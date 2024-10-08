@@ -1,0 +1,36 @@
+# Exclude the Go workspace cache
+/pkg
+/bin
+# Exclude version control files
+.git
+.gitignore
+
+# Exclude local Go mod cache
+go.sum
+go.mod
+
+# Exclude editor and IDE settings
+*.swp
+*.swo
+*.idea/
+.vscode/
+*.iml
+
+# Exclude binaries and executables
+*.exe
+*.out
+*.so
+*.o
+*.a
+
+# Exclude log files and temporary files
+*.log
+*.tmp
+*.bak
+
+# Exclude Dockerfile itself (not needed in the image)
+Dockerfile
+
+# Other files to exclude
+README.md
+docker-compose.yml

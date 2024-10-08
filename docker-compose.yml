@@ -1,0 +1,10 @@
+version: '3'
+services:
+  app:
+    image: forum-go:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+
