@@ -5,11 +5,9 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
 	"strconv"
 	"time"
 
-	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -29,7 +27,7 @@ type service struct {
 }
 
 var (
-	dburl      = os.Getenv("DB_URL")
+	dburl      = "./test.db"
 	dbInstance *service
 )
 
