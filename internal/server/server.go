@@ -11,13 +11,16 @@ import (
 type Server struct {
 	port int
 	db   database.Service
+	//Users *sqlite.UserModel
 }
 
 func NewServer() *http.Server {
 	NewServer := &Server{
 		port: 8080,
-
-		db: database.New(),
+		db:   database.New(),
+		// Users: &sqlite.UserModel{
+		// 	Db: &db,
+		// },
 	}
 
 	// Declare Server config

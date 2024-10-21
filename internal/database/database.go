@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"forum-go/internal/models"
 	"io/ioutil"
 	"log"
 	"os"
@@ -21,6 +22,7 @@ type Service interface {
 
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
+	CreateUser(user models.User) error
 	Close() error
 }
 
