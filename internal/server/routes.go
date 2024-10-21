@@ -45,22 +45,3 @@ func (s *Server) healthHandler(w http.ResponseWriter, r *http.Request) {
 
 	_, _ = w.Write(jsonResp)
 }
-
-func (s *Server) GetLoginHandler(w http.ResponseWriter, r *http.Request) {
-}
-func (s *Server) PostLoginHandler(w http.ResponseWriter, r *http.Request) {
-}
-func (s *Server) LogoutHandler(w http.ResponseWriter, r *http.Request) {
-}
-func (s *Server) GetRegisterHandler(w http.ResponseWriter, r *http.Request) {
-}
-func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
-}
-func (s *Server) GetNewPostsHandler(w http.ResponseWriter, r *http.Request) {
-}
-func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
-}
-func (s *Server) GetPostHandler(w http.ResponseWriter, r *http.Request) {
-}
-func (s *Server) PostCommentHandler(w http.ResponseWriter, r *http.Request) {
-}
