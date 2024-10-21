@@ -43,7 +43,6 @@ func New() Service {
 	if err != nil {
 		log.Fatal("Error opening database:", err)
 	}
-	defer db.Close()
 	// Read the SQL file
 	file, err := os.Open("query.sql")
 	if err != nil {
