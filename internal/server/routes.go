@@ -4,13 +4,17 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", s.HelloWorldHandler)
-
+	mux.HandleFunc("/long-task", func(w http.ResponseWriter, r *http.Request) {
+		time.Sleep(10 * time.Second) // Simule une tâche longue
+		w.Write([]byte("Task completed"))
+	})
 	mux.HandleFunc("/health", s.healthHandler)
 
 	return mux

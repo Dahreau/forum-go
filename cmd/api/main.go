@@ -39,8 +39,8 @@ func main() {
 
 	go gracefulShutdown(server)
 
+	fmt.Println("Server started on port", server.Addr)
 	err := server.ListenAndServe()
-	fmt.Println("Server started")
 	if err != nil && err != http.ErrServerClosed {
 		panic(fmt.Sprintf("http server error: %s", err))
 	}

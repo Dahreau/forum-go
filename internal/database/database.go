@@ -4,7 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
 	"strconv"
 	"time"
 
@@ -27,7 +29,7 @@ type service struct {
 }
 
 var (
-	dburl      = "./test.db"
+	dburl      = "./db.sqlite"
 	dbInstance *service
 )
 
@@ -39,10 +41,30 @@ func New() Service {
 
 	db, err := sql.Open("sqlite3", dburl)
 	if err != nil {
-		// This will not be a connection error, but a DSN parse error or
-		// another initialization error.
-		log.Fatal(err)
+		log.Fatal("Error opening database:", err)
 	}
+	defer db.Close()
+	// Read the SQL file
+	file, err := os.Open("query.sql")
+	if err != nil {
+		log.Fatal("Error opening SQL file:", err)
+	}
+	defer file.Close()
+	// Read the contents of the SQL file
+	sqlBytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Fatal("Error reading SQL file:", err)
+	}
+	sqlStatements := string(sqlBytes)
+
+	// Execute the SQL statements in the file
+	_, err = db.Exec(sqlStatements)
+	if err != nil {
+		log.Fatal("Error executing SQL script:", err)
+
+	}
+
+	fmt.Println("Database initialized successfully!")
 
 	dbInstance = &service{
 		db: db,
@@ -63,7 +85,7 @@ func (s *service) Health() map[string]string {
 	if err != nil {
 		stats["status"] = "down"
 		stats["error"] = fmt.Sprintf("db down: %v", err)
-		log.Fatalf(fmt.Sprintf("db down: %v", err)) // Log the error and terminate the program
+		log.Fatalf("db down: %v", err) // Log the error and terminate the program
 		return stats
 	}
 
