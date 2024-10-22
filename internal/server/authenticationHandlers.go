@@ -1,8 +1,10 @@
 package server
 
 import (
+	"encoding/base64"
 	"forum-go/internal/models"
 	"html/template"
+	"log"
 	"math"
 	"math/rand"
 	"net/http"
@@ -22,12 +24,13 @@ func (s *Server) GetLoginHandler(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) PostLoginHandler(w http.ResponseWriter, r *http.Request) {
 	//Simulates login
-	userID := "12345"
+	userID := generateToken(32)
+	sessionID := generateToken(32)
 
 	//Creates cookie session
 	expiration := time.Now().Add(24 * time.Hour)
 	cookie := http.Cookie{
-		Name:     "session_id",
+		Name:     sessionID,
 		Value:    userID,
 		Expires:  expiration,
 		HttpOnly: true,
@@ -57,4 +60,12 @@ func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
+}
+
+func generateToken(lenght int) string {
+	bytes := make([]byte, lenght)
+	if _, err := rand.Read(bytes); err != nil {
+		log.Fatalf("Failed to generate token: %v", err)
+	}
+	return base64.URLEncoding.EncodeToString(bytes)
 }

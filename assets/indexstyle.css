@@ -97,6 +97,8 @@ input[type="email"] {
     margin: 10px 0;
     border-bottom: 2px solid rosybrown;
     border-radius: 52px;
+    color:rosybrown;
+    caret-color:rosybrown;
     /* Ligne fine et épurée */
     /* Légère texture pour évoquer la simplicité naturelle */
     transition: border-color 0.3s ease;
