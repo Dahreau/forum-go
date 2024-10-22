@@ -6,6 +6,8 @@
     <title>Users List</title>
 </head>
 <body>
+    <a href="/">Home</a>
+    <h1>Users List</h1>
     {{ range . }}
     <div>
         <h1>{{ .Username }}</h1>
@@ -14,6 +16,7 @@
         <p>{{ .Password}} </p>
         <p>{{ .CreationDate }}</p>
         <p>{{ .Role }}</p>
+        <button><a href="/delete/users/{{ .UserId}}">Delete</a></button>
     </div>
     {{ end }}
 </body>

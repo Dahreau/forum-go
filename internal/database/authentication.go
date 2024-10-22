@@ -44,3 +44,9 @@ func (s *service) GetUser(email, password string) (models.User, error) {
 	}
 	return user, nil
 }
+
+func (s *service) DeleteUser(id string) error {
+	query := "DELETE FROM User WHERE user_id=?"
+	_, err := s.db.Exec(query, id)
+	return err
+}
