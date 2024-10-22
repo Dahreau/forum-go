@@ -1,0 +1,181 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Manrope', sans-serif;
+    background-color: #10091B;
+    color: #FFFFFF;
+}
+
+/* Header Section */
+.header-section {
+    position: absolute;
+    width: 1440px;
+    height: 85px;
+    left: 0;
+    top: 0;
+    background: #180030;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(90deg, #0119B6 -7.19%, #010B50 86.55%);
+    box-shadow: 0px 0px 3.9px #FFFFFF, inset 0px 0px 2.6px #FFFFFF;
+}
+
+.logo-text {
+    font-family: 'Mina', sans-serif;
+    font-size: 32px;
+    line-height: 51px;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.welcome-text {
+    font-weight: 300;
+    font-size: 20px;
+}
+
+.logout-link {
+    font-weight: 400;
+    font-size: 20px;
+    color: #FF948A;
+    text-shadow: 0px 0px 24px #FE5454;
+    text-decoration: none;
+}
+
+/* Content Header */
+.content-header {
+    position: absolute;
+    width: 1005px;
+    height: 57px;
+    left: 32px;
+    top: 108px;
+    background: rgba(51, 10, 94, 0.83);
+    border: 2px solid #7789FF;
+    box-shadow: 0px 0px 24px #102FF9, inset 0px 0px 24px #102FF9;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.user-name, .post-title, .post-date {
+    font-weight: 400;
+    font-size: 20px;
+}
+
+/* Tags Section */
+.tags-section {
+    position: absolute;
+    left: 46.55px;
+    top: 194.14px;
+    display: flex;
+    gap: 8px;
+}
+
+.tag {
+    padding: 4px 16px;
+    border: 1px solid #767676;
+    border-radius: 24px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 17px;
+}
+
+.tag.neon {
+    background: #B4B4B4;
+    box-shadow: 0px 0px 24px #FE9AF8, inset 0px 0px 24px #FE9AF8;
+    color: #000000;
+}
+
+/* Post Content */
+.post-content {
+    position: absolute;
+    width: 1005px;
+    height: 654px;
+    left: 32px;
+    top: 179px;
+    background: rgba(51, 10, 94, 0.65);
+    border: 2px solid #7789FF;
+    box-shadow: 0px 0px 24px #102FF9, inset 0px 0px 32px #102FF9;
+    border-radius: 16px;
+    padding: 16px;
+}
+
+.post-text {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+}
+
+/* Comments Section */
+.comments-section {
+    position: absolute;
+    width: 355px;
+    height: 756px;
+    left: 1053px;
+    top: 150px;
+    background: rgba(51, 10, 94, 0.65);
+    border: 2px solid #7789FF;
+    box-shadow: 0px 0px 24px #102FF9, inset 0px 0px 24px #102FF9;
+    border-radius: 16px;
+    padding: 16px;
+}
+
+.comment {
+    margin-bottom: 16px;
+}
+
+.comment-text {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+}
+
+.comment-author {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+    margin-top: 4px;
+}
+
+/* Footer Section */
+.footer-section {
+    position: absolute;
+    width: 1440px;
+    height: 53px;
+    left: 0;
+    top: 972px;
+    background: #10091B;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-text {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
+    color: #FFFFFF;
+}
