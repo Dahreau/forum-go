@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users List</title>
+</head>
+<body>
+    {{ range . }}
+    <div>
+        <h1>{{ .Username }}</h1>
+        <p>{{ .UserId }}</p>
+        <p>{{ .Email }}</p>
+        <p>{{ .Password}} </p>
+        <p>{{ .CreationDate }}</p>
+        <p>{{ .Role }}</p>
+    </div>
+    {{ end }}
+</body>
+</html>

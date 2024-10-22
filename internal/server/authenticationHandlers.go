@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/base64"
+	"fmt"
 	"forum-go/internal/models"
 	"html/template"
 	"log"
@@ -21,22 +22,33 @@ func (s *Server) GetLoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	t.Execute(w, nil)
-
 }
-
 func (s *Server) PostLoginHandler(w http.ResponseWriter, r *http.Request) {
+	email := r.FormValue("email")
+	password := r.FormValue("password")
+	user, err := s.db.GetUser(email, password)
+	if user.UserId == "" || err != nil {
+		t, err := template.ParseFiles("./assets/login.tmpl.html")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		t.Execute(w, map[string]string{"Error": "Invalid username or password. Please try again."})
+		return
+	}
 	//Simulates login
 	userID := generateToken(32)
-	sessionID := generateToken(32)
 
 	//Creates cookie session
 	expiration := time.Now().Add(24 * time.Hour)
 	cookie := http.Cookie{
-		Name:     sessionID,
-		Value:    userID,
-		Expires:  expiration,
-		HttpOnly: true,
+		Name:    s.SESSION_ID,
+		Value:   userID,
+		Expires: expiration,
+		Path:    "/",
 	}
+	fmt.Println("Cookie: ", cookie)
 	http.SetCookie(w, &cookie)
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -69,10 +81,27 @@ func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 
+func (s *Server) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
+	start := time.Now()
+	users, err := s.db.GetUsers()
+	fmt.Println("Exec time for GetUsersHandler: ", time.Since(start))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	t, err := template.ParseFiles("./assets/users.tmpl.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	t.Execute(w, users)
+}
+
 func generateToken(lenght int) string {
 	bytes := make([]byte, lenght)
 	if _, err := rand.Read(bytes); err != nil {
 		log.Fatalf("Failed to generate token: %v", err)
 	}
 	return base64.URLEncoding.EncodeToString(bytes)
+
 }

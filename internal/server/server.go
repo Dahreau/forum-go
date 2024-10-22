@@ -6,21 +6,27 @@ import (
 	"time"
 
 	"forum-go/internal/database"
+	"forum-go/internal/models"
 )
 
 type Server struct {
-	port int
-	db   database.Service
-	//Users *sqlite.UserModel
+	port       int
+	db         database.Service
+	users      []models.User
+	SESSION_ID string
 }
 
 func NewServer() *http.Server {
 	NewServer := &Server{
-		port: 8080,
-		db:   database.New(),
-		// Users: &sqlite.UserModel{
-		// 	Db: &db,
-		// },
+		port:       8080,
+		db:         database.New(),
+		SESSION_ID: "sRpyIJS9Zmerlpcpqhc1B0xxG7w6Gk1b",
+	}
+	users, err := NewServer.db.GetUsers()
+	if err != nil {
+		fmt.Println("Error getting users: ", err)
+	} else {
+		NewServer.users = users
 	}
 
 	// Declare Server config

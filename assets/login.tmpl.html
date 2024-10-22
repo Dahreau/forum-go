@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="stylesheet" href="indexstyle.css">
-
+    <title>Login</title>
 </head>
-
 <body>
+    <h1>Login</h1>
+    {{ if .Error }}
+    <p style="color: red;">{{ .Error }}</p>
+    {{ end }}
     <form action="/login" method="post">
         <label for="email">Email</label>
-        <input type="email" name="email" id="email" required>
+        <input type="email" name="email" id="email" value="{{ .Form.Get "email"}}"required>
         <label for="password">Password</label>
         <input type="password" name="password" id="password" required>
-        <button type="submit">Sign in</button>
+        <button type="submit">Login</button>
+        <p>Don't have an account? <a href="/register">Register</a></p>
     </form>
-
 </body>
-
 </html>

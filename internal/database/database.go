@@ -23,6 +23,8 @@ type Service interface {
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
 	CreateUser(user models.User) error
+	GetUsers() ([]models.User, error)
+	GetUser(email, password string) (models.User, error)
 	Close() error
 }
 

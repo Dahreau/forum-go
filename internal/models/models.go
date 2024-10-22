@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"database/sql"
+	"time"
+)
 
 type User struct {
 	UserId         string
@@ -9,6 +12,6 @@ type User struct {
 	Password       string
 	Role           string
 	CreationDate   time.Time
-	SessionId      string
-	SessionExpired time.Time
+	SessionId      sql.NullString
+	SessionExpired sql.NullTime
 }
