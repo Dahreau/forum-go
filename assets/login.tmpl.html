@@ -2,16 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="indexstyle.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" href="Image collée.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Shojumaru&display=swap" rel="stylesheet">
+
     <title>Login</title>
 </head>
 <body>
+<!--    {{ if .Error }}-->
+<!--    <p style="color: red;">{{ .Error }}</p>-->
+<!--    {{ end }}-->
+<form action="/login" method="post">
     <h1>Login</h1>
-    {{ if .Error }}
-    <p style="color: red;">{{ .Error }}</p>
-    {{ end }}
-    <form action="/login" method="post">
-        <label for="email">Email</label>
+    <label for="email">Email</label>
         <input type="email" name="email" id="email" value="{{ .Form.Get "email"}}"required>
         <label for="password">Password</label>
         <input type="password" name="password" id="password" required>
