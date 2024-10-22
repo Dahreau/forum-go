@@ -27,6 +27,7 @@ type Service interface {
 	GetUser(email, password string) (models.User, error)
 	DeleteUser(id string) error
 	Close() error
+	FindEmailUser(email string) (bool, error)
 }
 
 type service struct {
