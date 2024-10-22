@@ -44,3 +44,22 @@ func (s *service) GetUser(email, password string) (models.User, error) {
 	}
 	return user, nil
 }
+
+func (s *service) FindEmailUser(email string) (bool, error) {
+	query := "SELECT * FROM User WHERE email=?"
+	row := s.db.QueryRow(query, email)
+	var user models.User
+	err := row.Scan(&user.UserId, &user.Email, &user.Username, &user.Password, &user.Role, &user.CreationDate, &user.SessionId, &user.SessionExpired)
+	if err != nil {
+		return true, nil
+	}
+	return false, nil
+}
+
+func (s *service) DeleteUser(id string) error {
+	query := "DELETE FROM User WHERE user_id=?"
+	_, err := s.db.Exec(query, id)
+	return err
+}
+
+//hue

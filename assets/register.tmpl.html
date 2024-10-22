@@ -16,6 +16,9 @@
 <body>
     <form action="/register" method="post">
         <h1>Register</h1>
+        {{ if .email_used }}
+        <p style="color:red;">{{ .email_used }}</p>
+        {{ end }}
         <label for="username">Username</label>
         <input type="text" name="username" id="username" required>
         <label for="email">Email</label>

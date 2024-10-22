@@ -10,6 +10,7 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -55,6 +56,20 @@ func (s *Server) PostLoginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) LogoutHandler(w http.ResponseWriter, r *http.Request) {
+	//Creates a cookie with the same name
+	cookie := http.Cookie{
+		Name:     s.SESSION_ID,    // Cookie name
+		Value:    "",              // EMpty value to delete it
+		Expires:  time.Unix(0, 0), // Set expiration date in the past
+		HttpOnly: true,
+		Path:     "/", // Cookie path
+	}
+
+	// Deletes cookie
+	http.SetCookie(w, &cookie)
+
+	// Redirect to home
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func (s *Server) GetRegisterHandler(w http.ResponseWriter, r *http.Request) {
@@ -70,6 +85,16 @@ func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
 	PasswordHash, err := bcrypt.GenerateFromPassword([]byte(r.FormValue("password")), bcrypt.DefaultCost)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	IsUnique, _ := s.db.FindEmailUser(r.FormValue("email"))
+	if !IsUnique {
+		t, err := template.ParseFiles("./assets/register.tmpl.html")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		t.Execute(w, map[string]string{"email_used": "Email already used, change it"})
 		return
 	}
 	user := models.User{Username: r.FormValue("username"), Email: r.FormValue("email"), Password: string(PasswordHash), Role: "user", CreationDate: time.Now(), UserId: strconv.Itoa(rand.Intn(math.MaxInt32))}
@@ -104,4 +129,22 @@ func generateToken(lenght int) string {
 	}
 	return base64.URLEncoding.EncodeToString(bytes)
 
+}
+
+func (s *Server) DeleteUsersHandler(w http.ResponseWriter, r *http.Request) {
+	path := r.URL.Path
+	pathParts := strings.Split(path, "/")
+	fmt.Println("Path: ", pathParts)
+	// Check if the path matches the structure
+	id := ""
+	fmt.Println("pathpart1 : ", pathParts[0])
+	if len(pathParts) >= 4 && pathParts[2] == "users" {
+		id = pathParts[3] // Extract user ID from the path
+	}
+	err := s.db.DeleteUser(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/users", http.StatusSeeOther)
 }

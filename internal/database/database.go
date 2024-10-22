@@ -25,7 +25,9 @@ type Service interface {
 	CreateUser(user models.User) error
 	GetUsers() ([]models.User, error)
 	GetUser(email, password string) (models.User, error)
+	DeleteUser(id string) error
 	Close() error
+	FindEmailUser(email string) (bool, error)
 }
 
 type service struct {
