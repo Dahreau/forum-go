@@ -1,0 +1,124 @@
+/* Police d'inspiration japonaise (à remplacer par une police appropriée si nécessaire) */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+
+/* Configuration générale */
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background-image: url(image\ 13.png);
+    background-color: transparent;
+    background-position: center;
+    /* Couleur de fond douce, inspirée des papiers washi */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+form {
+    background-color: rgba(15, 7, 53, 0.842);
+    border: 10px solid 111A7C;
+    /* Lignes épurées évoquant les cloisons shōji */
+    border-radius: 52x;
+    padding: 20px 40px;
+    box-shadow:
+        0 0 7px #111A7C,
+        0 0 10px #111A7C,
+        0 0 21px #111A7C,
+        0 0 42px #7789FF,
+        0 0 82px #7789FF,
+        0 0 92px #7789FF,
+        0 0 102px #7789FF,
+        0 0 151px #7789FF;
+    /* Légère ombre pour modernité */
+    text-align: center;
+    width: 300px;
+}
+
+label {
+    font-size: 1.2em;
+    color: rosybrown;
+    text-shadow:
+        0 0 7px rosybrown,
+        0 0 10px rosybrown,
+        0 0 21px rosybrown,
+
+        0 0 42px rosybrown,
+        0 0 82px rosybrown,
+        0 0 92px rosybrown,
+        0 0 102px rosybrown,
+        0 0 151px rosybrown;
+    margin-top: 10px;
+    display: block;
+    text-align: left;
+}
+
+button:hover {
+    background-color: rgba(187, 255, 199, 1);
+    border-radius: 52;
+    background-color: transparent;
+
+    /* Couleur légèrement plus sombre au survol */
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-bottom: 2px solid rosybrown;
+    border-radius: 52px;
+    /* Ligne fine et épurée */
+    background-color: transparent;
+    /* Légère texture pour évoquer la simplicité naturelle */
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+    border-bottom: 2px solid rosybrown;
+    outline: none;
+}
+
+input[type="password"]:focus {
+    border-bottom: 2px solid rosybrown;
+    outline: none;
+}
+
+
+button {
+    background-color: transparent;
+    text-shadow:
+        /* White glow */
+        0 0 7px rgba(187, 255, 199, 1),
+        0 0 10px rgba(187, 255, 199, 1),
+        0 0 21px rgba(187, 255, 199, 1),
+
+        /* Green glow */
+        0 0 42px rgba(187, 255, 199, 1),
+        0 0 82px rgba(187, 255, 199, 1),
+        0 0 92px rgba(187, 255, 199, 1),
+        0 0 102px rgba(187, 255, 199, 1),
+        0 0 151px rgba(187, 255, 199, 1);
+
+    color: rgb(130, 248, 152);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 52px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+}
+
+/* Responsiveness */
+@media (max-width: 400px) {
+    form {
+        width: 90%;
+        padding: 20px;
+    }
+
+    button {
+        width: 100%;
+    }
+}
