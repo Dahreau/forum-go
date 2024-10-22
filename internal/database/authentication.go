@@ -61,3 +61,5 @@ func (s *service) DeleteUser(id string) error {
 	_, err := s.db.Exec(query, id)
 	return err
 }
+
+//hue
