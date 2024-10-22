@@ -63,7 +63,7 @@ label {
         0 0 102px rosybrown,
         0 0 151px rosybrown;
     margin-top: 10px;
-    display: block;
+    display: flex;
     text-align: left;
 }
 
@@ -75,12 +75,12 @@ button:hover {
     /* Couleur légèrement plus sombre au survol */
 }
 
-input[type="text"] {
+input {
     background-color: transparent;
     border: solid rosybrown;
-    width: 100%;
+    width: 90%;
     padding: 10px;
-    margin: 10px 0;
+    margin: 10px 0px;
     border-bottom: 2px solid rosybrown;
     border-radius: 52px;
     color:rosybrown;
@@ -89,52 +89,12 @@ input[type="text"] {
     /* Légère texture pour évoquer la simplicité naturelle */
     transition: border-color 0.3s ease;
 }
-input[type="email"] {
-    background-color: transparent;
-    border: solid rosybrown;
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border-bottom: 2px solid rosybrown;
-    border-radius: 52px;
-    color:rosybrown;
-    caret-color:rosybrown;
-    /* Ligne fine et épurée */
-    /* Légère texture pour évoquer la simplicité naturelle */
-    transition: border-color 0.3s ease;
-}
-input[type="password"] {
-    background-color: transparent;
-    border-radius: 20px;
-    border: solid rosybrown;
-}
-input[type="password"] {
 
-}
-input[type="password"] {
-    background-color: transparent;
-    border: solid rosybrown;
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border-bottom: 2px solid rosybrown;
-    border-radius: 52px;
-    /* Ligne fine et épurée */
-    /* Légère texture pour évoquer la simplicité naturelle */
-    transition: border-color 0.3s ease;
-}
-
-input[type="text"]:focus {
+input:focus {
     border-top: 2px solid rosybrown;
     border-bottom: 2px solid rosybrown;
     outline: none;
 }
-
-input[type="password"]:focus {
-    border-bottom: 2px solid rosybrown;
-    outline: none;
-}
-
 
 button {
     background-color: transparent;
