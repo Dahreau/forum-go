@@ -14,12 +14,26 @@ body {
     height: 100vh;
     margin: 0;
 }
-
+h1 {
+    font-family: "Shojumaru";
+    color:#7789FF;
+    text-shadow:
+    0 0 7px #111A7C,
+    0 0 10px #111A7C,
+    0 0 21px #111A7C,
+    0 0 42px #7789FF,
+    0 0 82px #7789FF,
+    0 0 92px #7789FF,
+    0 0 102px #7789FF,
+    0 0 151px #7789FF;
+    font-size: 27px;
+    margin-top: -4%;
+}
 form {
     background-color: rgba(15, 7, 53, 0.842);
     border: 10px solid 111A7C;
     /* Lignes épurées évoquant les cloisons shōji */
-    border-radius: 52x;
+    border-radius: 52px;
     padding: 20px 40px;
     box-shadow:
         0 0 7px #111A7C,
@@ -61,21 +75,55 @@ button:hover {
     /* Couleur légèrement plus sombre au survol */
 }
 
-input[type="text"],
-input[type="password"] {
+input[type="text"] {
+    background-color: transparent;
+    border: solid rosybrown;
     width: 100%;
     padding: 10px;
     margin: 10px 0;
-    border: none;
+    border-bottom: 2px solid rosybrown;
+    border-radius: 52px;
+    color:rosybrown;
+    caret-color:rosybrown;
+    /* Ligne fine et épurée */
+    /* Légère texture pour évoquer la simplicité naturelle */
+    transition: border-color 0.3s ease;
+}
+input[type="email"] {
+    background-color: transparent;
+    border: solid rosybrown;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
     border-bottom: 2px solid rosybrown;
     border-radius: 52px;
     /* Ligne fine et épurée */
+    /* Légère texture pour évoquer la simplicité naturelle */
+    transition: border-color 0.3s ease;
+}
+input[type="password"] {
     background-color: transparent;
+    border-radius: 20px;
+    border: solid rosybrown;
+}
+input[type="password"] {
+
+}
+input[type="password"] {
+    background-color: transparent;
+    border: solid rosybrown;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-bottom: 2px solid rosybrown;
+    border-radius: 52px;
+    /* Ligne fine et épurée */
     /* Légère texture pour évoquer la simplicité naturelle */
     transition: border-color 0.3s ease;
 }
 
 input[type="text"]:focus {
+    border-top: 2px solid rosybrown;
     border-bottom: 2px solid rosybrown;
     outline: none;
 }
@@ -101,8 +149,8 @@ button {
         0 0 102px rgba(187, 255, 199, 1),
         0 0 151px rgba(187, 255, 199, 1);
 
-    color: rgb(130, 248, 152);
-    border: none;
+    color: rgba(187, 255, 199, 1);
+    border: solid ;
     padding: 12px 20px;
     border-radius: 52px;
     margin-top: 20px;
