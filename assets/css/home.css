@@ -164,6 +164,35 @@ body {
     font-weight: 300;
 }
 
+/* Button Styles for Likes/Dislikes */
+.vote-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.vote-button {
+    padding: 8px 12px;
+    border-radius: 18px;
+    border: solid #010B50;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+/* Tag styles */
+.tag {
+    padding: 6px 12px;
+    border-radius: 8px;
+    background-color: #222;
+    color: #fff;
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+
 /* Footer Section */
 .footer-section {
     width: 100%;
