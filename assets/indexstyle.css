@@ -17,36 +17,23 @@ body {
 
 h1 {
     font-family: "Shojumaru";
-    color: #7789FF;
+    color: rgba(119, 137, 255, 1);
     text-shadow:
-        0 0 7px #111A7C,
-        0 0 10px #111A7C,
-        0 0 21px #111A7C,
-        0 0 42px #7789FF,
-        0 0 82px #7789FF,
-        0 0 92px #7789FF,
-        0 0 102px #7789FF,
-        0 0 151px #7789FF;
+        0 0 7px rgba(1, 25, 182, 1),
+        0 0 10px rgba(1, 25, 182, 1),
+        0 0 21px rgba(1, 25, 182, 1);
     font-size: 27px;
     margin-top: -4%;
 }
 
 form {
     background-color: rgba(15, 7, 53, 0.842);
-    border: 5px solid 111A7C;
+    border: 2px solid #7789FF;
     /* Lignes épurées évoquant les cloisons shōji */
     border-radius: 52px;
     padding: 20px 40px;
     box-shadow:
-        0 0 7px #111A7C,
-        0 0 10px #111A7C,
-        0 0 21px #111A7C,
-        0 0 42px #7789FF,
-        0 0 82px #7789FF,
-        0 0 92px #7789FF,
-        0 0 102px #7789FF,
-        0 0 151px #7789FF;
-    /* Légère ombre pour modernité */
+        0 0 21px rgba(1, 25, 182, 1);
     text-align: center;
     width: 300px;
 }
@@ -54,16 +41,7 @@ form {
 label {
     font-size: 1.2em;
     color: rosybrown;
-    text-shadow:
-        0 0 7px rosybrown,
-        0 0 10px rosybrown,
-        0 0 21px rosybrown,
-
-        0 0 42px rosybrown,
-        0 0 82px rosybrown,
-        0 0 92px rosybrown,
-        0 0 102px rosybrown,
-        0 0 151px rosybrown;
+    border: 0 0 21px rosybrown;
     margin-top: 10px;
     display: flex;
     text-align: left;
@@ -84,6 +62,7 @@ input {
     padding: 10px;
     margin: 10px 0px;
     border-bottom: 2px solid rosybrown;
+    box-shadow: 0 0 21px rosybrown;
     border-radius: 52px;
     color: rosybrown;
     caret-color: rosybrown;
@@ -102,16 +81,7 @@ button {
     background-color: transparent;
     text-shadow:
         /* White glow */
-        0 0 7px rgba(187, 255, 199, 1),
-        0 0 10px rgba(187, 255, 199, 1),
-        0 0 21px rgba(187, 255, 199, 1),
-
-        /* Green glow */
-        0 0 42px rgba(187, 255, 199, 1),
-        0 0 82px rgba(187, 255, 199, 1),
-        0 0 92px rgba(187, 255, 199, 1),
-        0 0 102px rgba(187, 255, 199, 1),
-        0 0 151px rgba(187, 255, 199, 1);
+        0 0 7px rgba(187, 255, 199, 1);
 
     color: rgb(82, 252, 113);
     border: solid;

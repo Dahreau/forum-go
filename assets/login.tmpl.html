@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+
+
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="indexstyle.css">
@@ -9,19 +11,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Shojumaru&display=swap" rel="stylesheet">
 
     <title>Login</title>
+
 </head>
+
 <body>
-<!--    {{ if .Error }}-->
-<!--    <p style="color: red;">{{ .Error }}</p>-->
-<!--    {{ end }}-->
-<form action="/login" method="post">
-    <h1>Login</h1>
-    <label for="email">Email</label>
-        <input type="email" name="email" id="email" value="{{ .Form.Get "email"}}"required>
+
+    <!-- {{ if .Error }}
+    <p style="color: red;">{{ .Error }}</p>
+    {{ end }}-->
+
+    <form action="/login" method="post">
+        <h1>Login</h1>
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" value="{{ .Form.Get " email"}}"required>
         <label for="password">Password</label>
         <input type="password" name="password" id="password" required>
         <button type="submit">Login</button>
         <p>Don't have an account? <a href="/register">Register</a></p>
     </form>
 </body>
+
 </html>
