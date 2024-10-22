@@ -10,6 +10,8 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 func (s *Server) GetLoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -53,8 +55,13 @@ func (s *Server) GetRegisterHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
-	user := models.User{Username: r.FormValue("username"), Email: r.FormValue("email"), Password: r.FormValue("password"), Role: "user", CreationDate: time.Now(), UserId: strconv.Itoa(rand.Intn(math.MaxInt32))}
-	err := s.db.CreateUser(user)
+	PasswordHash, err := bcrypt.GenerateFromPassword([]byte(r.FormValue("password")), bcrypt.DefaultCost)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	user := models.User{Username: r.FormValue("username"), Email: r.FormValue("email"), Password: string(PasswordHash), Role: "user", CreationDate: time.Now(), UserId: strconv.Itoa(rand.Intn(math.MaxInt32))}
+	err = s.db.CreateUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
