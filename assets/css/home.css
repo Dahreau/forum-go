@@ -12,6 +12,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-image: url(image\ 13.png);
 }
 
 /* Header Section */
@@ -101,6 +102,7 @@ body {
     box-shadow: 0px 0px 24px #FE9AF8, inset 0px 0px 24px #FE9AF8;
     border-radius: 24px;
     padding: 22px;
+    background-color: rgba(15, 7, 53, 0.842);
 }
 
 .filters-title {
@@ -128,7 +130,8 @@ body {
     border-radius: 14px;
     padding: 8px;
     cursor: pointer;
-    margin-top: 16px;
+    margin-top: 55px;
+    margin-left: 7%;
 }
 
 /* Post List Section */
