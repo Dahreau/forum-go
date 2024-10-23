@@ -46,7 +46,7 @@ func (s *service) GetUser(email, password string) (models.User, error) {
 }
 
 func (s *service) FindUsername(username string) (bool, error) {
-	query := "SELECT * FROM User WHERE email=?"
+	query := "SELECT * FROM User WHERE username=?"
 	row := s.db.QueryRow(query, username)
 	var user models.User
 	err := row.Scan(&user.UserId, &user.Email, &user.Username, &user.Password, &user.Role, &user.CreationDate, &user.SessionId, &user.SessionExpired)

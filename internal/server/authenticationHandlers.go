@@ -92,7 +92,7 @@ func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	IsUniqueUsername, _ := s.db.FindUsername(r.FormValue("email"))
+	IsUniqueUsername, _ := s.db.FindUsername(r.FormValue("username"))
 	if !IsUniqueUsername {
 		render(w, "register", map[string]interface{}{"username_used": "Username already used, change it"})
 		return
