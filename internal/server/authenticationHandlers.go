@@ -102,6 +102,18 @@ func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
 		t.Execute(w, map[string]string{"email_used": "Email already used, change it"})
 		return
 	}
+
+	IsUniqueUsername, _ := s.db.FindUsername(r.FormValue("email"))
+	if !IsUniqueUsername {
+		t, err := template.ParseFiles("./assets/register.tmpl.html")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		t.Execute(w, map[string]string{"username_used": "Username already used, change it"})
+		return
+	}
+
 	user := models.User{Username: r.FormValue("username"), Email: r.FormValue("email"), Password: string(PasswordHash), Role: "user", CreationDate: time.Now(), UserId: strconv.Itoa(rand.Intn(math.MaxInt32))}
 	err = s.db.CreateUser(user)
 	if err != nil {

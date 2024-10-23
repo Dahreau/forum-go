@@ -16,6 +16,9 @@
 <body>
     <form action="/register" method="post">
         <h1>Register</h1>
+        {{ if .username_used }}
+        <p style="color:red;">{{ .username_used }}</p>
+        {{ end }}
         {{ if .email_used }}
         <p style="color:red;">{{ .email_used }}</p>
         {{ end }}
