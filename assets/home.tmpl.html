@@ -29,14 +29,22 @@
   <!-- Filters Section -->
   <aside class="filters-section">
     <div class="filters-title">Filters</div>
-    <div class="filter-item">Shonen</div>
-    <div class="filter-item">Naruto</div>
-    <div class="filter-item">Spoil</div>
+    <select class="filter-category">
+      <option>Choose a category</option>
+      <option>Shonen</option>
+      <option>Naruto</option>
+      <option>Spoil</option>
+    </select>
     <div class="filter-reset">Reset filters</div>
   </aside>
 
   <!-- Post List Section -->
   <section class="post-list">
+    <div class="tabs">
+      <button class="tab active">All posts</button>
+      <button class="tab">Created</button>
+      <button class="tab">Liked</button>
+    </div>
     <div class="post-item">
       <div class="post-title">Title un peu long histoire qu’on voit ce que cela donne en dimension réelle</div>
       <div class="post-meta">
@@ -47,7 +55,7 @@
       <!-- Vote Buttons -->
       <div class="vote-buttons">
         <div class="vote-button upvote">
-          <img src="img/upvote.png">
+          <img src="img/upvote.png" width="30">
           <span>12</span>
         </div>
         <div class="vote-button downvote">
@@ -60,23 +68,10 @@
         <span class="tag">Shonen</span>
         <span class="tag">Sword Art Online</span>
       </div>
-    </div>
-
-    <div class="post-item">
-      <div class="post-title">Title un peu long histoire qu’on voit ce que cela donne en dimension réelle</div>
-      <div class="post-meta">
-        <span class="post-author">John doe</span>
-        <span class="post-date">18th October 2024</span>
-        <span class="comment-count">12 Comments</span>
-      </div>
-    </div>
-
-    <div class="post-item">
-      <div class="post-title">Title un peu long histoire qu’on voit ce que cela donne en dimension réelle</div>
-      <div class="post-meta">
-        <span class="post-author">John doe</span>
-        <span class="post-date">18th October 2024</span>
-        <span class="comment-count">12 Comments</span>
+      <!-- Report and Delete -->
+      <div class="post-actions">
+        <button class="report-button">Report</button>
+        <button class="delete-button">Delete</button>
       </div>
     </div>
   </section>
