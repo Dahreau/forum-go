@@ -29,13 +29,8 @@ func (s *Server) PostLoginHandler(w http.ResponseWriter, r *http.Request) {
 	password := r.FormValue("password")
 	user, err := s.db.GetUser(email, password)
 	if user.UserId == "" || err != nil {
-		t, err := template.ParseFiles("./assets/login.tmpl.html")
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
 
-		t.Execute(w, map[string]string{"Error": "Invalid username or password. Please try again."})
+		render(w, "login", map[string]interface{}{"Error": "Invalid username or password. Please try again.", "email": email})
 		return
 	}
 	//Simulates login
@@ -129,7 +124,7 @@ func (s *Server) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	render(w, "users", map[string]interface{}{"users": users})
+	render(w, "../users", map[string]interface{}{"users": users})
 }
 
 func generateToken(lenght int) string {

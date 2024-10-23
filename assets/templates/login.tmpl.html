@@ -23,7 +23,7 @@
             <p style="color: red;">{{ .Error }}</p>
             {{ end }}
         <label for="email">Email</label>
-        <input type="email" name="email" id="email" value="{{ .Form.Get " email"}}"required>
+        <input type="email" name="email" id="email" value="{{ .email}}"required>
         <label for="password">Password</label>
         <input type="password" name="password" id="password" required>
         <button type="submit">Login</button>
