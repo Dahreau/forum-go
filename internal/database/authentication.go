@@ -56,10 +56,23 @@ func (s *service) FindEmailUser(email string) (bool, error) {
 	return false, nil
 }
 
+func (s *service) FindUserCookie(cookie string) (models.User, error) {
+	query := "SELECT * FROM User WHERE session_id=?"
+	row := s.db.QueryRow(query, cookie)
+	var user models.User
+	if err := row.Scan(&user.UserId, &user.Email, &user.Username, &user.Password, &user.Role, &user.CreationDate, &user.SessionId, &user.SessionExpired); err != nil {
+		return models.User{}, err
+	}
+	return user, nil
+}
 func (s *service) DeleteUser(id string) error {
 	query := "DELETE FROM User WHERE user_id=?"
 	_, err := s.db.Exec(query, id)
 	return err
 }
 
-//hue
+func (s *service) UpdateUser(user models.User) error {
+	query := "UPDATE User SET email=?, username=?, password=?, role=?, session_id=?, session_expire=? WHERE user_id=?"
+	_, err := s.db.Exec(query, user.Email, user.Username, user.Password, user.Role, user.SessionId, user.SessionExpired, user.UserId)
+	return err
+}

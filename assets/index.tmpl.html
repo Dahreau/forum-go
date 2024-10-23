@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aniverse</title>
+</head>
+<body>
+    {{ if .User }}
+    <h1>Hello {{ .User.Username}}</h1>
+    <h2> {{ .User.SessionId.String }}</h2>
+    <form method="post" action="/logout"><input type="submit" value="logout"></form>
+    {{ else }}
+    <h1>Hello Guest</h1>
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+    {{ end}}
+    <a href="/users">Users</a>
+</body>
+</html>

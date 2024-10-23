@@ -3,7 +3,6 @@ package server
 import (
 	"encoding/json"
 	"fmt"
-	"html/template"
 	"log"
 	"net/http"
 )
@@ -26,16 +25,11 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc("GET /delete/users/{id}", s.DeleteUsersHandler)
 	mux.HandleFunc("/health", s.healthHandler)
 
-	return mux
+	return s.authenticate(mux)
 }
 
 func (s *Server) HomePageHandler(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("./assets/index.tmpl.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	t.Execute(w, nil)
+	render(w, "index", map[string]interface{}{"User": r.Context().Value(contextKeyUser)})
 }
 func (s *Server) HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
 	resp := make(map[string]string)
