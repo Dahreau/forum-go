@@ -12,7 +12,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-image: url(../13.png);
+    background-image: url(../img/13.png);
 }
 
 /* Header Section */
