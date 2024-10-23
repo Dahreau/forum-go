@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"forum-go/internal/models"
-	"html/template"
 	"log"
 	"math"
 	"math/rand"
@@ -89,23 +88,13 @@ func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	IsUnique, _ := s.db.FindEmailUser(r.FormValue("email"))
 	if !IsUnique {
-		t, err := template.ParseFiles("./assets/register.tmpl.html")
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		t.Execute(w, map[string]string{"email_used": "Email already used, change it"})
+		render(w, "register", map[string]interface{}{"email_used": "Email already used, change it"})
 		return
 	}
 
 	IsUniqueUsername, _ := s.db.FindUsername(r.FormValue("email"))
 	if !IsUniqueUsername {
-		t, err := template.ParseFiles("./assets/register.tmpl.html")
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		t.Execute(w, map[string]string{"username_used": "Username already used, change it"})
+		render(w, "register", map[string]interface{}{"username_used": "Username already used, change it"})
 		return
 	}
 
