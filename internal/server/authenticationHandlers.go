@@ -1,8 +1,8 @@
 package server
 
 import (
+	"database/sql"
 	"encoding/base64"
-	"fmt"
 	"forum-go/internal/models"
 	"html/template"
 	"log"
@@ -17,12 +17,12 @@ import (
 )
 
 func (s *Server) GetLoginHandler(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("./assets/login.tmpl.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	if s.isLoggedIn(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
-	t.Execute(w, nil)
+
+	render(w, "login", nil)
 }
 func (s *Server) PostLoginHandler(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
@@ -49,7 +49,13 @@ func (s *Server) PostLoginHandler(w http.ResponseWriter, r *http.Request) {
 		Expires: expiration,
 		Path:    "/",
 	}
-	fmt.Println("Cookie: ", cookie)
+	user.SessionId = sql.NullString{String: userID, Valid: true}
+	user.SessionExpired = sql.NullTime{Time: expiration, Valid: true}
+	err = s.db.UpdateUser(user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	http.SetCookie(w, &cookie)
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -73,12 +79,11 @@ func (s *Server) LogoutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GetRegisterHandler(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("./assets/register.tmpl.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	if s.isLoggedIn(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
-	t.Execute(w, nil)
+	render(w, "register", nil)
 }
 
 func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
@@ -107,19 +112,12 @@ func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
-	start := time.Now()
 	users, err := s.db.GetUsers()
-	fmt.Println("Exec time for GetUsersHandler: ", time.Since(start))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	t, err := template.ParseFiles("./assets/users.tmpl.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	t.Execute(w, users)
+	render(w, "users", map[string]interface{}{"users": users})
 }
 
 func generateToken(lenght int) string {
@@ -134,10 +132,8 @@ func generateToken(lenght int) string {
 func (s *Server) DeleteUsersHandler(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 	pathParts := strings.Split(path, "/")
-	fmt.Println("Path: ", pathParts)
 	// Check if the path matches the structure
 	id := ""
-	fmt.Println("pathpart1 : ", pathParts[0])
 	if len(pathParts) >= 4 && pathParts[2] == "users" {
 		id = pathParts[3] // Extract user ID from the path
 	}

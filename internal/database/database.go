@@ -28,6 +28,8 @@ type Service interface {
 	DeleteUser(id string) error
 	Close() error
 	FindEmailUser(email string) (bool, error)
+	UpdateUser(user models.User) error
+	FindUserCookie(cookie string) (models.User, error)
 }
 
 type service struct {
