@@ -15,3 +15,8 @@ type User struct {
 	SessionId      sql.NullString
 	SessionExpired sql.NullTime
 }
+
+type Category struct {
+	CategoryId string
+	Name       string
+}

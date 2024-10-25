@@ -11,18 +11,29 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	mux := http.NewServeMux()
 	mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets"))))
+
 	mux.HandleFunc("/", s.HomePageHandler)
+
 	mux.HandleFunc("GET /login", s.GetLoginHandler)
 	mux.HandleFunc("POST /login", s.PostLoginHandler)
+
 	mux.HandleFunc("POST /logout", s.LogoutHandler)
+
 	mux.HandleFunc("GET /register", s.GetRegisterHandler)
 	mux.HandleFunc("POST /register", s.PostRegisterHandler)
+
 	mux.HandleFunc("GET /users", s.GetUsersHandler)
+	mux.HandleFunc("GET /delete/users/{id}", s.DeleteUsersHandler)
+
 	mux.HandleFunc("GET /posts/create", s.GetNewPostsHandler)
 	mux.HandleFunc("POST /posts/create", s.PostNewPostsHandler)
+
+	mux.HandleFunc("GET /categories", s.GetCategoriesHandler)
+	mux.HandleFunc("POST /categories/add", s.PostCategoriesHandler)
+	// mux.HandleFunc("POST /categories/delete/{id}", s.DeleteCategoriesHandler)
+
 	mux.HandleFunc("GET /post/{id}", s.GetPostHandler)
-	mux.HandleFunc("POST /post/{id}/comments", s.PostCommentHandler)
-	mux.HandleFunc("GET /delete/users/{id}", s.DeleteUsersHandler)
+	mux.HandleFunc("POST /post/comment", s.PostCommentHandler)
 	mux.HandleFunc("/health", s.healthHandler)
 
 	return s.authenticate(mux)
