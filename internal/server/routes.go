@@ -30,7 +30,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	mux.HandleFunc("GET /categories", s.GetCategoriesHandler)
 	mux.HandleFunc("POST /categories/add", s.PostCategoriesHandler)
-	// mux.HandleFunc("POST /categories/delete/{id}", s.DeleteCategoriesHandler)
+	mux.HandleFunc("POST /categories/delete/{id}", s.DeleteCategoriesHandler)
+	mux.HandleFunc("POST /categories/edit/{id}", s.EditCategoriesHandler)
 
 	mux.HandleFunc("GET /post/{id}", s.GetPostHandler)
 	mux.HandleFunc("POST /post/comment", s.PostCommentHandler)

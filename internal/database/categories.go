@@ -28,7 +28,23 @@ func (s *service) GetCategories() ([]models.Category, error) {
 }
 
 func (s *service) AddCategory(name string) error {
+	category := models.Category{
+		CategoryId: strconv.Itoa(rand.Intn(math.MaxInt32)),
+		Name:       name,
+	}
 	query := "INSERT INTO Category (category_id,name) VALUES (?,?)"
-	_, err := s.db.Exec(query, strconv.Itoa(rand.Intn(math.MaxInt32)), name)
+	_, err := s.db.Exec(query, category.CategoryId, category.Name)
+	return err
+}
+
+func (s *service) DeleteCategory(id string) error {
+	query := "DELETE FROM Category WHERE category_id=?"
+	_, err := s.db.Exec(query, id)
+	return err
+}
+
+func (s *service) EditCategory(id, name string) error {
+	query := "UPDATE Category SET name=? WHERE category_id=?"
+	_, err := s.db.Exec(query, name, id)
 	return err
 }

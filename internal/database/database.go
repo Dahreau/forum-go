@@ -36,6 +36,8 @@ type Service interface {
 
 	GetCategories() ([]models.Category, error)
 	AddCategory(name string) error
+	DeleteCategory(id string) error
+	EditCategory(id, name string) error
 }
 
 type service struct {

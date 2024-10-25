@@ -11,12 +11,23 @@
             {{ range .Categories }}
             <div class="category">
                 <div class="category-name">{{ .Name }}</div>
-                <form action="/categories/delete/{{ .CategoryId }}" method="post">
-                    <button class="category-button">Delete</button>
-                </form>
+                <div class="category-buttons">
+                    <form action="/categories/delete/{{ .CategoryId }}" method="post" class="delete-form">
+                        <input type="hidden" name="categoryId" value="{{ .CategoryId }}">
+                        <button class="category-button">Delete</button>
+                    </form>
+                    <form action="/categories/edit/{{ .CategoryId }}" method="post" class="edit-form">
+                        <input type="hidden" name="categoryId" value="{{ .CategoryId }}">
+                        <input type="text" name="newCategoryName" placeholder="New Category Name">
+                        <button class="category-button edit-button">Edit</button>
+                    </form>
+                </div>
             </div>
             {{ end }}
         </div>
+        {{ if .Error }}
+        <div style="color: red; margin-bottom: 20px;">{{ .Error }}</div>
+        {{ end }}
         <form action="/categories/add" method="post">
             <input type="text" name="categoryName" placeholder="Category Name">
             <button>Add Category</button>
@@ -54,8 +65,9 @@
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         display: flex;
+        flex-direction: column;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         width: 100%;
         max-width: 300px;
     }
@@ -63,6 +75,14 @@
     .category-name {
         font-size: 20px;
         font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .category-buttons {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+        justify-content: space-between;
     }
 
     .category-button {
@@ -73,22 +93,40 @@
         border-radius: 5px;
         cursor: pointer;
         transition: background-color 0.3s ease;
+        flex: 1;
     }
 
     .category-button:hover {
         background-color: #cc0000;
     }
 
+    .delete-form {
+        width: 100%;
+        flex: 1;
+    }
+    .edit-form {    
+        width: 100%;
+        flex: 3;
+    }
+    .edit-button {
+        background-color: #007bff;
+    }
+
+    .edit-button:hover {
+        background-color: #0056b3;
+    }
+
     form {
         display: flex;
         gap: 10px;
+        width: 100%;
     }
 
     input[type="text"] {
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
-        width: 200px;
+        width: 100%;
     }
 
     button {

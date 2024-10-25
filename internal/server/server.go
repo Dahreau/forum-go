@@ -13,6 +13,7 @@ type Server struct {
 	port       int
 	db         database.Service
 	users      []models.User
+	categories []models.Category
 	SESSION_ID string
 }
 
@@ -27,6 +28,12 @@ func NewServer() *http.Server {
 		fmt.Println("Error getting users: ", err)
 	} else {
 		NewServer.users = users
+	}
+	categories, err := NewServer.db.GetCategories()
+	if err != nil {
+		fmt.Println("Error getting categories: ", err)
+	} else {
+		NewServer.categories = categories
 	}
 
 	// Declare Server config
