@@ -1,38 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link rel="stylesheet" href="../css/indexstyle.css">
+    <link rel="stylesheet" href="../css/register.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" href="../img/logo.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Shojumaru&display=swap" rel="stylesheet">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <form action="/register" method="post">
-        <h1>Register</h1>
-        {{ if .username_used }}
-        <p style="color:red;">{{ .username_used }}</p>
-        {{ end }}
-        {{ if .email_used }}
-        <p style="color:red;">{{ .email_used }}</p>
-        {{ end }}
-        <label for="username">Username</label>
-        <input type="text" name="username" id="username" required>
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email" required>
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" required>
-        <label for="Confirmpassword">Confirm Password</label>
-        <input type="password" name="Confirmpassword" id="Confirmpassword" required>
-        <button type="submit">Sign up</button>
-    </form>
+    <div class="container">
+        <form action="/register" method="post">
+            <h1>Register</h1>
 
+            <!-- Messages d'erreur
+            {{ if .username_used }}
+            <p class="error-message">{{ .username_used }}</p>
+            {{ end }}
+            {{ if .email_used }}
+            <p class="error-message">{{ .email_used }}</p>
+            {{ end }} -->
+
+            <label for="username">Username :</label>
+            <input type="text" name="username" id="username" required placeholder="Enter your username here...">
+
+            <label for="email">Email :</label>
+            <input type="email" name="email" id="email" required placeholder="Enter your email here...">
+
+            <label for="password">Password :</label>
+            <input type="password" name="password" id="password" required placeholder="Enter your password here...">
+
+            <label for="Confirmpassword">Confirm Password :</label>
+            <input type="password" name="Confirmpassword" id="Confirmpassword" required
+                placeholder="Confirm your password here...">
+
+            <button type="submit">Sign up</button>
+        </form>
+    </div>
 </body>
 
 </html>

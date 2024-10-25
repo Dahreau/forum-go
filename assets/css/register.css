@@ -1,0 +1,119 @@
+/* Importation des polices */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+
+/* Configuration générale */
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background-image: url(../img/13.png);
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+h1 {
+    font-family: "Shojumaru";
+    color: #7789FF;
+    text-shadow:
+        0 0 7px #111A7C,
+        0 0 10px #111A7C,
+        0 0 21px #111A7C,
+        0 0 42px #7789FF,
+        0 0 82px #7789FF;
+    font-size: 27px;
+    margin-top: -4%;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form {
+    background-color: #10091bD9;
+    border: 2px solid #7789FF;
+    border-radius: 52px;
+    padding: 20px 40px;
+    box-shadow:
+        0 0 12px #102ff9,
+        inset 0 0 7PX #102ff9;
+    text-align: center;
+    width: 300px;
+}
+
+label {
+    font-size: 1.25em;
+    color: #ffc4fb;
+    text-shadow:
+        0 0 7px #FE9AF8;
+    margin-top: 10px;
+    display: block;
+    text-align: left;
+}
+
+button:hover {
+    background-color: rgba(187, 255, 199, 0.8);
+    border-radius: 16px;
+    color: #10091b;
+    cursor: pointer;
+}
+
+input {
+    background-color: #10091b;
+    border: 2px solid #ffc4fb;
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 52px;
+    color: rosybrown;
+    caret-color: rosybrown;
+    transition: border-color 0.3s ease;
+    box-shadow:
+        0 0 7px #FE9AF8,
+        inset 0 0 4px #FE9AF8;
+
+
+}
+
+::placeholder {
+    color: #ffc4fb63;
+    font-family: "Manrope", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-size: 1rem;
+
+}
+
+input:focus {
+    border-top: 2px solid rosybrown;
+    border-bottom: 2px solid rosybrown;
+    outline: none;
+}
+
+p {
+    font-family: 'Noto Sans JP', sans-serif;
+    color: rosybrown;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin: 0;
+}
+
+button {
+    background-color: transparent;
+    text-shadow:
+        0 0 7px rgba(187, 255, 199, 1);
+    color: rgb(82, 252, 113);
+    border: 2px solid rgb(82, 252, 113);
+    padding: 12px 20px;
+    border-radius: 16px;
+    margin-top: 20px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
