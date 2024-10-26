@@ -2,9 +2,7 @@ package server
 
 import (
 	"database/sql"
-	"encoding/base64"
 	"forum-go/internal/models"
-	"log"
 	"math"
 	"math/rand"
 	"net/http"
@@ -21,7 +19,7 @@ func (s *Server) GetLoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render(w, "login", nil)
+	render(w, r, "login", nil)
 }
 func (s *Server) PostLoginHandler(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
@@ -29,7 +27,7 @@ func (s *Server) PostLoginHandler(w http.ResponseWriter, r *http.Request) {
 	user, err := s.db.GetUser(email, password)
 	if user.UserId == "" || err != nil {
 
-		render(w, "login", map[string]interface{}{"Error": "Invalid username or password. Please try again.", "email": email})
+		render(w, r, "login", map[string]interface{}{"Error": "Invalid username or password. Please try again.", "email": email})
 		return
 	}
 	//Simulates login
@@ -44,7 +42,7 @@ func (s *Server) PostLoginHandler(w http.ResponseWriter, r *http.Request) {
 		Path:    "/",
 	}
 	user.SessionId = sql.NullString{String: userID, Valid: true}
-	user.SessionExpired = sql.NullTime{Time: expiration, Valid: true}
+	user.SessionExpire = sql.NullTime{Time: expiration, Valid: true}
 	err = s.db.UpdateUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -62,6 +60,8 @@ func (s *Server) LogoutHandler(w http.ResponseWriter, r *http.Request) {
 		Value:    "",              // EMpty value to delete it
 		Expires:  time.Unix(0, 0), // Set expiration date in the past
 		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+		Secure:   true,
 		Path:     "/", // Cookie path
 	}
 
@@ -77,7 +77,7 @@ func (s *Server) GetRegisterHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
-	render(w, "register", nil)
+	render(w, r, "register", nil)
 }
 
 func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
@@ -88,13 +88,13 @@ func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	IsUnique, _ := s.db.FindEmailUser(r.FormValue("email"))
 	if !IsUnique {
-		render(w, "register", map[string]interface{}{"email_used": "Email already used, change it"})
+		render(w, r, "register", map[string]interface{}{"email_used": "Email already used, change it"})
 		return
 	}
 
 	IsUniqueUsername, _ := s.db.FindUsername(r.FormValue("username"))
 	if !IsUniqueUsername {
-		render(w, "register", map[string]interface{}{"username_used": "Username already used, change it"})
+		render(w, r, "register", map[string]interface{}{"username_used": "Username already used, change it"})
 		return
 	}
 
@@ -108,21 +108,16 @@ func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
+	if !IsAdmin(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
 	users, err := s.db.GetUsers()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	render(w, "../users", map[string]interface{}{"users": users})
-}
-
-func generateToken(lenght int) string {
-	bytes := make([]byte, lenght)
-	if _, err := rand.Read(bytes); err != nil {
-		log.Fatalf("Failed to generate token: %v", err)
-	}
-	return base64.URLEncoding.EncodeToString(bytes)
-
+	render(w, r, "../users", map[string]interface{}{"users": users})
 }
 
 func (s *Server) DeleteUsersHandler(w http.ResponseWriter, r *http.Request) {

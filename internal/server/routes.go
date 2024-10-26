@@ -10,6 +10,7 @@ import (
 func (s *Server) RegisterRoutes() http.Handler {
 
 	mux := http.NewServeMux()
+
 	mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets"))))
 
 	mux.HandleFunc("/", s.HomePageHandler)
@@ -41,7 +42,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 }
 
 func (s *Server) HomePageHandler(w http.ResponseWriter, r *http.Request) {
-	render(w, "../index", map[string]interface{}{"User": r.Context().Value(contextKeyUser)})
+	render(w, r, "../index", nil)
 }
 func (s *Server) HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
 	resp := make(map[string]string)

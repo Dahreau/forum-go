@@ -9,13 +9,16 @@
     <button style="background: none; border: none;"><a href="/" style="text-decoration: none;"><img src="./assets/img/logo.svg" alt="logo" style="width: 64px;">Aniverse</a></button>
     {{ if .User }}
     <h1>Hello {{ .User.Username}}</h1>
-    <h2> {{ .User.SessionId.String }}</h2>
+    <h2> {{ .User.SessionId.Value }}</h2>
     <form method="post" action="/logout"><input type="submit" value="logout"></form>
+    {{ if eq .User.Role "admin" }}
+    <a href="/users">Users</a>
+    {{ end }}
     {{ else }}
     <h1>Hello Guest</h1>
     <a href="/login">Login</a>
     <a href="/register">Register</a>
-    {{ end}}
-    <a href="/users">Users</a>
+    {{ end }}
+    
 </body>
 </html>

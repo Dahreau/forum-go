@@ -27,8 +27,3 @@ func (s *Server) authenticate(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
-
-func (s *Server) isLoggedIn(r *http.Request) bool {
-	user := r.Context().Value(contextKeyUser)
-	return user != nil
-}
