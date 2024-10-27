@@ -59,6 +59,8 @@ body {
     color: #FF948A;
     text-shadow: 0px 0px 24px #FE5454;
     text-decoration: none;
+    border-radius: 100%;
+    text-shadow: #0119B6;
 }
 
 /* Content Header */

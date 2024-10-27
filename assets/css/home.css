@@ -18,7 +18,7 @@ body {
 
 /* Header Section */
 .header-section {
-    width: 100%;
+    width: 100vw;
     max-width: 1440px;
     height: 96px;
     background: #10091B;
@@ -31,6 +31,7 @@ body {
     top: 0;
     left: 0;
     z-index: 10;
+    /* box-sizing: border-box; */
 }
 
 .logo-container {
@@ -46,53 +47,79 @@ body {
     box-shadow: 0px 0px 3.9px #FFFFFF, inset 0px 0px 2.6px #FFFFFF;
 }
 
-.logo-text {
-    font-family: 'Mina', sans-serif;
-    font-size: 32px;
-    line-height: 51px;
-    letter-spacing: -0.02em;
-    color: #FFFFFF;
-}
-
-.user-actions {
+.user-info {
     display: flex;
+    align-items: center;
     gap: 16px;
 }
 
-.button-green {
-    padding: 12px;
-    background: #10091B;
-    border: 1px solid #BBFFC7;
-    box-shadow: 0px 0px 24px #88F49C, inset 0px 0px 24px #88F49C;
-    border-radius: 16px;
-    color: #BBFFC7;
+.welcome-text {
+    font-weight: 300;
     font-size: 20px;
-    text-align: center;
-    text-shadow: 0px 0px 24px #88F49C;
-    cursor: pointer;
 }
 
-.button-red {
+.logout-link {
+    font-weight: 200;
+    font-size: 20px;
+    color: #FE5454;
+    text-shadow: 0px 0px 24px #FE5454;
+    text-decoration: none;
+}
+
+.logout-button {
     padding: 12px;
     background: #10091B;
-    border: 1px solid #FFC4FB;
-    box-shadow: 0px 0px 24px #FE9AF8, inset 0px 0px 24px #FE9AF8;
+    border: 1px solid #FF948A;
+    box-shadow: 0px 0px 24px #FE5454, inset 0px 0px 24px #FE5454;
     border-radius: 16px;
-    color: #FFC4FB;
+    color: #FF948A;
     font-size: 20px;
     text-align: center;
-    text-shadow: 0px 0px 24px #FE9AF8;
+    text-shadow: 0px 0px 24px #FE5454;
     cursor: pointer;
+} 
+
+.logout-button:hover {
+    background: #FE5454;
+    color: #FFFFFF;
+    .logout-link {
+        color: #FFFFFF;
+    }
 }
 
 /* Main Content Section */
 .content-wrapper {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
     max-width: 1440px;
     margin-top: 150px;
     gap: 32px;
-    padding: 0 32px;
+    padding: 15px 32px;
+    text-align: center;
+}
+
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab {
+    padding: 10px 20px;
+    border-radius: 5px;
+    /* background-color: #170F22; */
+    /* color: #FFFFFF; */
+    cursor: pointer;
+}
+
+.main-content {
+    display: flex;
+    gap: 20px;
+    width: 100%;
 }
 
 /* Filters Section */
@@ -140,21 +167,7 @@ body {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-}
-
-.tabs {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 16px;
-}
-
-.tab {
-    padding: 8px 16px;
-    border-radius: 8px;
-    background-color: #170F22;
-    color: #FFFFFF;
-    cursor: pointer;
+    gap: 20px;
 }
 
 .tab.active {
@@ -163,7 +176,7 @@ body {
 }
 
 .post-item {
-    padding: 16px;
+    padding: 20px;
     background: #10091B;
     border: 1px solid #7789FF;
     box-shadow: 0px 0px 24px #102FF9, inset 0px 0px 24px #102FF9;
@@ -186,24 +199,48 @@ body {
     font-weight: 300;
 }
 
+/* Misc Section containing Like/Dislikes, Tags and Actions */
+
+.misc {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+
+}
+
+.vote-tags-container {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Espace entre les boutons de vote et les tags */
+}
+
 /* Button Styles for Likes/Dislikes */
 .vote-buttons {
     display: flex;
+    /* flex-direction: column; */
+    /* max-width: 15%; */
+    max-height: 15px;
+    border-radius: 19px;
     gap: 12px;
     align-items: center;
     margin-top: 8px;
+    border : 1px solid #7789FF;
+    box-shadow: 0px 0px 8px #102FF9, inset 0px 0px 8px #102FF9;
+    padding: 10px; /* Ajout de padding pour éviter que le contenu soit coupé */
+    overflow: visible;
 }
 
 .vote-button {
-    padding: 8px 12px;
+    padding: 4px 8px;
     border-radius: 18px;
-    background: #170F22;
-    border: 1px solid #BBFFC7;
-    box-shadow: 0px 0px 12px #88F49C;
+    /* background: #170F22; */
+    /* border: 1px solid #BBFFC7; */
+    /* box-shadow: 0px 0px 12px #88F49C; */
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
 }
 
 .vote-button img {
@@ -211,7 +248,21 @@ body {
     height: auto;
 }
 
+#like-count {
+    color: #BBFFC7; 
+}
+
+#dislike-count {
+    color: #FF948A;
+}
+
 /* Tag styles */
+.tags {
+    display: flex;
+    /* flex-wrap: wrap; */
+    gap: 8px;
+}
+
 .tag {
     padding: 6px 12px;
     border-radius: 8px;
