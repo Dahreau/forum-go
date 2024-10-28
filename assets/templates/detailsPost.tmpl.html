@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/post.css">
+    <link rel="stylesheet" href="/assets/css/post.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" href="../img/logo.png" type="image/png">
@@ -15,7 +15,7 @@
 <!-- Header Section -->
 <div class="header-section">
     <div class="logo-container">
-        <div class="logo"><img src="../img/logo.png" alt="Logo Aniverse" width="50"></div>
+        <div class="logo"><img src="/assets/img/logo.png" alt="Logo Aniverse" width="50"></div>
         <div class="logo-text">Aniverse</div>
     </div>
     <div class="user-info">
@@ -26,9 +26,9 @@
 
 <!-- Content Header -->
 <div class="content-header">
-    <span class="user-name">John Doe</span>
-    <span class="post-title">My Happy Marriage</span>
-    <span class="post-date">Sunday 13, Oct - 22:01</span>
+    <span class="user-name"> {{ .Post.User.Username }}</span>
+    <span class="post-title">{{ .Post.Title }}</span>
+    <span class="post-date">{{ .Post.FormattedCreationDate }} </span>
 </div>
 
 <!-- Tags Section -->
@@ -45,8 +45,8 @@
 <!-- Post Content -->
 <div class="post-content">
     <p class="post-text">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sed pretium augue, ac consequat eros. Fusce turpis est, lacinia vel venenatis quis, consequat sed tellus. Morbi vitae libero neque. Fusce maximus interdum tortor nec faucibus. Suspendisse tempor tempus nisi in efficitur...
-    </p>
+        {{ .Post.Content}}
+        </p>
 </div>
 
 <!-- Comments Section -->

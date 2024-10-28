@@ -16,6 +16,7 @@
 
         <form action="/posts/delete/{{ .PostId }}" method="post">
             <input type="hidden" name="postId" value="{{ .PostId }}">
+            <a href="/post/{{ .PostId }}">Details</a>
             <input type="submit" value="Delete">
         </form>
     </div>
