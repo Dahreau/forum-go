@@ -14,6 +14,9 @@ body {
     flex-direction: column;
     align-items: center;
     background-image: url(../img/13.png);
+    overflow-x:hidden;
+    margin: 0;
+    padding: 0;
 }
 
 /* Header Section */
@@ -103,8 +106,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
-    max-width: 1440px;
+    width: 90%;
+    /* max-width: 100%; */
     margin-top: 150px;
     gap: 32px;
     padding: 15px 32px;
@@ -113,9 +116,10 @@ body {
     border-radius: 24px;
     background: rgba(16, 9, 27, 0.80);
     box-shadow: 0px 0px 24px #102FF9, inset 0px 0px 24px #102FF9;
+    /* overflow: auto; */
 }
 
-.main-title {
+/* .main-title {
     position: relative;
     margin-bottom: 20px;
     text-align: center;
@@ -128,7 +132,23 @@ body {
         0 0 18px #102FF9,
         0 0 24px #102FF9,
         0 0 30px #102FF9;
+} */
+
+.main-title {
+    position: relative;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+    font-family: 'Shojumaru', sans-serif;
+    color: #7789FF;
+    text-shadow:
+        0 0 7px #111A7C,
+        0 0 10px #111A7C,
+        0 0 21px #111A7C,
+        0 0 42px #7789FF,
+        0 0 82px #7789FF;
 }
+ 
 
 .form-section {
     display: flex;
@@ -297,4 +317,24 @@ button[type="submit"] {
     font-size: 20px;
     line-height: 24px;
     color: #FFFFFF;
+}
+
+@media (max-width: 768px) {
+    .conteneur {
+        width: 100%;
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+}
+
+img, video {
+    max-width: 100%;
+    height: auto;
 }
