@@ -26,7 +26,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc("GET /users", s.GetUsersHandler)
 	mux.HandleFunc("GET /delete/users/{id}", s.DeleteUsersHandler)
 
-	mux.HandleFunc("GET /posts/create", s.GetNewPostsHandler)
+	mux.HandleFunc("GET /posts", s.GetPostsHandler)
+	mux.HandleFunc("GET /posts/create", s.GetNewPostHandler)
 	mux.HandleFunc("POST /posts/create", s.PostNewPostsHandler)
 	mux.HandleFunc("POST /posts/delete/{id}", s.DeletePostsHandler)
 

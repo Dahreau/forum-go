@@ -1,12 +1,17 @@
 package server
 
 import (
+	"fmt"
 	"forum-go/internal/models"
+	"math"
+	"math/rand"
 	"net/http"
+	"strconv"
 	"strings"
+	"time"
 )
 
-func (s *Server) GetNewPostsHandler(w http.ResponseWriter, r *http.Request) {
+func (s *Server) GetPostsHandler(w http.ResponseWriter, r *http.Request) {
 	posts, err := s.db.GetPosts()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -16,12 +21,14 @@ func (s *Server) GetNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
-	post := r.FormValue("Postid")
-	if !IsUniquePost(s.posts, post) {
-		render(w, r, "../posts", map[string]interface{}{"Posts": s.posts, "Error": "Post already exists"})
-		return
+	newPost := models.Post{
+		PostId:       strconv.Itoa(rand.Intn(math.MaxInt32)),
+		Title:        r.FormValue("title"),
+		Content:      r.FormValue("content"),
+		UserID:       r.FormValue("UserId"),
+		CreationDate: time.Now(),
 	}
-	err := s.db.AddPost(post)
+	err := s.db.AddPost(newPost)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -30,7 +37,8 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
-	PostID := r.FormValue("postID")
+	PostID := r.FormValue("postId")
+	fmt.Println(PostID)
 	err := s.db.DeletePost(PostID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -38,7 +46,13 @@ func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	http.Redirect(w, r, "/posts", http.StatusSeeOther)
 }
-
+func (s *Server) GetNewPostHandler(w http.ResponseWriter, r *http.Request) {
+	if !s.isLoggedIn(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	render(w, r, "createPost", nil)
+}
 func (s *Server) GetPostHandler(w http.ResponseWriter, r *http.Request) {
 }
 func (s *Server) PostCommentHandler(w http.ResponseWriter, r *http.Request) {

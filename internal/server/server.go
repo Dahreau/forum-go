@@ -36,6 +36,12 @@ func NewServer() *http.Server {
 	} else {
 		NewServer.categories = categories
 	}
+	posts, err := NewServer.db.GetPosts()
+	if err != nil {
+		fmt.Println("Error getting posts: ", err)
+	} else {
+		NewServer.posts = posts
+	}
 
 	// Declare Server config
 	server := &http.Server{

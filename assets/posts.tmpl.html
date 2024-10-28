@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts</title>
+</head>
+<body>
+    <button style="background: none; border: none;"><a href="/" style="text-decoration: none;"><img src="./assets/img/logo.svg" alt="logo" style="width: 64px;">Aniverse</a></button>
+    <h1>Posts List</h1>
+    {{ range .Posts }}
+    <div>
+        <h1>{{ .PostId }}</h1>
+        <p>{{ .Title }}</p>
+        <p>{{ .Content }}</p>
+
+        <form action="/posts/delete/{{ .PostId }}" method="post">
+            <input type="hidden" name="postId" value="{{ .PostId }}">
+            <input type="submit" value="Delete">
+        </form>
+    </div>
+    {{ end }}
+    <a href="/posts/create">Create Post</a>
+</body>
+</html>

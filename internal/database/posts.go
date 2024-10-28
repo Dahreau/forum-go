@@ -2,9 +2,6 @@ package database
 
 import (
 	"forum-go/internal/models"
-	"math"
-	"math/rand"
-	"strconv"
 )
 
 func (s *service) GetPosts() ([]models.Post, error) {
@@ -17,7 +14,7 @@ func (s *service) GetPosts() ([]models.Post, error) {
 	posts := make([]models.Post, 0)
 	for rows.Next() {
 		var post models.Post
-		err := rows.Scan(&post.PostId, &post.Title)
+		err := rows.Scan(&post.PostId, &post.Title, &post.Content, &post.UserID, &post.CreationDate, &post.UpdateDate)
 		if err != nil {
 			return nil, err
 		}
@@ -26,13 +23,9 @@ func (s *service) GetPosts() ([]models.Post, error) {
 	return posts, nil
 }
 
-func (s *service) AddPost(title string) error {
-	post := models.Post{
-		PostId: strconv.Itoa(rand.Intn(math.MaxInt32)),
-		Title:  title,
-	}
-	query := "INSERT INTO Post (post_id,title) VALUES (?,?)"
-	_, err := s.db.Exec(query, post.PostId, post.Title)
+func (s *service) AddPost(post models.Post) error {
+	query := "INSERT INTO Post (post_id,title,content,user_id,creation_date) VALUES (?,?,?,?,?)"
+	_, err := s.db.Exec(query, post.PostId, post.Title, post.Content, post.UserID, post.CreationDate)
 	return err
 }
 

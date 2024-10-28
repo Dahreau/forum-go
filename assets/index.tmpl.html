@@ -10,7 +10,7 @@
     {{ if .User }}
     <h1>Hello {{ .User.Username}}</h1>
     <h2> {{ .User.SessionId.Value }}</h2>
-    <form method="post" action="/logout"><input type="submit" value="logout"></form>
+    <form method="post" action="/logout"><input style="background-color:red; border:1px solid black;"type="submit" value="logout"></form>
     {{ if eq .User.Role "admin" }}
     <a href="/users">Users</a>
     {{ end }}

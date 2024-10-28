@@ -33,6 +33,7 @@
     <h1 class="main-title">New Post</h1>
 
     <form action="" method="post" class="form-section">
+        <input type="hidden" value="{{.User.UserId}}" name="UserId">
         <!-- Title Section-->
         <div class="form-group">
             <label for="title">Titre :</label>
