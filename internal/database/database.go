@@ -34,6 +34,11 @@ type Service interface {
 
 	FindUserCookie(cookie string) (models.User, error)
 
+	GetPosts() ([]models.Post, error)
+	AddPost(title string) error
+	DeletePost(id string) error
+	EditPost(id, title string) error
+
 	GetCategories() ([]models.Category, error)
 	AddCategory(name string) error
 	DeleteCategory(id string) error
