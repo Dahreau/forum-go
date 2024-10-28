@@ -23,18 +23,16 @@ type Category struct {
 }
 
 type Post struct {
-	PostId                string       `db:"post_id"`
-	Title                 string       `db:"title"`
-	Content               string       `db:"content"`
-	UserID                string       `db:"user_id"`
-	CreationDate          time.Time    `db:"creation_date"`
-	FormattedCreationDate string       `db:"-"`
-	UpdateDate            sql.NullTime `db:"update_date"`
-	User                  User         `db:"-"`
-	Categories            []Category   `db:"-"`
-	Comments              []Comment    `db:"-"`
-	Likes                 int          `db:"-"`
-	Dislikes              int          `db:"-"`
+	PostId       string       `db:"post_id"`
+	Title        string       `db:"title"`
+	Content      string       `db:"content"`
+	UserID       string       `db:"user_id"`
+	CreationDate time.Time    `db:"creation_date"`
+	UpdateDate   sql.NullTime `db:"update_date"`
+	Categories   []Category   `db:"-"`
+	Comments     []Comment    `db:"-"`
+	Likes        int          `db:"-"`
+	Dislikes     int          `db:"-"`
 }
 
 type Comment struct {
