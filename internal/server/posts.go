@@ -29,10 +29,15 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 		CreationDate:          time.Now(),
 		FormattedCreationDate: time.Now().Format("Jan 02, 2006 - 15:04:05"),
 	}
-	err := s.db.AddPost(newPost)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+
+	charControl := ValidatePostChar(newPost.Content)
+
+	if !charControl {
+		err := s.db.AddPost(newPost)
+		if err != nil || charControl {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 	http.Redirect(w, r, "/posts", http.StatusSeeOther)
 }
@@ -85,13 +90,9 @@ func IsUniquePost(posts []models.Post, post string) bool {
 
 const MaxChar = 1000
 
-func (s *Server) ValidatePost(w http.ResponseWriter, r *http.Request) {
-	var post models.Post
-	if len(post.Content) > MaxChar {
-		render(w, r, "../posts", map[string]interface{}{"Posts": s.posts, "Error": "Post content is too long"})
-		return
+func ValidatePostChar(content string) bool {
+	if len(content) > MaxChar {
+		return true
 	}
-	if len(post.Categories) < 1 {
-		//return (Wainting for cat selector)
-	}
+	return false
 }
