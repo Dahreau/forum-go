@@ -14,6 +14,7 @@ type Server struct {
 	db         database.Service
 	users      []models.User
 	categories []models.Category
+	posts      []models.Post
 	SESSION_ID string
 }
 

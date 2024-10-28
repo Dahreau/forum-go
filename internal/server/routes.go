@@ -28,6 +28,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	mux.HandleFunc("GET /posts/create", s.GetNewPostsHandler)
 	mux.HandleFunc("POST /posts/create", s.PostNewPostsHandler)
+	mux.HandleFunc("POST /posts/delete/{id}", s.DeletePostsHandler)
 
 	mux.HandleFunc("GET /categories", s.GetCategoriesHandler)
 	mux.HandleFunc("POST /categories/add", s.PostCategoriesHandler)
