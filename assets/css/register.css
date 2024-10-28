@@ -1,19 +1,35 @@
 /* Importation des polices */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap'); */
+
+/* General Styles */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Manrope', sans-serif;
+    background-color: #10091B;
+    color: #FFFFFF;
+}
 
 /* Configuration générale */
 body {
-    font-family: 'Noto Sans JP', sans-serif;
+    /* font-family: 'Manrope', sans-serif; */
     background-image: url(../img/13.png);
     background-position: center;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    /* justify-content: center; */
     align-items: center;
     height: 100vh;
     margin: 0;
+    padding: 0;
+    color: #FFFFFF;
+    gap: 32px;
+
 }
 
-h1 {
+.title {
     font-family: "Shojumaru";
     color: #7789FF;
     text-shadow:
@@ -61,6 +77,10 @@ button:hover {
     cursor: pointer;
 }
 
+button {
+    font-family: 'Manrope', sans-serif;
+}
+
 input {
     background-color: #10091b;
     border: 2px solid #ffc4fb;
@@ -94,26 +114,13 @@ input:focus {
 }
 
 p {
-    font-family: 'Noto Sans JP', sans-serif;
-    color: rosybrown;
+    font-family: 'Mina', sans-serif;
+    color: white;
 }
+
 
 .error-message {
     color: red;
     font-size: 0.9em;
     margin: 0;
-}
-
-button {
-    background-color: transparent;
-    text-shadow:
-        0 0 7px rgba(187, 255, 199, 1);
-    color: rgb(82, 252, 113);
-    border: 2px solid rgb(82, 252, 113);
-    padding: 12px 20px;
-    border-radius: 16px;
-    margin-top: 20px;
-    font-size: 1.1em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 }

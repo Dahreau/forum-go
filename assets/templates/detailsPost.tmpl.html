@@ -3,63 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/assets/css/post.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="icon" href="../img/logo.png" type="image/png">
+    <link rel="icon" href="/assets/img/logo.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Shojumaru&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/createPost.css">
+    <link rel="stylesheet" href="/assets/css/post.css">
 
     <title>Posts</title>
 </head>
 <body>
-<!-- Header Section -->
-<div class="header-section">
-    <div class="logo-container">
-        <div class="logo"><img src="/assets/img/logo.png" alt="Logo Aniverse" width="50"></div>
-        <div class="logo-text">Aniverse</div>
+    <!-- Header Section -->
+    <header class="header-section">
+        <div class="logo-container">
+          <div class="logo"><img src="/assets/img/logo.png" alt="Logo Aniverse" width="50"></div>
+          <div class="logo-text">Aniverse</div>
+        </div>
+        <div class="user-info">
+          {{ if .User }}
+          <h1 class="welcome">Welcome {{ .User.Username}}</h1>
+          <form method="post" action="/logout"><button class="logout-button" type="submit">Log out <svg id="logout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24">
+            <path d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z"/>
+          </svg></button></form>
+          <!-- <div class="logout-button">
+              <a href="#" class="logout-link">Log out</a>
+          </div> -->
+          {{ if eq .User.Role "admin" }}
+          <a href="/users">Users</a>
+          {{ end }}
+          {{ else }}
+          <h1 class="welcome">Hello Guest</h1>
+          <a class="button" href="/login">Login</a>
+          <a class="button register" href="/register">Register</a>
+          {{ end }}
+        </div>
+      </header>
+
+<!-- Main Content Section -->
+<div class="main-post-content">
+    <div class="post-container">
+        <!-- Content Header -->
+        <div class="box content-header">
+            <span class="user-name"> {{ .Post.User.Username }}</span>
+            <span class="post-title">{{ .Post.Title }}</span>
+            <span class="post-date">{{ .Post.FormattedCreationDate }} </span>
+        </div>
+
+        
+        <!-- Post Content -->
+        <div class="box post-content">
+            <!-- Tags Section -->
+            <div class="tags-section">
+                <span class="tag">Shonen</span>
+                <span class="tag">Seinen</span>
+                <span class="tag">Shojo</span>
+                <span class="tag">Naruto</span>
+                <span class="tag">Sword Art Online</span>
+                <span class="tag">Ecchi pour Momo</span>
+                <span class="tag">Spoil</span>
+            </div>
+            <div>
+                <p class="post-text">
+                {{ .Post.Content}}
+                </p>
+            </div>
+        </div>
+
+        <div class="write-comment-section">
+            <form class="comment-form" action="/comment" method="post">
+                <input type="hidden" name="PostId" value="{{ .Post.PostId }}">
+                <input type="hidden" name="UserId" value="{{ .User.UserId }}">
+                <textarea name="comment" id="comment-form" placeholder="Write your comment here... (Grab bottom-right corner to resize)"></textarea>
+                <button class="post-button" type="submit">Comment</button>
+            </form>
+        </div>
     </div>
-    <div class="user-info">
-        <span class="welcome-text">Welcome, John Doe</span>
-        <a href="#" class="logout-link">Log out</a>
+
+    <div class="comment-container">
+        <div class="box comment-header">
+            <span class="comment-title">Comments</span>
+        </div>
+        <!-- Comments Section -->
+        <div class="box comments-section">
+            <div class="comment">
+                <span class="comment-author">Crystale 13/10/24 - 22:05</span>
+                <span class="comment-text">I really like Miyo, she's so gorgeoudddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddds</span>
+            </div>
+            <div class="comment">
+                <div class="comment-author">Crystale 13/10/24 - 22:05</div>
+                <div class="comment-text">I really like Miyo, she's so gorgeous</div>
+            </div>
+            <div class="comment">
+                <div class="comment-author">Crystale 13/10/24 - 22:05</div>
+                <div class="comment-text">I really like Miyo, she's so gorgeous</div>
+            </div>
+            <div class="comment">
+                <span class="comment-author">Crystale 13/10/24 - 22:05</span>
+                <span class="comment-text">I really like Miyo, she's so gorgeoudddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddds</span>
+            </div>
+            <div class="comment">
+                <div class="comment-author">Crystale 13/10/24 - 22:05</div>
+                <div class="comment-text">I really like Miyo, she's so gorgeous</div>
+            </div>
+            <div class="comment">
+                <div class="comment-author">Crystale 13/10/24 - 22:05</div>
+                <div class="comment-text">I really like Miyo, she's so gorgeous</div>
+            </div>
+            <div class="comment">
+                <span class="comment-author">Crystale 13/10/24 - 22:05</span>
+                <span class="comment-text">I really like Miyo, she's so gorgeoudddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddds</span>
+            </div>
+            <div class="comment">
+                <div class="comment-author">Crystale 13/10/24 - 22:05</div>
+                <div class="comment-text">I really like Miyo, she's so gorgeous</div>
+            </div>
+            <div class="comment">
+                <div class="comment-author">Crystale 13/10/24 - 22:05</div>
+                <div class="comment-text">I really like Miyo, she's so gorgeous</div>
+            </div>
+        </div>
     </div>
+
 </div>
 
-<!-- Content Header -->
-<div class="content-header">
-    <span class="user-name"> {{ .Post.User.Username }}</span>
-    <span class="post-title">{{ .Post.Title }}</span>
-    <span class="post-date">{{ .Post.FormattedCreationDate }} </span>
-</div>
-
-<!-- Tags Section -->
-<div class="tags-section">
-    <div class="tag">Shonen</div>
-    <div class="tag">Seinen</div>
-    <div class="tag neon">Shojo</div>
-    <div class="tag">Naruto</div>
-    <div class="tag">Sword Art Online</div>
-    <div class="tag">Ecchi pour Momo</div>
-    <div class="tag">Spoil</div>
-</div>
-
-<!-- Post Content -->
-<div class="post-content">
-    <p class="post-text">
-        {{ .Post.Content}}
-        </p>
-</div>
-
-<!-- Comments Section -->
-<div class="comments-section">
-    <div class="comment">
-        <div class="comment-text">I really like Miyo, she's so gorgeous</div>
-        <div class="comment-author">Crystale 13/10/24 - 22:05</div>
-    </div>
-</div>
 
 <!-- Footer Section -->
 <div class="footer-section">
     <span class="footer-text">Footer, licence</span>
 </div>
+
 </body>
 </html>

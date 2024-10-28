@@ -44,7 +44,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 }
 
 func (s *Server) HomePageHandler(w http.ResponseWriter, r *http.Request) {
-	render(w, r, "../index", nil)
+	render(w, r, "home", nil)
 }
 func (s *Server) HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
 	resp := make(map[string]string)

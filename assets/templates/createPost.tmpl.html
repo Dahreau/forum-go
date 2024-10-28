@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/createPost.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" href="../img/logo.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Shojumaru&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/createPost.css">
+    <link rel="stylesheet" href="/assets/css/header.css">
   
     <title>Create a Post</title>
 </head>
@@ -17,15 +21,27 @@
     <!-- Header Section -->
 <header class="header-section">
     <div class="logo-container">
-      <div class="logo"><img src="../img/logo.png" alt="Logo Aniverse" width="50"></div>
+      <div class="logo"><img src="/assets/img/logo.png" alt="Logo Aniverse" width="50"></div>
       <div class="logo-text">Aniverse</div>
     </div>
     <div class="user-info">
-        <span class="welcome-text">Welcome, John Doe</span>
-        <div class="logout-button">
+        {{ if .User }}
+        <h1 class="welcome">Welcome {{ .User.Username}}</h1>
+        <form method="post" action="/logout"><button class="logout-button" type="submit">Log out <svg id="logout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24">
+          <path d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z"/>
+        </svg></button></form>
+        <!-- <div class="logout-button">
             <a href="#" class="logout-link">Log out</a>
-        </div>
-    </div>
+        </div> -->
+        {{ if eq .User.Role "admin" }}
+        <a href="/users">Users</a>
+        {{ end }}
+        {{ else }}
+        <h1>Hello Guest</h1>
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+        {{ end }}
+      </div>
   </header>
 
  <!-- Main Content Section -->
@@ -36,19 +52,19 @@
         <input type="hidden" value="{{.User.UserId}}" name="UserId">
         <!-- Title Section-->
         <div class="form-group">
-            <label for="title">Titre :</label>
+            <label for="title">Title :</label>
             <input type=text name="title" id="title-form" placeholder="Insert your title here...">
         </div>
 
         <!-- Content Section-->
         <div class="form-group">
             <label for="content">Content :</label>
-            <textarea name="content" id="content-form" placeholder="Write your post here..."></textarea>
+            <textarea name="content" id="content-form" placeholder="Write your post here... (Grab bottom-right corner to resize)"></textarea>
         </div>
 
         <!-- Categories Section-->
         <div class="form-group">
-            <label for="categories">Catégories :</label>
+            <label for="categories">Categories :</label>
             <div class="categories">
                 <div class="category-box">Shonen</div>
                 <div class="category-box">Seinen</div>
