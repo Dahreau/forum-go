@@ -75,4 +75,7 @@ func (s *Server) ValidatePost(w http.ResponseWriter, r *http.Request) {
 		render(w, r, "../posts", map[string]interface{}{"Posts": s.posts, "Error": "Post content is too long"})
 		return
 	}
+	if len(post.Categories) < 1 {
+		//return (Wainting for cat selector)
+	}
 }
