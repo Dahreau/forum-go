@@ -18,9 +18,27 @@ func (s *service) GetPosts() ([]models.Post, error) {
 		if err != nil {
 			return nil, err
 		}
+		post.FormattedCreationDate = post.CreationDate.Format("Jan 02, 2006 - 15:04:05")
 		posts = append(posts, post)
 	}
 	return posts, nil
+}
+func (s *service) GetPost(id string) (models.Post, error) {
+	post := models.Post{}
+	user := models.User{}
+	query := `
+		SELECT p.post_id, p.title, p.content, p.user_id, p.creation_date, p.update_date, 
+			   u.user_id, u.username, u.email 
+		FROM Post p 
+		JOIN User u ON p.user_id = u.user_id 
+		WHERE p.post_id = ?`
+	err := s.db.QueryRow(query, id).Scan(
+		&post.PostId, &post.Title, &post.Content, &post.UserID, &post.CreationDate, &post.UpdateDate,
+		&user.UserId, &user.Username, &user.Email,
+	)
+	post.FormattedCreationDate = post.CreationDate.Format("Jan 02, 2006 - 15:04:05")
+	post.User = user
+	return post, err
 }
 
 func (s *service) AddPost(post models.Post) error {
