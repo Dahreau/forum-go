@@ -66,3 +66,13 @@ func IsUniquePost(posts []models.Post, post string) bool {
 	}
 	return true
 }
+
+const MaxChar = 1000
+
+func (s *Server) ValidatePost(w http.ResponseWriter, r *http.Request) {
+	var post models.Post
+	if len(post.Content) > MaxChar {
+		render(w, r, "../posts", map[string]interface{}{"Posts": s.posts, "Error": "Post content is too long"})
+		return
+	}
+}
