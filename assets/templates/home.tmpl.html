@@ -13,45 +13,56 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Mina:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/global.css">
   <link rel="stylesheet" href="assets/css/home.css">
   <link rel="stylesheet" href="assets/css/header.css">
 
   <title>Aniverse Homepage</title>
 </head>
 <body>
-        <!-- Header Section -->
-        <header class="header-section">
-          <div class="logo-container">
-            <div class="logo"><img src="/assets/img/logo.png" alt="Logo Aniverse" width="50"></div>
-            <div class="logo-text">Aniverse</div>
-          </div>
-          <div class="user-info">
-              {{ if .User }}
-              <h1 class="welcome">Welcome {{ .User.Username}}</h1>
-              <form method="post" action="/logout"><button class="logout-button" type="submit">Log out <svg id="logout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24">
-                <path d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z"/>
-              </svg></button></form>
-              <!-- <div class="logout-button">
-                  <a href="#" class="logout-link">Log out</a>
-              </div> -->
-              {{ if eq .User.Role "admin" }}
-              <a href="/users">Users</a>
-              {{ end }}
-              {{ else }}
-              <h1 class="welcome">Hello Guest</h1>
-              <a class="button" href="/login">Login</a>
-              <a class="button register" href="/register">Register</a>
-              {{ end }}
-            </div>
-        </header>
+    <!-- Header Section -->
+    <header class="header-section">
+      <div class="logo-container">
+          <a href="/"><div class="logo"><img src="/assets/img/logo.png" alt="Logo Aniverse" width="50"></div>
+          <div class="logo-text">Aniverse</div></a>
+      </div>
+      <div class="user-info">
+          {{ if .User }}
+          <h1 class="welcome">Welcome {{ .User.Username}}</h1>
+          <form method="post" action="/logout">
+              <button class="logout-button button" type="submit"><span>Log out</span><svg id="logout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24">
+              <path d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z"/>
+          </svg></button></form>
+          <!-- <div class="logout-button">
+              <a href="#" class="logout-link">Log out</a>
+          </div> -->
+          {{ if eq .User.Role "admin" }}
+          <a href="/users">Users</a>
+          {{ end }}
+          {{ else }}
+          <h1 class="welcome">Guest</h1>
+          <a class="button" href="/login">Login</a>
+          <a class="button register" href="/register">Register</a>
+          {{ end }}
+      </div>
+  </header>
 
 <!-- Main Content Section -->
 <div class="content-wrapper">
   <!-- Tabs Section -->
-  <div class="tabs">
+  <div class="global-box tabs">
     <button class="tab active">All posts</button>
-    <button class="tab">Created</button>
-    <button class="tab">Liked</button>
+    <button class="tab">Created
+      <svg class="icon" width="24" height="24" viewBox="-2 -2 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 20.0283C12.5 17.5283 11 22.5283 13.5 20.0283C15.5 18.0283 16.3333 19.3617 17 20.5284"/>
+        <path d="M6 16V20L9 17.5M6 16L9 17.5M6 16L7.84615 12L10.6154 6M9 17.5L10.8462 13.5L13.6154 7.5M13.6154 7.5L10.6154 6M13.6154 7.5L14.3077 6M10.6154 6L11.5676 3.93678C11.8042 3.42421 12.4179 3.20894 12.9228 3.46141L14.1331 4.06654C14.6162 4.30809 14.8202 4.88962 14.5938 5.38003L14.3077 6M14.3077 6L15 6.5L13.5 9.5H13"/>
+        </svg>               
+    </button>
+    <button class="tab">Liked
+      <svg class="icon" width="24" height="24" viewBox="-2 -2 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5.71999 11.1137L11.72 19.1137L17.72 11.1137C20.22 7.61369 15.72 1.11369 11.72 8.11371C7.71999 1.11369 3.22002 7.61369 5.71999 11.1137Z"/>
+        </svg>              
+    </button>
   </div>
 
   <div class="main-content">
@@ -93,9 +104,9 @@
               </div>
       
               <!-- Tags -->
-              <div class="tags">
-                <span class="tag">Shonen</span>
-                <span class="tag">Sword Art Online</span>
+              <div class="categories">
+                <span class="category-box">Shonen</span>
+                <span class="category-box">Sword Art Online</span>
               </div>
           </div>
 

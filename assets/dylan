@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -23,30 +23,30 @@
 <body>
     <!-- Header Section -->
     <header class="header-section">
-      <div class="logo-container">
-          <a href="/"><div class="logo"><img src="/assets/img/logo.png" alt="Logo Aniverse" width="50"></div>
-          <div class="logo-text">Aniverse</div></a>
-      </div>
-      <div class="user-info">
-          {{ if .User }}
-          <h1 class="welcome">Welcome {{ .User.Username}}</h1>
-          <form method="post" action="/logout">
-              <button class="logout-button button" type="submit"><span>Log out</span><svg id="logout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24">
-              <path d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z"/>
-          </svg></button></form>
-          <!-- <div class="logout-button">
-              <a href="#" class="logout-link">Log out</a>
-          </div> -->
-          {{ if eq .User.Role "admin" }}
-          <a href="/users">Users</a>
-          {{ end }}
-          {{ else }}
-          <h1 class="welcome">Guest</h1>
-          <a class="button" href="/login">Login</a>
-          <a class="button register" href="/register">Register</a>
-          {{ end }}
-      </div>
-  </header>
+        <div class="logo-container">
+            <div class="logo"><img src="/assets/img/logo.png" alt="Logo Aniverse" width="50"></div>
+            <div class="logo-text">Aniverse</div>
+        </div>
+        <div class="user-info">
+            {{ if .User }}
+            <h1 class="welcome">Welcome {{ .User.Username}}</h1>
+            <form method="post" action="/logout">
+                <button class="logout-button button" type="submit"><span>Log out</span><svg id="logout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24">
+                <path d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z"/>
+            </svg></button></form>
+            <!-- <div class="logout-button">
+                <a href="#" class="logout-link">Log out</a>
+            </div> -->
+            {{ if eq .User.Role "admin" }}
+            <a href="/users">Users</a>
+            {{ end }}
+            {{ else }}
+            <h1 class="welcome">Guest</h1>
+            <a class="button" href="/login">Login</a>
+            <a class="button register" href="/register">Register</a>
+            {{ end }}
+        </div>
+    </header>
 
     <div class="container">
       <form action="/login" method="post">
@@ -60,7 +60,7 @@
           <label for="password">Password :</label>
           <input type="password" name="password" id="password" required placeholder="Enter your password...">
           <button class="button btn-submit" type="submit">Login</button>
-          <p>Don't have an account? <a id="not-register" href="/register">Register</a></p>
+          <p>Don't have an account? <a href="/register">Register</a></p>
       </form>
       </div>
 </body>
