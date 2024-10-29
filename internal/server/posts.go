@@ -21,6 +21,22 @@ func (s *Server) GetPostsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
+
+	title := r.FormValue("title")
+	content := r.FormValue("content")
+
+	// Validate title
+	if ValidateTitle(title) {
+		http.Error(w, "Title cannot be empty", http.StatusBadRequest)
+		return
+	}
+
+	// Validate content
+	if ValidatePostChar(content) {
+		http.Error(w, "Content is either empty or exceeds maximum character limit", http.StatusBadRequest)
+		return
+	}
+
 	newPost := models.Post{
 		PostId:                strconv.Itoa(rand.Intn(math.MaxInt32)),
 		Title:                 r.FormValue("title"),
@@ -30,14 +46,12 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 		FormattedCreationDate: time.Now().Format("Jan 02, 2006 - 15:04:05"),
 	}
 
-	charControl := ValidatePostChar(newPost.Content)
+	// charControl := ValidatePostChar(newPost.Content)
 
-	if !charControl {
-		err := s.db.AddPost(newPost)
-		if err != nil || charControl {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
+	err := s.db.AddPost(newPost)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	http.Redirect(w, r, "/posts", http.StatusSeeOther)
 }
@@ -91,8 +105,12 @@ func IsUniquePost(posts []models.Post, post string) bool {
 const MaxChar = 1000
 
 func ValidatePostChar(content string) bool {
-	if len(content) > MaxChar {
+	if len(content) > MaxChar || len(content) == 0 {
 		return true
 	}
 	return false
+}
+
+func ValidateTitle(title string) bool {
+	return len(title) == 0
 }
