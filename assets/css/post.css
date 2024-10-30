@@ -25,7 +25,7 @@
     justify-content: space-between;
     align-items: flex-start;
     flex-direction: column;
-    min-height: 60vh;
+    min-height: 55vh;
     padding: 16px;
 }
 
@@ -61,7 +61,7 @@
 .comments-section {
     padding: 16px;
     gap: 16px;
-    height:70vh;
+    height:69vh;
     overflow: auto;
 }
 

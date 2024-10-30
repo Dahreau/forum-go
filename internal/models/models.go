@@ -18,8 +18,8 @@ type User struct {
 }
 
 type Category struct {
-	CategoryId sql.NullString `db:"category_id"`
-	Name       sql.NullString `db:"name"`
+	CategoryId string `db:"category_id"`
+	Name       string `db:"name"`
 }
 
 type Post struct {

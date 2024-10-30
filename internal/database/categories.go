@@ -1,7 +1,6 @@
 package database
 
 import (
-	"database/sql"
 	"forum-go/internal/models"
 	"math"
 	"strconv"
@@ -30,8 +29,8 @@ func (s *service) GetCategories() ([]models.Category, error) {
 
 func (s *service) AddCategory(name string) error {
 	category := models.Category{
-		CategoryId: sql.NullString{String: strconv.Itoa(rand.Intn(math.MaxInt32)), Valid: true},
-		Name:       sql.NullString{String: name, Valid: true},
+		CategoryId: strconv.Itoa(rand.Intn(math.MaxInt32)),
+		Name:       name,
 	}
 	query := "INSERT INTO Category (category_id,name) VALUES (?,?)"
 	_, err := s.db.Exec(query, category.CategoryId, category.Name)

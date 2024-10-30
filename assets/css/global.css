@@ -14,7 +14,6 @@ html, body {
 
 body {
     display: flex;
-    gap : 32px;
     flex-direction: column;
     align-items: center;
     background-image: url(/assets/img/13.png);
@@ -31,12 +30,13 @@ body {
 .footer-section {
     width: 100%;
     /* max-width: 1440px; */
-    height: 53px;
+    height: 48px;
     background: #10091B;
     display: flex;
     justify-content: center;
     align-items: center;
-    /* position: fixed; */
+    margin-top: 16px;
+    position: relative;
     bottom: 0;
     left: 0;
 }

@@ -53,3 +53,5 @@ CREATE TABLE IF NOT EXISTS Post_Category (
   FOREIGN KEY (post_id) REFERENCES Post(post_id) ON DELETE CASCADE,
   FOREIGN KEY (category_id) REFERENCES Category(category_id) ON DELETE CASCADE
 );
+
+INSERT Into Category (category_id, name) VALUES ('1', 'Post');

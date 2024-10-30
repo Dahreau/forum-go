@@ -70,6 +70,11 @@ func (s *service) GetPost(id string) (models.Post, error) {
 func (s *service) AddPost(post models.Post) error {
 	query := "INSERT INTO Post (post_id,title,content,user_id,creation_date) VALUES (?,?,?,?,?)"
 	_, err := s.db.Exec(query, post.PostId, post.Title, post.Content, post.UserID, post.CreationDate)
+	if err != nil {
+		return err
+	}
+	queryPostCategory := "INSERT INTO Post_Category (post_id,category_id) VALUES (?,?)"
+	_, err = s.db.Exec(queryPostCategory, post.PostId, "1")
 	return err
 }
 
