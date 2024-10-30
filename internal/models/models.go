@@ -18,8 +18,8 @@ type User struct {
 }
 
 type Category struct {
-	CategoryId string `db:"category_id"`
-	Name       string `db:"name"`
+	CategoryId sql.NullString `db:"category_id"`
+	Name       sql.NullString `db:"name"`
 }
 
 type Post struct {
@@ -33,6 +33,7 @@ type Post struct {
 	User                  User         `db:"-"`
 	Categories            []Category   `db:"-"`
 	Comments              []Comment    `db:"-"`
+	NbOfComments          int          `db:"-"`
 	Likes                 int          `db:"-"`
 	Dislikes              int          `db:"-"`
 }

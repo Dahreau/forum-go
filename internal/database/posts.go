@@ -5,21 +5,47 @@ import (
 )
 
 func (s *service) GetPosts() ([]models.Post, error) {
-	rows, err := s.db.Query("SELECT * FROM Post")
+	rows, err := s.db.Query(`
+		SELECT p.post_id, p.title, p.content, p.user_id, p.creation_date, p.update_date, 
+			   c.category_id, c.name 
+		FROM Post p 
+		LEFT JOIN Post_Category pc ON p.post_id = pc.post_id 
+		LEFT JOIN Category c ON pc.category_id = c.category_id`)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	posts := make([]models.Post, 0)
+	users, err := s.GetUsers()
+	if err != nil {
+		return nil, err
+	}
+	postMap := make(map[string]*models.Post)
 	for rows.Next() {
 		var post models.Post
-		err := rows.Scan(&post.PostId, &post.Title, &post.Content, &post.UserID, &post.CreationDate, &post.UpdateDate)
+		var category models.Category
+		err := rows.Scan(&post.PostId, &post.Title, &post.Content, &post.UserID, &post.CreationDate, &post.UpdateDate, &category.CategoryId, &category.Name)
 		if err != nil {
 			return nil, err
 		}
 		post.FormattedCreationDate = post.CreationDate.Format("Jan 02, 2006 - 15:04:05")
-		posts = append(posts, post)
+		if existingPost, ok := postMap[post.PostId]; ok {
+			existingPost.Categories = append(existingPost.Categories, category)
+		} else {
+			for _, user := range users {
+				if user.UserId == post.UserID {
+					post.User = user
+					break
+				}
+			}
+			post.Categories = append(post.Categories, category)
+			postMap[post.PostId] = &post
+		}
+	}
+	posts := make([]models.Post, 0, len(postMap))
+	for _, post := range postMap {
+		post.NbOfComments = len(post.Comments)
+		posts = append(posts, *post)
 	}
 	return posts, nil
 }

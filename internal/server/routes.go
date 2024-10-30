@@ -44,7 +44,18 @@ func (s *Server) RegisterRoutes() http.Handler {
 }
 
 func (s *Server) HomePageHandler(w http.ResponseWriter, r *http.Request) {
-	render(w, r, "home", nil)
+	err := error(nil)
+	s.categories, err = s.db.GetCategories()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	s.posts, err = s.db.GetPosts()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	render(w, r, "home", map[string]interface{}{"Categories": s.categories, "Posts": s.posts})
 }
 func (s *Server) HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
 	resp := make(map[string]string)

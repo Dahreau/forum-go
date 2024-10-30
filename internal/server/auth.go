@@ -133,5 +133,11 @@ func (s *Server) DeleteUsersHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	for i, user := range s.users {
+		if user.UserId == id {
+			s.users = append(s.users[:i], s.users[i+1:]...)
+			break
+		}
+	}
 	http.Redirect(w, r, "/users", http.StatusSeeOther)
 }

@@ -70,6 +70,10 @@ func New() Service {
 	if err != nil {
 		log.Fatal("Error opening SQL file:", err)
 	}
+	_, err = db.Exec("PRAGMA foreign_keys = ON")
+	if err != nil {
+		log.Fatal("Failed to enable foreign key constraints:", err)
+	}
 	defer file.Close()
 	// Read the contents of the SQL file
 	sqlBytes, err := ioutil.ReadAll(file)

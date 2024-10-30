@@ -29,18 +29,6 @@
     padding: 16px;
 }
 
-.like-btn {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    gap: 16px;
-    padding: 8px 16px;
-    border-radius: 24px;
-    cursor: pointer;
-    box-shadow: inset 0px 0px 8px #102FF9, 0px 0px 8px #102FF9;
-    width: fit-content;
-}
-
 .inner-post-content {
     display: flex;
     flex-direction: column;
