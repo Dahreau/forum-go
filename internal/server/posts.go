@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"forum-go/internal/models"
+	"log"
 	"math"
 	"math/rand"
 	"net/http"
@@ -25,6 +26,14 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
 	content := r.FormValue("content")
 
+	erri := r.ParseForm()
+	if erri != nil {
+		log.Println(erri)
+	}
+
+	categories := r.Form["categories"]
+	fmt.Println(categories)
+
 	// Validate title
 	if ValidateTitle(title) {
 		http.Error(w, "Title cannot be empty", http.StatusBadRequest)
@@ -37,11 +46,17 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Validate Categories
+	if ValidateCategory(categories) {
+		http.Error(w, "You must select at least 1 category", http.StatusBadRequest)
+	}
+
 	newPost := models.Post{
-		PostId:                strconv.Itoa(rand.Intn(math.MaxInt32)),
-		Title:                 r.FormValue("title"),
-		Content:               r.FormValue("content"),
-		UserID:                r.FormValue("UserId"),
+		PostId:  strconv.Itoa(rand.Intn(math.MaxInt32)),
+		Title:   r.FormValue("title"),
+		Content: r.FormValue("content"),
+		UserID:  r.FormValue("UserId"),
+		//Categories:
 		CreationDate:          time.Now(),
 		FormattedCreationDate: time.Now().Format("Jan 02, 2006 - 15:04:05"),
 	}
@@ -118,4 +133,8 @@ func ValidatePostChar(content string) bool {
 
 func ValidateTitle(title string) bool {
 	return len(title) == 0
+}
+
+func ValidateCategory(categories []string) bool {
+	return len(categories) < 1
 }
