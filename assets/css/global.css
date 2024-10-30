@@ -2,7 +2,8 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap'); */
 
 /* General Styles */
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -14,10 +15,11 @@ html, body {
 
 body {
     display: flex;
+    gap: 32px;
     flex-direction: column;
     align-items: center;
     background-image: url(/assets/img/13.png);
-    overflow-x:hidden;
+    overflow-x: hidden;
     background-size: cover;
     background-position: center;
 }
@@ -67,7 +69,7 @@ textarea {
     font-style: italic;
     font-family: 'Inter', sans-serif;
     color: rgb(255, 255, 255);
-    background: rgba(51, 10, 94, 80%);    
+    background: rgba(51, 10, 94, 80%);
     box-shadow: 0px 0px 24px #FE9AF8, inset 0px 0px 24px #FE9AF8;
     box-sizing: border-box;
     vertical-align: top;
@@ -80,7 +82,8 @@ textarea::placeholder {
     font-family: 'Inter', sans-serif;
     color: rgba(255, 255, 255, 0.5);
     text-align: left;
-    vertical-align: top;}
+    vertical-align: top;
+}
 
 label {
     display: block;
@@ -114,11 +117,13 @@ label {
     align-items: center;
     gap: 4px;
     text-align: center;
+
     p {
         margin: 0;
         padding: 0;
     }
 }
+
 .like-btn {
     display: flex;
     align-items: center;
@@ -138,12 +143,21 @@ label {
 
 #like-count {
     font-family: 'Mina', sans-serif;
-    color: #BBFFC7; 
+    color: #56c76a;
 }
 
 #dislike-count {
     font-family: 'Mina', sans-serif;
     color: #FF948A;
+}
+
+.vote-button:hover {
+    cursor: pointer;
+    stroke: #BBFFC7;
+
+    #like-count {
+        color: #BBFFC7;
+    }
 }
 
 
@@ -209,7 +223,8 @@ label {
     }
 }
 
-img, video {
+img,
+video {
     max-width: 100%;
     height: auto;
 }
@@ -220,19 +235,24 @@ img, video {
 
 /* Custom scrollbar styling */
 ::-webkit-scrollbar {
-    width: 16px; /* Width of the scrollbar */
+    width: 16px;
+    /* Width of the scrollbar */
 }
 
 /* Track (background) of the scrollbar */
 ::-webkit-scrollbar-track {
-    background: rgba(16, 9, 27); /* Color of the scrollbar track */
-    border-radius: 0px; /* Optional: round edges of the track */
+    background: rgba(16, 9, 27);
+    /* Color of the scrollbar track */
+    border-radius: 0px;
+    /* Optional: round edges of the track */
 }
 
 /* Scrollbar thumb (the draggable part) */
 ::-webkit-scrollbar-thumb {
-    background-color: rgb(16, 9, 27); /* Color of the scrollbar thumb */
-    border-radius: 10px; /* Round edges of the thumb */
+    background-color: rgb(16, 9, 27);
+    /* Color of the scrollbar thumb */
+    border-radius: 10px;
+    /* Round edges of the thumb */
     border: 2px solid #FE9AF8;
     box-shadow: 0 0 12px #FE9AF8, inset 0 0 12px #FE9AF8;
 }
@@ -245,14 +265,14 @@ img, video {
 
 /* Custom scrollbar resizer */
 ::-webkit-resizer {
-    background-color: rgba(16, 9, 27) ;
+    background-color: rgba(16, 9, 27);
     border: 1px solid #FE9AF8;
     border-radius: 20px;
     box-shadow: 0 0 12px #FE9AF8, inset 0 0 12px #FE9AF8;
 }
 
 ::-webkit-scrollbar-corner {
-    background-color: transparent  ;
+    background-color: transparent;
     /* border: 1px solid #FE9AF8;
     border-radius: 20px;
     box-shadow: 0 0 12px #FE9AF8, inset 0 0 12px #FE9AF8;
@@ -266,7 +286,8 @@ img, video {
 
 .wrapper {
     overflow: hidden;
-    border-radius: 8px; /* Définis la valeur souhaitée */
-    display: inline-block; /* Pour adapter la taille du conteneur au textarea */
+    border-radius: 8px;
+    /* Définis la valeur souhaitée */
+    display: inline-block;
+    /* Pour adapter la taille du conteneur au textarea */
 }
-
