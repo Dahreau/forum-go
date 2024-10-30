@@ -70,7 +70,8 @@
             <label for="categories">Categories :</label>
             <div class="categories">
                 {{range .Categories}}
-                    <div class="category-box">{{.Name}}</div>
+                    <input type="checkbox" id="{{.CategoryId}}" class="category-box" name="categories" value="{{.CategoryId}}"/>
+                    <label class="category-box" for="{{.CategoryId}}">{{.Name}}</label>
                 {{end}}
             </div>
         </div>
