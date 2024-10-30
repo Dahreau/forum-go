@@ -38,9 +38,8 @@ body {
     justify-content: center;
     align-items: center;
     margin-top: 16px;
-    position: relative;
+    position: absolute;
     bottom: 0;
-    left: 0;
 }
 
 .footer-text {
