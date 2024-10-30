@@ -131,38 +131,6 @@
     resize: vertical;
 }
 
-/* Custom scrollbar styling */
-::-webkit-scrollbar {
-    width: 16px; /* Width of the scrollbar */
-}
-
-/* Track (background) of the scrollbar */
-::-webkit-scrollbar-track {
-    background: none; /* Color of the scrollbar track */
-    border-radius: 10px; /* Optional: round edges of the track */
-}
-
-/* Scrollbar thumb (the draggable part) */
-::-webkit-scrollbar-thumb {
-    background-color: rgba(16, 9, 27); /* Color of the scrollbar thumb */
-    border-radius: 10px; /* Round edges of the thumb */
-    border: 2px solid #83c3ff;
-    box-shadow: 0 0 12px #102FF9, inset 0 0 12px #102FF9;
-}
-
-/* Hover effect on the scrollbar thumb */
-::-webkit-scrollbar-thumb:hover {
-    /* background-color: #555; Color when hovering over the thumb */
-    box-shadow: 0 0 24px #102FF9, inset 0 0 24px #102FF9;
-}
-
-::-webkit-resizer {
-    background-color: rgba(16, 9, 27) ;
-    border: 1px solid #FE9AF8;
-    border-radius: 4px;
-    box-shadow: 0 0 12px #FE9AF8, inset 0 0 12px #FE9AF8;  
-}
-
 #comment-form::placeholder {
     font-size: 16px;
     font-style: italic;
