@@ -69,13 +69,9 @@
         <div class="form-group">
             <label for="categories">Categories :</label>
             <div class="categories">
-                <div class="category-box">Shonen</div>
-                <div class="category-box">Seinen</div>
-                <div class="category-box">Shoujo</div>
-                <div class="category-box">Naruto</div>
-                <div class="category-box">Sword Art Online</div>
-                <div class="category-box">Ecchi pour Momo</div>
-                <div class="category-box">Spoil</div>
+                {{range .Categories}}
+                    <div class="category-box">{{.Name}}</div>
+                {{end}}
             </div>
         </div>
 

@@ -67,11 +67,16 @@ func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/posts", http.StatusSeeOther)
 }
 func (s *Server) GetNewPostHandler(w http.ResponseWriter, r *http.Request) {
+	categories, err := s.db.GetCategories()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	if !s.isLoggedIn(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
-	render(w, r, "createPost", nil)
+	render(w, r, "createPost", map[string]interface{}{"Categories": categories})
 }
 func (s *Server) GetPostHandler(w http.ResponseWriter, r *http.Request) {
 	vars := strings.Split(r.URL.Path, "/")
