@@ -104,3 +104,13 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
+
+input[type=checkbox] {
+    display: none;
+}
+
+input:checked + label {
+    color: black;
+    background-color: #b4b4b4;
+    box-shadow: 0 0 24px #fe9af8, inset 0 0 24px #FE9AF8;
+}
