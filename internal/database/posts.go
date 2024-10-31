@@ -54,17 +54,36 @@ func (s *service) GetPost(id string) (models.Post, error) {
 	user := models.User{}
 	query := `
 		SELECT p.post_id, p.title, p.content, p.user_id, p.creation_date, p.update_date, 
-			   u.user_id, u.username, u.email 
+			   u.user_id, u.username, u.email,
+			   c.category_id, c.name
 		FROM Post p 
 		JOIN User u ON p.user_id = u.user_id 
+		LEFT JOIN Post_Category pc ON p.post_id = pc.post_id
+		LEFT JOIN Category c ON pc.category_id = c.category_id
 		WHERE p.post_id = ?`
-	err := s.db.QueryRow(query, id).Scan(
-		&post.PostId, &post.Title, &post.Content, &post.UserID, &post.CreationDate, &post.UpdateDate,
-		&user.UserId, &user.Username, &user.Email,
-	)
+	rows, err := s.db.Query(query, id)
+	if err != nil {
+		return post, err
+	}
+	defer rows.Close()
+
+	var categories []models.Category
+	for rows.Next() {
+		var category models.Category
+		err := rows.Scan(
+			&post.PostId, &post.Title, &post.Content, &post.UserID, &post.CreationDate, &post.UpdateDate,
+			&user.UserId, &user.Username, &user.Email,
+			&category.CategoryId, &category.Name,
+		)
+		if err != nil {
+			return post, err
+		}
+		categories = append(categories, category)
+	}
 	post.FormattedCreationDate = post.CreationDate.Format("Jan 02, 2006 - 15:04:05")
 	post.User = user
-	return post, err
+	post.Categories = categories
+	return post, nil
 }
 
 func (s *service) AddPost(post models.Post, categories []models.Category) error {
