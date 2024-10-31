@@ -38,11 +38,11 @@ body {
     justify-content: center;
     align-items: center;
 
-    margin-top: 0px;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    right: 0;
+    /*margin-top: 0px;*/
+    position: relative;
+    /*left: 0;*/
+    /*bottom: 0;*/
+    /*right: 0;*/
 }
 
 .footer-text {
