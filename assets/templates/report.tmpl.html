@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="icon" href="/assets/img/logo.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Mina:wght@400;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/global.css">
+  <link rel="stylesheet" href="assets/css/header.css">
+  <link rel="stylesheet" href="assets/css/home.css">
+
+  <title>Aniverse Homepage</title>
+</head>
+
+<body>
+    <div class="logo-container">
+        <a href="/"><div class="logo"><img src="/assets/img/logo.png" alt="Logo Aniverse" width="50"></div>
+        <div class="logo-text">Aniverse</div></a>
+    <h1>Report</h1>
+    <h3>Report : {{ .User.Username}}</h3>
+    <h4>What's the issue ?</h5>
+    <select class="Report-category">
+        <option>Choose a category</option>
+        {{ range .Categories }}
+        <option value="{{ .CategoryId }}">{{ .Name }}</option>
+        {{ end }}
+      </select>
+    <p>Description :</p>
+    <textarea class="scroll" name="content" id="content" placeholder="Give more detail about the report, if not needed leave empty"></textarea>
+    <!-- Footer Section -->
+    <button class="button Report-button">Confirm Report</button>
+  <footer class="footer-section">
+    <div class="footer-text">Footer, licence</div>
+  </footer>
+</body>
+
+</html>
