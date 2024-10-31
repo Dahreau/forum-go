@@ -80,7 +80,7 @@
     padding: 16px 12px;
     height: fit-content;
     background-color: rgba(15, 7, 53, 0.842);
-    position: fixed;
+    position: absolute;
 }
 
 .filters-title {
