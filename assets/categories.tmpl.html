@@ -41,14 +41,14 @@
         <div class="categories">
             {{ range .Categories }}
             <div class="category global-box">
-                <div class="category-name">{{ .Name.Value }}</div>
+                <div class="category-name">{{ .Name }}</div>
                 <div class="category-buttons">
-                    <form action="/categories/delete/{{ .CategoryId.Value }}" method="post" class="delete-form">
-                        <input type="hidden" name="categoryId" value="{{ .CategoryId.Value }}">
+                    <form action="/categories/delete/{{ .CategoryId }}" method="post" class="delete-form">
+                        <input type="hidden" name="categoryId" value="{{ .CategoryId }}">
                         <button class="category-button">Delete</button>
                     </form>
-                    <form action="/categories/edit/{{ .CategoryId.Value }}" method="post" class="edit-form">
-                        <input type="hidden" name="categoryId" value="{{ .CategoryId.Value }}">
+                    <form action="/categories/edit/{{ .CategoryId }}" method="post" class="edit-form">
+                        <input type="hidden" name="categoryId" value="{{ .CategoryId}}">
                         <input type="text" name="newCategoryName" placeholder="New Category Name">
                         <button class="category-button edit-button">Edit</button>
                     </form>
