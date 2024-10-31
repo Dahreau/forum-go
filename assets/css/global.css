@@ -14,7 +14,8 @@ body {
 }
 
 body {
-    display: flex;
+    display: table;
+    width: 100%;
     gap: 32px;
     flex-direction: column;
     align-items: center;
@@ -32,14 +33,19 @@ body {
 .footer-section {
     width: 100%;
     /* max-width: 1440px; */
-    height: 48px;
+    height: 100px;
     background: #10091B;
-    display: flex;
+    display: table;
     justify-content: center;
     align-items: center;
-    margin-top: 16px;
-    position: absolute;
+
+    /* margin-top: 0px; */
+    /* position: relative; */
+    /* left: 0;
     bottom: 0;
+    right: 0;
+    z-index: 1000; */
+    gap: 10px;
 }
 
 .footer-text {

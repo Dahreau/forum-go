@@ -11,6 +11,7 @@
 
 .main-content {
     display: flex;
+    flex: 1;
     flex-direction: column;
     align-items: center;
     width: 90%;
@@ -37,7 +38,7 @@
 
 .form-section {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: center;
     width: 100%;
     padding: 0 20px;
@@ -85,7 +86,7 @@
 
 .category-box:hover {
     background-color: #767676;
-    color : black
+    color: black
 }
 
 /* Post Actions */
@@ -95,7 +96,8 @@
     margin-top: 12px;
 }
 
-.report-button, .delete-button {
+.report-button,
+.delete-button {
     padding: 6px 12px;
     border: none;
     border-radius: 8px;
@@ -109,7 +111,7 @@ input[type=checkbox] {
     display: none;
 }
 
-input:checked + label {
+input:checked+label {
     color: black;
     background-color: #b4b4b4;
     box-shadow: 0 0 24px #fe9af8, inset 0 0 24px #FE9AF8;
