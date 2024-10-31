@@ -50,6 +50,14 @@
     text-align: left;
 }
 
+.error{
+    width: 100%;
+    text-align: center;
+    display: block;
+    color: #FF948A;
+    font-family: 'Mina', sans-serif;
+    font-size: 16px;
+}
 
 #content {
     height: 175px;
