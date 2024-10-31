@@ -6,3 +6,4 @@
 PRAGMA foreign_keys = ON;
 delete from Post where post_id = 652928286 or post_id = 1211729316;
 
+DROP TABLE IF EXISTS User_Like;

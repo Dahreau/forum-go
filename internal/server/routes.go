@@ -39,8 +39,17 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc("GET /post/{id}", s.GetPostHandler)
 	mux.HandleFunc("POST /post/comment", s.PostCommentHandler)
 	mux.HandleFunc("/health", s.healthHandler)
+	mux.HandleFunc("GET /adminPannel", s.AdminPannelHandler)
 
 	return s.authenticate(mux)
+}
+
+func (s *Server) AdminPannelHandler(w http.ResponseWriter, r *http.Request) {
+	if !s.isLoggedIn(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	render(w, r, "adminPannel", nil)
 }
 
 func (s *Server) HomePageHandler(w http.ResponseWriter, r *http.Request) {
