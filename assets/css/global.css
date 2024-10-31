@@ -15,7 +15,6 @@ body {
 
 body {
     display: flex;
-    width: 100%;
     gap: 32px;
     flex-direction: column;
     align-items: center;
@@ -33,15 +32,17 @@ body {
 .footer-section {
     width: 100%;
     /* max-width: 1440px; */
-    height: 16px;
+    height: 80px;
     background: #10091B;
     display: flex;
     justify-content: center;
     align-items: center;
+
     margin-top: 0px;
     position: absolute;
     left: 0;
     bottom: 0;
+    right: 0;
 }
 
 .footer-text {
