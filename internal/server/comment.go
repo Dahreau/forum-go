@@ -53,10 +53,6 @@ func (s *Server) PostCommentHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/post/"+newComment.PostID, http.StatusSeeOther)
 }
 
-func validComment(content string) bool {
-	return len(content) < 401
-}
-
 func (s *Server) GetCommentsHandler(w http.ResponseWriter, r *http.Request) {
 	posts, err := s.db.GetPosts()
 	if err != nil {
