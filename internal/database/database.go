@@ -43,7 +43,8 @@ type Service interface {
 	// Comment section
 	AddComment(comment models.Comment) error
 	DeleteComment(id string) error
-	EditComment(id string) error
+	EditComment(id, content string) error
+	GetComments(post models.Post) ([]models.Comment, error)
 
 	GetCategories() ([]models.Category, error)
 	AddCategory(name string) error

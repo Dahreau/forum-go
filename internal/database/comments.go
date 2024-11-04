@@ -7,8 +7,11 @@ import (
 	"strconv"
 )
 
-func (s *service) GetComment() ([]models.Comment, error) {
-	rows, err := s.db.Query("SELECT * FROM Comment")
+func (s *service) GetComments(post models.Post) ([]models.Comment, error) {
+	rows, err := s.db.Query(`
+		SELECT c.comment_id, c.content, c.creation_date, c.user_id, c.post_id
+		FROM Comment c
+		WHERE c.post_id = ?`, post.PostId)
 	if err != nil {
 		return nil, err
 	}
@@ -17,7 +20,7 @@ func (s *service) GetComment() ([]models.Comment, error) {
 	comments := make([]models.Comment, 0)
 	for rows.Next() {
 		var comment models.Comment
-		err := rows.Scan(&comment.CommentId)
+		err := rows.Scan(&comment.CommentId, &comment.Content, &comment.CreationDate, &comment.UserID, &comment.PostID)
 		if err != nil {
 			return nil, err
 		}
@@ -60,8 +63,8 @@ func (s *service) DeleteComment(id string) error {
 	return nil
 }
 
-func (s *service) EditComment(id, name string) error {
-	query := "UPDATE Category SET name=? WHERE category_id=?"
-	_, err := s.db.Exec(query, name, id)
+func (s *service) EditComment(id, content string) error {
+	query := "UPDATE Comment SET content=? WHERE comment_id=?"
+	_, err := s.db.Exec(query, content, id)
 	return err
 }

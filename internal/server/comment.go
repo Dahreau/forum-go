@@ -44,11 +44,6 @@ func (s *Server) PostNewcommentHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(erri)
 	}
 
-	// Validate title
-	if ValidateTitle(formData.Title) {
-		formData.Errors["Title"] = "Title cannot be empty"
-	}
-
 	// Validate content
 	if ValidatePostChar(formData.Content) {
 		formData.Errors["Content"] = "Content cannot be empty or more than 1000 characters"
@@ -134,8 +129,6 @@ func (s *Server) GetCommentHandler(w http.ResponseWriter, r *http.Request) {
 	render(w, r, "detailsPost", map[string]interface{}{"Post": post})
 }
 
-// Handler in the post.go file line 130
-
 const MaxCharComment = 400
 
 func ValidateCommentChar(content string) bool {
@@ -143,4 +136,16 @@ func ValidateCommentChar(content string) bool {
 		return true
 	}
 	return false
+}
+
+func (s *Server) EditCommentHandler(w http.ResponseWriter, r *http.Request) {
+	commentID := r.FormValue("commentId")
+	commentContent := r.FormValue("newCommentContent")
+
+	err := s.db.EditComment(commentID, commentContent)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/posts", http.StatusSeeOther)
 }

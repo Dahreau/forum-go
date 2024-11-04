@@ -67,6 +67,11 @@ func (s *service) GetPost(id string) (models.Post, error) {
 	}
 	defer rows.Close()
 
+	post.Comments, err = s.GetComments(post)
+	if err != nil {
+		return post, err
+	}
+
 	var categories []models.Category
 	for rows.Next() {
 		var category models.Category
