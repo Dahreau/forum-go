@@ -93,13 +93,14 @@
       <section class="post-list">
         {{ range .Posts }}
         <div class="post-item">
+          <a href="/post/{{ .PostId }}">
           <div class="post-title">{{ .Title }}</div>
           <div class="post-meta">
             <span class="post-author">{{ .User.Username}}</span>
             <span class="post-date">{{ .FormattedCreationDate }}</span>
             <span class="comment-count">{{ .NbOfComments}} Comments</span>
           </div>
-
+          </a>
           <div class="misc">
             <div class="vote-tags-container">
               <div class="global-box like-btn">
