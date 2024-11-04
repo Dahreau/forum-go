@@ -12,6 +12,10 @@ import (
 	"time"
 )
 
+// Implement function : retrieve form values and call AddCommet function in database/comment.go
+func (s *Server) PostCommentHandler(w http.ResponseWriter, r *http.Request) {
+}
+
 func (s *Server) GetCommentsHandler(w http.ResponseWriter, r *http.Request) {
 	posts, err := s.db.GetPosts()
 	if err != nil {
@@ -98,6 +102,7 @@ func (s *Server) DeleteCommentHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	http.Redirect(w, r, "/posts", http.StatusSeeOther)
 }
+
 func (s *Server) GetNewCommentHandler(w http.ResponseWriter, r *http.Request) {
 	categories, err := s.db.GetCategories()
 	if err != nil {
@@ -110,6 +115,7 @@ func (s *Server) GetNewCommentHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	render(w, r, "createPost", map[string]interface{}{"Categories": categories})
 }
+
 func (s *Server) GetCommentHandler(w http.ResponseWriter, r *http.Request) {
 	vars := strings.Split(r.URL.Path, "/")
 	if len(vars) < 3 {

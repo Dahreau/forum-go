@@ -127,8 +127,6 @@ func (s *Server) GetPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	render(w, r, "detailsPost", map[string]interface{}{"Post": post})
 }
-func (s *Server) PostCommentHandler(w http.ResponseWriter, r *http.Request) {
-}
 
 func IsUniquePost(posts []models.Post, post string) bool {
 	for _, existingPost := range posts {
