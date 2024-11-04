@@ -94,10 +94,12 @@ label {
     margin-bottom: 0px;
     font-family: 'Mina', sans-serif;
 }
+
 a {
     text-decoration: none;
     color: white;
 }
+
 /*******************************************************************/
 /************************** Global Boxes ***************************/
 /*******************************************************************/
@@ -124,12 +126,18 @@ a {
     align-items: center;
     gap: 4px;
     text-align: center;
+    padding: 4px 4px;
+    border: none;
+    border-radius: 12px;
+    stroke: #56c76a;
+    color: #56c76a;
 
     p {
         margin: 0;
         padding: 0;
     }
 }
+
 
 .like-btn {
     display: flex;
