@@ -40,17 +40,37 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc("POST /comment/delete/{id}", s.DeleteCommentHandler)
 	mux.HandleFunc("POST /post/comment", s.PostCommentHandler)
 	mux.HandleFunc("/health", s.healthHandler)
-	mux.HandleFunc("GET /adminPannel", s.AdminPannelHandler)
+	mux.HandleFunc("GET /adminPanel", s.AdminPanelHandler)
+	mux.HandleFunc("GET /report", s.reportHandler)
 
 	return s.authenticate(mux)
 }
 
-func (s *Server) AdminPannelHandler(w http.ResponseWriter, r *http.Request) {
-	if !s.isLoggedIn(r) {
+func (s *Server) reportHandler(w http.ResponseWriter, r *http.Request) {
+	if !s.isLoggedIn(r) || !IsAdmin(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
-	render(w, r, "adminPannel", nil)
+	users, err := s.db.GetUsers()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	render(w, r, "report", map[string]interface{}{"users": users})
+
+}
+
+func (s *Server) AdminPanelHandler(w http.ResponseWriter, r *http.Request) {
+	if !s.isLoggedIn(r) || !IsAdmin(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	users, err := s.db.GetUsers()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	render(w, r, "adminPanel", map[string]interface{}{"users": users})
 }
 
 func (s *Server) HomePageHandler(w http.ResponseWriter, r *http.Request) {

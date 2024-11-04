@@ -139,5 +139,5 @@ func (s *Server) DeleteUsersHandler(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 	}
-	http.Redirect(w, r, "/users", http.StatusSeeOther)
+	http.Redirect(w, r, "/adminPanel", http.StatusSeeOther)
 }

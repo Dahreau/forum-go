@@ -23,22 +23,40 @@
 </head>
 
 <body>
+  <header class="header-section">
     <div class="logo-container">
-        <a href="/"><div class="logo"><img src="/assets/img/logo.png" alt="Logo Aniverse" width="50"></div>
-        <div class="logo-text">Aniverse</div></a>
-    <h1>Report</h1>
-    <h3>Report : {{ .User.Username}}</h3>
-    <h4>What's the issue ?</h5>
-    <select class="Report-category">
-        <option>Choose a category</option>
-        {{ range .Categories }}
-        <option value="{{ .CategoryId }}">{{ .Name }}</option>
-        {{ end }}
-      </select>
-    <p>Description :</p>
-    <textarea class="scroll" name="content" id="content" placeholder="Give more detail about the report, if not needed leave empty"></textarea>
-    <!-- Footer Section -->
-    <button class="button Report-button">Confirm Report</button>
+      <a href="/">
+        <div class="logo"><img src="/assets/img/logo.png" alt="Logo Aniverse" width="50"></div>
+        <div class="logo-text">Aniverse</div>
+      </a>
+    </div>
+    <div class="user-info">
+      {{ if .User }}
+      <h1 class="welcome">Welcome {{ .User.Username}}</h1>
+      <form method="post" action="/logout">
+        <button class="logout-button button" type="submit"><span>Log out</span><svg id="logout-icon"
+            xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24">
+            <path
+              d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z" />
+          </svg></button>
+      </form>
+      <!-- <div class="logout-button">
+              <a href="#" class="logout-link">Log out</a>
+          </div> -->
+      {{ if eq .User.Role "admin" }}
+      <a class=button href="/adminPanel">Admin Panel</a>
+      {{ end }}
+      {{ else }}
+      <h1 class="welcome">Guest</h1>
+      <a class="button" href="/login">Login</a>
+      <a class="button register" href="/register">Register</a>
+      {{ end }}
+    </div>
+  </header>
+  <textarea class="scroll" name="content" id="content"
+    placeholder="Give more detail about the report, if not needed leave empty"></textarea>
+  <!-- Footer Section -->
+  <button class="button Report-button">Confirm Report</button>
   <footer class="footer-section">
     <div class="footer-text">Footer, licence</div>
   </footer>

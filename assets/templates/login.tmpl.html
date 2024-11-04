@@ -38,7 +38,7 @@
               <a href="#" class="logout-link">Log out</a>
           </div> -->
           {{ if eq .User.Role "admin" }}
-          <a href="/users">Users</a>
+          <a class=button href="/adminPanel">Admin Panel</a>
           {{ end }}
           {{ else }}
           <h1 class="welcome">Guest</h1>
