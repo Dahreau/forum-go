@@ -25,6 +25,7 @@ body {
     background-attachment: fixed;
     background-repeat: no-repeat;
     overflow-x: hidden;
+    overflow-y: overlay;
 }
 
 .welcome {
@@ -143,8 +144,8 @@ a {
     display: flex;
     align-items: center;
     flex-direction: row;
-    gap: 16px;
-    padding: 8px 16px;
+    gap: 8px;
+    padding: 4px 8px;
     border-radius: 24px;
     cursor: pointer;
     box-shadow: inset 0px 0px 8px #102FF9, 0px 0px 8px #102FF9;
