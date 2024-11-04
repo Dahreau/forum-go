@@ -39,13 +39,15 @@ type Post struct {
 }
 
 type Comment struct {
-	CommentId    string    `db:"comment_id"`
-	Content      string    `db:"content"`
-	CreationDate time.Time `db:"creation_date"`
-	UserID       string    `db:"user_id"`
-	PostID       string    `db:"post_id"`
-	Likes        int       `db:"-"`
-	Dislikes     int       `db:"-"`
+	CommentId             string    `db:"comment_id"`
+	Content               string    `db:"content"`
+	CreationDate          time.Time `db:"creation_date"`
+	FormattedCreationDate string    `db:"-"`
+	UserID                string    `db:"user_id"`
+	PostID                string    `db:"post_id"`
+	Username              string    `db:"-"`
+	Likes                 int       `db:"-"`
+	Dislikes              int       `db:"-"`
 }
 
 type PostCategory struct {

@@ -6,9 +6,10 @@ import (
 
 func (s *service) GetComments(post models.Post) ([]models.Comment, error) {
 	rows, err := s.db.Query(`
-		SELECT c.comment_id, c.content, c.creation_date, c.user_id, c.post_id
-		FROM Comment c
-		WHERE c.post_id = ?`, post.PostId)
+        SELECT c.comment_id, c.content, c.creation_date, c.user_id, c.post_id, u.username
+        FROM Comment c
+        JOIN User u ON c.user_id = u.user_id
+        WHERE c.post_id = ?`, post.PostId)
 	if err != nil {
 		return nil, err
 	}
@@ -17,10 +18,12 @@ func (s *service) GetComments(post models.Post) ([]models.Comment, error) {
 	comments := make([]models.Comment, 0)
 	for rows.Next() {
 		var comment models.Comment
-		err := rows.Scan(&comment.CommentId, &comment.Content, &comment.CreationDate, &comment.UserID, &comment.PostID)
+		err := rows.Scan(&comment.CommentId, &comment.Content, &comment.CreationDate, &comment.UserID, &comment.PostID, &comment.Username)
 		if err != nil {
 			return nil, err
 		}
+		// Formater la date après récupération
+		comment.FormattedCreationDate = comment.CreationDate.Format("02/01/06 - 15:04")
 		comments = append(comments, comment)
 	}
 	return comments, nil

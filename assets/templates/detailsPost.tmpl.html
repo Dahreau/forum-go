@@ -131,7 +131,7 @@
         </div>
         {{if .User}} 
         <div class="write-comment-section">
-            <form class="comment-form scroll" action="/comment" method="post">
+            <form class="comment-form scroll" action="/post/comment" method="post">
                 <input type="hidden" name="PostId" value="{{ .Post.PostId }}">
                 <input type="hidden" name="UserId" value="{{ .User.UserId }}">
                 <textarea class="scroll" name="comment" id="comment-form" placeholder="Write your comment here... (Grab bottom-right corner to resize)"></textarea>
@@ -147,9 +147,10 @@
         </div>
         <!-- Comments Section -->
         <div class="global-box comments-section scroll">
+            {{ range .Post.Comments}}
             <div class="comment">
-                <span class="comment-author">Crystale 13/10/24 - 22:05</span>
-                <span class="comment-text">I really like Miyo, she's so gorgeoudddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddds</span>
+                <span class="comment-author">{{.Username}} - {{.FormattedCreationDate }}</span>
+                <span class="comment-text">{{.Content}}</span>
                 <!-- Vote Buttons -->
             <div class="global-box like-btn">
                 <div class="vote-button upvote">
@@ -177,10 +178,10 @@
                         </defs>
                         </svg>
                         
-                    <span id="like-count">12</span>
+                    <span id="like-count">{{.Likes}}</span>
                 </div>
                 <div class="vote-button downvote">
-                    <span id="dislike-count">12</span>
+                    <span id="dislike-count">{{.Dislikes}}</span>
                     <!-- SVG for downvote button -->
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g clip-path="url(#clip0_668_716)">
@@ -207,38 +208,7 @@
                 </div>
             </div>
             </div>
-            <div class="comment">
-                <div class="comment-author">Crystale 13/10/24 - 22:05</div>
-                <div class="comment-text">I really like Miyo, she's so gorgeous</div>
-            </div>
-            <div class="comment">
-                <div class="comment-author">Crystale 13/10/24 - 22:05</div>
-                <div class="comment-text">I really like Miyo, she's so gorgeous</div>
-            </div>
-            <div class="comment">
-                <span class="comment-author">Crystale 13/10/24 - 22:05</span>
-                <span class="comment-text">I really like Miyo, she's so gorgeoudddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddds</span>
-            </div>
-            <div class="comment">
-                <div class="comment-author">Crystale 13/10/24 - 22:05</div>
-                <div class="comment-text">I really like Miyo, she's so gorgeous</div>
-            </div>
-            <div class="comment">
-                <div class="comment-author">Crystale 13/10/24 - 22:05</div>
-                <div class="comment-text">I really like Miyo, she's so gorgeous</div>
-            </div>
-            <div class="comment">
-                <span class="comment-author">Crystale 13/10/24 - 22:05</span>
-                <span class="comment-text">I really like Miyo, she's so gorgeoudddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddds</span>
-            </div>
-            <div class="comment">
-                <div class="comment-author">Crystale 13/10/24 - 22:05</div>
-                <div class="comment-text">I really like Miyo, she's so gorgeous</div>
-            </div>
-            <div class="comment">
-                <div class="comment-author">Crystale 13/10/24 - 22:05</div>
-                <div class="comment-text">I really like Miyo, she's so gorgeous</div>
-            </div>
+            {{end}}
         </div>
     </div>
 

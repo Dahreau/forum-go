@@ -67,11 +67,6 @@ func (s *service) GetPost(id string) (models.Post, error) {
 	}
 	defer rows.Close()
 
-	post.Comments, err = s.GetComments(post)
-	if err != nil {
-		return post, err
-	}
-
 	var categories []models.Category
 	for rows.Next() {
 		var category models.Category
@@ -84,6 +79,10 @@ func (s *service) GetPost(id string) (models.Post, error) {
 			return post, err
 		}
 		categories = append(categories, category)
+	}
+	post.Comments, err = s.GetComments(post)
+	if err != nil {
+		return post, err
 	}
 	post.FormattedCreationDate = post.CreationDate.Format("Jan 02, 2006 - 15:04:05")
 	post.User = user
