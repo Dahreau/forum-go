@@ -29,24 +29,12 @@ func (s *service) GetComments(post models.Post) ([]models.Comment, error) {
 	return comments, nil
 }
 
-<<<<<<< Updated upstream
 func (s *service) AddComment(comment models.Comment) error {
 	// Query insert all fields in comment table
 	query := "INSERT INTO Comment (comment_id,content, creation_date, user_id, post_id) VALUES (?,?,?,?,?)"
 	_, err := s.db.Exec(query, comment.CommentId, comment.Content, comment.CreationDate, comment.UserID, comment.PostID)
 	return err
 }
-=======
-// func (s *service) AddCategory(name string) error {
-// 	category := models.Category{
-// 		CategoryId: strconv.Itoa(rand.Intn(math.MaxInt32)),
-// 		Name:       name,
-// 	}
-// 	query := "INSERT INTO Category (category_id,name) VALUES (?,?)"
-// 	_, err := s.db.Exec(query, category.CategoryId, category.Name)
-// 	return err
-// }
->>>>>>> Stashed changes
 
 func (s *service) DeleteComment(id string) error {
 	// Start a transaction
@@ -72,16 +60,8 @@ func (s *service) DeleteComment(id string) error {
 	return nil
 }
 
-<<<<<<< Updated upstream
 func (s *service) EditComment(id, content string) error {
 	query := "UPDATE Comment SET content=? WHERE comment_id=?"
 	_, err := s.db.Exec(query, content, id)
 	return err
 }
-=======
-// func (s *service) EditCategory(id, name string) error {
-// 	query := "UPDATE Category SET name=? WHERE category_id=?"
-// 	_, err := s.db.Exec(query, name, id)
-// 	return err
-// }
->>>>>>> Stashed changes
