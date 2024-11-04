@@ -55,18 +55,27 @@
         <input type="hidden" value="{{.User.UserId}}" name="UserId">
         <!-- Title Section-->
         <div class="form-group">
+            {{ if .FormData.Errors.Title }}
+                <span class="error">{{ .FormData.Errors.Title }}</span>
+            {{ end }}
             <label for="title">Title :</label>
-            <input type=text name="title" placeholder="Insert your title here...">
+            <input type=text name="title" value="{{ .FormData.Title}}" placeholder="Insert your title here...">
         </div>
 
         <!-- Content Section-->
         <div class="form-group">
+            {{ if .FormData.Errors.Content }}
+            <span class="error">{{ .FormData.Errors.Content }}</span>
+        {{ end }}
             <label for="content">Content :</label>
-            <textarea class="scroll" name="content" id="content" placeholder="Write your post here... (Grab bottom-right corner to resize)"></textarea>
+            <textarea class="scroll" name="content" id="content" placeholder="Write your post here... (Grab bottom-right corner to resize)">{{ .FormData.Content }}</textarea>
         </div>
 
         <!-- Categories Section-->
         <div class="form-group">
+            {{ if .FormData.Errors.Categories }}
+            <span class="error">{{ .FormData.Errors.Categories }}</span>
+        {{ end }}
             <label for="categories">Categories :</label>
             <div class="categories">
                 {{range .Categories}}

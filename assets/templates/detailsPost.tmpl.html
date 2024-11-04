@@ -62,13 +62,9 @@
             <!-- Tags Section -->
             <div class="inner-post-content">
                 <div class="tags-section">
-                    <span class="category-box">Shonen</span>
-                    <span class="category-box">Seinen</span>
-                    <span class="category-box">Shojo</span>
-                    <span class="category-box">Naruto</span>
-                    <span class="category-box">Sword Art Online</span>
-                    <span class="category-box">Ecchi pour Momo</span>
-                    <span class="category-box">Spoil</span>
+                    {{ range .Post.Categories }}
+                    <span class="category-box">{{ .Name }}</span>
+                    {{ end }}
                 </div>
                 <div>
                     <p class="post-text">

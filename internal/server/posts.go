@@ -23,32 +23,40 @@ func (s *Server) GetPostsHandler(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 
-	title := r.FormValue("title")
-	content := r.FormValue("content")
-
+	type FormData struct {
+		Title      string
+		Content    string
+		Categories []string
+		Errors     map[string]string
+	}
 	erri := r.ParseForm()
+	formData := FormData{
+		Title:      r.FormValue("title"),
+		Content:    r.FormValue("content"),
+		Categories: r.Form["categories"],
+		Errors:     make(map[string]string),
+	}
 	if erri != nil {
 		log.Println(erri)
 	}
 
-	categories := r.Form["categories"]
-	fmt.Println(categories)
-
 	// Validate title
-	if ValidateTitle(title) {
-		http.Error(w, "Title cannot be empty", http.StatusBadRequest)
-		return
+	if ValidateTitle(formData.Title) {
+		formData.Errors["Title"] = "Title cannot be empty"
 	}
 
 	// Validate content
-	if ValidatePostChar(content) {
-		http.Error(w, "Content is either empty or exceeds maximum character limit", http.StatusBadRequest)
-		return
+	if ValidatePostChar(formData.Content) {
+		formData.Errors["Content"] = "Content cannot be empty or more than 1000 characters"
 	}
 
 	// Validate Categories
-	if ValidateCategory(categories) {
-		http.Error(w, "You must select at least 1 category", http.StatusBadRequest)
+	if ValidateCategory(formData.Categories) {
+		formData.Errors["Categories"] = "Please select at least one category"
+	}
+	if len(formData.Errors) > 0 {
+		render(w, r, "createPost", map[string]interface{}{"FormData": formData, "Categories": s.categories})
+		return
 	}
 
 	newPost := models.Post{
@@ -62,8 +70,17 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// charControl := ValidatePostChar(newPost.Content)
-
-	err := s.db.AddPost(newPost)
+	categories := []models.Category{}
+	for _, categoryID := range formData.Categories {
+		for _, category := range s.categories {
+			if category.CategoryId == categoryID {
+				categories = append(categories, category)
+			}
+		}
+	}
+	newPost.Categories = categories
+	err := s.db.AddPost(newPost, categories)
+	s.posts = append(s.posts, newPost)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

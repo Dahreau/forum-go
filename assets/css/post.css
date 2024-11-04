@@ -128,15 +128,17 @@
     vertical-align: top;
 }
 
-.tag {
-    padding: 6px 12px;
-    border-radius: 20px;
-    background-color: transparent;
-    border: 1px solid #767676;
-    color: white;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
+
+.category-box {
+    cursor: default;
 }
+
+.category-box:hover {
+background-color: transparent;
+border: 1px solid #767676;
+color: white;
+}
+
 
 @media (max-width: 768px) {
     .main-post-content {

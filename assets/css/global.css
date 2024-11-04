@@ -17,11 +17,14 @@ body {
     display: flex;
     gap: 32px;
     flex-direction: column;
+    min-height: 100vh;
     align-items: center;
     background-image: url(/assets/img/13.png);
-    overflow-x: hidden;
     background-size: cover;
     background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    overflow-x: hidden;
 }
 
 .welcome {
@@ -31,18 +34,17 @@ body {
 /* Footer Section */
 .footer-section {
     width: 100%;
-    /* max-width: 1440px; */
     height: 80px;
     background: #10091B;
     display: flex;
     justify-content: center;
     align-items: center;
-
-    /*margin-top: 0px;*/
+    flex-shrink: 0;
     position: relative;
-    /*left: 0;*/
-    /*bottom: 0;*/
-    /*right: 0;*/
+    box-sizing: border-box;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 .footer-text {
