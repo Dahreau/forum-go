@@ -2,6 +2,9 @@ package database
 
 import (
 	"forum-go/internal/models"
+	"math"
+	"math/rand"
+	"strconv"
 )
 
 func (s *service) GetComment() ([]models.Comment, error) {
@@ -23,10 +26,13 @@ func (s *service) GetComment() ([]models.Comment, error) {
 	return comments, nil
 }
 
-func (s *service) AddComment(comment models.Comment) error {
-	// Query insert all fields in comment table
+func (s *service) AddComment(name string) error {
+	comment := models.Comment{
+		CommentId: strconv.Itoa(rand.Intn(math.MaxInt32)),
+		Name:       name,
+	}
 	query := "INSERT INTO Comment (comment_id,name) VALUES (?,?)"
-	_, err := s.db.Exec(query, comment.CommentId, comment.Content)
+	_, err := s.db.Exec(query, comment.CommentId, comment.Name)
 	return err
 }
 
