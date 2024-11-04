@@ -3,7 +3,6 @@ package server
 import (
 	"fmt"
 	"forum-go/internal/models"
-	"log"
 	"math"
 	"math/rand"
 	"net/http"
@@ -13,7 +12,49 @@ import (
 )
 
 // Implement function : retrieve form values and call AddCommet function in database/comment.go
+// Add model instance
 func (s *Server) PostCommentHandler(w http.ResponseWriter, r *http.Request) {
+	type CommentData struct {
+		Content string
+		UserID  string
+		PostID  string
+		Errors  map[string]string
+	}
+
+	commentData := CommentData{
+		Content: r.FormValue("comment"),
+		UserID:  "UserId",
+		PostID:  "PostId",
+		Errors:  make(map[string]string),
+	}
+
+	if ValidateCommentChar(commentData.Content) {
+		commentData.Errors["Comment"] = "Comments must have a maximum of 400 characters"
+	}
+	if len(commentData.Errors) > 0 {
+		render(w, r, "detailsPost", map[string]interface{}{"FormData": commentData, "Categories": s.categories})
+		return
+	}
+
+	newComment := models.Comment{
+		CommentId:    strconv.Itoa(rand.Intn(math.MaxInt32)),
+		Content:      r.FormValue("comment"),
+		CreationDate: time.Now(),
+		UserID:       r.FormValue("UserId"),
+		PostID:       r.FormValue("PostId"),
+		Likes:        0,
+		Dislikes:     0,
+	}
+	err := s.db.AddComment(newComment)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/post/"+newComment.PostID, http.StatusSeeOther)
+}
+
+func validComment(content string) bool {
+	return len(content) < 401
 }
 
 func (s *Server) GetCommentsHandler(w http.ResponseWriter, r *http.Request) {
@@ -23,68 +64,6 @@ func (s *Server) GetCommentsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	render(w, r, "../posts", map[string]interface{}{"Posts": posts})
-}
-
-func (s *Server) PostNewcommentHandler(w http.ResponseWriter, r *http.Request) {
-
-	type FormData struct {
-		Title      string
-		Content    string
-		Categories []string
-		Errors     map[string]string
-	}
-	erri := r.ParseForm()
-	formData := FormData{
-		Title:      r.FormValue("title"),
-		Content:    r.FormValue("content"),
-		Categories: r.Form["categories"],
-		Errors:     make(map[string]string),
-	}
-	if erri != nil {
-		log.Println(erri)
-	}
-
-	// Validate content
-	if ValidatePostChar(formData.Content) {
-		formData.Errors["Content"] = "Content cannot be empty or more than 1000 characters"
-	}
-
-	// Validate Categories
-	if ValidateCategory(formData.Categories) {
-		formData.Errors["Categories"] = "Please select at least one category"
-	}
-	if len(formData.Errors) > 0 {
-		render(w, r, "createPost", map[string]interface{}{"FormData": formData, "Categories": s.categories})
-		return
-	}
-
-	newPost := models.Post{
-		PostId:  strconv.Itoa(rand.Intn(math.MaxInt32)),
-		Title:   r.FormValue("title"),
-		Content: r.FormValue("content"),
-		UserID:  r.FormValue("UserId"),
-		//Categories:
-		CreationDate:          time.Now(),
-		FormattedCreationDate: time.Now().Format("Jan 02, 2006 - 15:04:05"),
-	}
-
-	// charControl := ValidatePostChar(newPost.Content)
-	categories := []models.Category{}
-	for _, categoryID := range formData.Categories {
-		for _, category := range s.categories {
-			if category.CategoryId == categoryID {
-				categories = append(categories, category)
-			}
-		}
-	}
-	newPost.Categories = categories
-	err := s.db.AddPost(newPost, categories)
-	s.posts = append(s.posts, newPost)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	http.Redirect(w, r, "/posts", http.StatusSeeOther)
 }
 
 func (s *Server) DeleteCommentHandler(w http.ResponseWriter, r *http.Request) {
@@ -128,6 +107,8 @@ func (s *Server) GetCommentHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	render(w, r, "detailsPost", map[string]interface{}{"Post": post})
 }
+
+// Handler in the post.go file line 130
 
 const MaxCharComment = 400
 

@@ -7,6 +7,7 @@ import (
 	"strconv"
 )
 
+<<<<<<< Updated upstream
 func (s *service) GetComments(post models.Post) ([]models.Comment, error) {
 	rows, err := s.db.Query(`
 		SELECT c.comment_id, c.content, c.creation_date, c.user_id, c.post_id
@@ -36,6 +37,12 @@ func (s *service) AddComment(name string) error {
 	}
 	query := "INSERT INTO Comment (comment_id,name) VALUES (?,?)"
 	_, err := s.db.Exec(query, comment.CommentId, comment.Name)
+=======
+func (s *service) AddComment(comment models.Comment) error {
+	// Query insert all fields in comment table
+	query := "INSERT INTO Comment (comment_id,content, creation_date, user_id, post_id) VALUES (?,?,?,?,?)"
+	_, err := s.db.Exec(query, comment.CommentId, comment.Content, comment.CreationDate, comment.UserID, comment.PostID)
+>>>>>>> Stashed changes
 	return err
 }
 
