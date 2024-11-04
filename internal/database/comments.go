@@ -43,16 +43,8 @@ func (s *service) DeleteComment(id string) error {
 		return err
 	}
 
-	// Delete from Post_Category first to maintain referential integrity
-	query := "DELETE FROM Post_Category WHERE category_id=?"
-	_, err = tx.Exec(query, id)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	// Delete from Category
-	query = "DELETE FROM Category WHERE category_id=?"
+	// Delete comment post by id
+	query := "DELETE FROM Comment WHERE comment_id=?"
 	_, err = tx.Exec(query, id)
 	if err != nil {
 		tx.Rollback()
