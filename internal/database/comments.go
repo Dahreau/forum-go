@@ -26,13 +26,13 @@ func (s *service) GetComment() ([]models.Comment, error) {
 	return comments, nil
 }
 
-func (s *service) AddCategory(name string) error {
-	category := models.Category{
-		CategoryId: strconv.Itoa(rand.Intn(math.MaxInt32)),
+func (s *service) AddComment(name string) error {
+	comment := models.Comment{
+		CommentId: strconv.Itoa(rand.Intn(math.MaxInt32)),
 		Name:       name,
 	}
-	query := "INSERT INTO Category (category_id,name) VALUES (?,?)"
-	_, err := s.db.Exec(query, category.CategoryId, category.Name)
+	query := "INSERT INTO Comment (comment_id,name) VALUES (?,?)"
+	_, err := s.db.Exec(query, comment.CommentId, comment.Name)
 	return err
 }
 
