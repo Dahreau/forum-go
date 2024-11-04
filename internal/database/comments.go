@@ -7,23 +7,23 @@ import (
 	"strconv"
 )
 
-func (s *service) GetCategorie() ([]models.Category, error) {
-	rows, err := s.db.Query("SELECT * FROM Category")
+func (s *service) GetComment() ([]models.Comment, error) {
+	rows, err := s.db.Query("SELECT * FROM Comment")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	categories := make([]models.Category, 0)
+	comments := make([]models.Comment, 0)
 	for rows.Next() {
-		var category models.Category
-		err := rows.Scan(&category.CategoryId, &category.Name)
+		var comment models.Comment
+		err := rows.Scan(&comment.CommentId)
 		if err != nil {
 			return nil, err
 		}
-		categories = append(categories, category)
+		comments = append(comments, comment)
 	}
-	return categories, nil
+	return comments, nil
 }
 
 func (s *service) AddCategory(name string) error {
