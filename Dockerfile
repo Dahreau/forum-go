@@ -1,5 +1,3 @@
-# Dockerfile
-
 # Build stage
 FROM golang:1.23.1-alpine3.20 AS build
 
