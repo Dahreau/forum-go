@@ -10,6 +10,29 @@
     text-align: center;
 }
 
+.Newpost-button {
+    position: absolute;
+    display: flex;
+    right: 5vw;
+    stroke: #BBFFC7;
+    align-items: center;
+
+    svg {
+        fill: transparent;
+        transition: all 0.5s ease;
+    }
+
+}
+
+
+.Newpost-button:hover {
+    stroke: white;
+
+    svg {
+        fill: #BBFFC7;
+    }
+
+}
 
 .tabs {
     display: flex;
@@ -19,6 +42,7 @@
     padding: 1px 32px;
     background-color: rgb(16, 9, 27);
     align-items: center;
+    ;
 }
 
 .tab {
@@ -252,4 +276,15 @@
     .post-list {
         width: 100%;
     }
+
+    .Newpost-button {
+        bottom: 2rem;
+        right: 4rem;
+        position: fixed;
+        z-index: 100;
+        span {
+            display: none;
+        }
+    }
+
 }
