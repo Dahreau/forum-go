@@ -6,18 +6,17 @@ html,
 body {
     margin: 0;
     padding: 0;
-    height: 100%;
+    min-height: 100vh;
     width: 100%;
+    display: flex;
+    flex-direction: column;
     font-family: 'Manrope', sans-serif;
     /* background-color: #10091B; */
     color: #FFFFFF;
 }
 
 body {
-    display: flex;
     gap: 32px;
-    flex-direction: column;
-    min-height: 100vh;
     align-items: center;
     background-image: url(/assets/img/13.png);
     background-size: cover;

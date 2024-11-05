@@ -94,13 +94,13 @@
         {{ range .Posts }}
         <div class="post-item">
           <a href="/post/{{ .PostId }}">
-          <div class="post-title">{{ .Title }}</div>
-          <div class="post-meta">
-            <span> </span>
-            <span class="post-author">{{ .User.Username}}</span>
-            <span class="post-date">{{ .FormattedCreationDate }}</span>
-            <span class="comment-count">{{ .NbOfComments}} Comments</span>
-          </div>
+            <div class="post-title">{{ .Title }}</div>
+            <div class="post-meta">
+              <span> </span>
+              <span class="post-author">{{ .User.Username}}</span>
+              <span class="post-date">{{ .FormattedCreationDate }}</span>
+              <span class="comment-count">{{ .NbOfComments}} Comments</span>
+            </div>
           </a>
           <div class="misc">
             <div class="vote-tags-container">
@@ -215,9 +215,9 @@
   </div>
 
   <!-- Footer Section -->
-  <div class="footer-section">
+  <footer class="footer-section">
     <span class="footer-text">FOOTER, LICENCE</span>
-  </div>
+  </footer>
 </body>
 
 </html>
