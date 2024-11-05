@@ -9,7 +9,8 @@ func (s *service) GetComments(post models.Post) ([]models.Comment, error) {
         SELECT c.comment_id, c.content, c.creation_date, c.user_id, c.post_id, u.username
         FROM Comment c
         JOIN User u ON c.user_id = u.user_id
-        WHERE c.post_id = ?`, post.PostId)
+        WHERE c.post_id = ?
+        ORDER BY c.creation_date ASC`, post.PostId)
 	if err != nil {
 		return nil, err
 	}

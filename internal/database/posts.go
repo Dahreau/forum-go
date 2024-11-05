@@ -5,22 +5,29 @@ import (
 )
 
 func (s *service) GetPosts() ([]models.Post, error) {
+	// Exécute la requête SQL pour récupérer les posts avec leurs catégories, triés par date
 	rows, err := s.db.Query(`
-		SELECT p.post_id, p.title, p.content, p.user_id, p.creation_date, p.update_date, 
-			   c.category_id, c.name 
-		FROM Post p 
-		LEFT JOIN Post_Category pc ON p.post_id = pc.post_id 
-		LEFT JOIN Category c ON pc.category_id = c.category_id`)
+        SELECT p.post_id, p.title, p.content, p.user_id, p.creation_date, p.update_date, 
+               c.category_id, c.name 
+        FROM Post p 
+        LEFT JOIN Post_Category pc ON p.post_id = pc.post_id 
+        LEFT JOIN Category c ON pc.category_id = c.category_id
+        ORDER BY p.creation_date DESC`) // Trie par date de création décroissante
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
+	// Récupère tous les utilisateurs
 	users, err := s.GetUsers()
 	if err != nil {
 		return nil, err
 	}
+
+	// Utilise un slice pour garantir l'ordre
+	var posts []models.Post
 	postMap := make(map[string]*models.Post)
+
 	for rows.Next() {
 		var post models.Post
 		var category models.Category
@@ -29,9 +36,12 @@ func (s *service) GetPosts() ([]models.Post, error) {
 			return nil, err
 		}
 		post.FormattedCreationDate = post.CreationDate.Format("Jan 02, 2006 - 15:04:05")
+
+		// Vérifie si le post existe déjà dans postMap
 		if existingPost, ok := postMap[post.PostId]; ok {
 			existingPost.Categories = append(existingPost.Categories, category)
 		} else {
+			// Attache l'utilisateur correspondant
 			for _, user := range users {
 				if user.UserId == post.UserID {
 					post.User = user
@@ -40,15 +50,18 @@ func (s *service) GetPosts() ([]models.Post, error) {
 			}
 			post.Categories = append(post.Categories, category)
 			postMap[post.PostId] = &post
+			posts = append(posts, post) // Ajoute le post dans le slice pour conserver l'ordre
 		}
 	}
-	posts := make([]models.Post, 0, len(postMap))
-	for _, post := range postMap {
-		post.NbOfComments = len(post.Comments)
-		posts = append(posts, *post)
+
+	// Compte les commentaires après avoir construit les posts
+	for i := range posts {
+		posts[i].NbOfComments = len(posts[i].Comments)
 	}
+
 	return posts, nil
 }
+
 func (s *service) GetPost(id string) (models.Post, error) {
 	post := models.Post{}
 	user := models.User{}
