@@ -50,15 +50,14 @@ func (s *service) GetPosts() ([]models.Post, error) {
 			}
 			post.Categories = append(post.Categories, category)
 			postMap[post.PostId] = &post
+			post.Comments, err = s.GetComments(post)
+			post.NbOfComments = len(post.Comments)
+			if err != nil {
+				return nil, err
+			}
 			posts = append(posts, post) // Ajoute le post dans le slice pour conserver l'ordre
 		}
 	}
-
-	// Compte les commentaires après avoir construit les posts
-	for i := range posts {
-		posts[i].NbOfComments = len(posts[i].Comments)
-	}
-
 	return posts, nil
 }
 

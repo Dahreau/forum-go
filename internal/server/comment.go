@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"forum-go/internal/models"
 	"math"
 	"math/rand"
@@ -63,14 +62,31 @@ func (s *Server) GetCommentsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) DeleteCommentHandler(w http.ResponseWriter, r *http.Request) {
-	PostID := r.FormValue("postId")
-	fmt.Println(PostID)
-	err := s.db.DeletePost(PostID)
+	PostID := r.FormValue("PostId")
+	CommentID := r.FormValue("CommentId")
+	UserID := r.FormValue("UserId")
+	if !s.isLoggedIn(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	if UserID != s.getUser(r).UserId && !IsAdmin(r) {
+		http.Error(w, "You are not allowed to delete this comment", http.StatusForbidden)
+		return
+	}
+	if CommentID == "" {
+		http.Error(w, "Invalid comment ID", http.StatusBadRequest)
+		return
+	}
+	if PostID == "" {
+		http.Error(w, "Invalid post ID", http.StatusBadRequest)
+		return
+	}
+	err := s.db.DeleteComment(CommentID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/posts", http.StatusSeeOther)
+	http.Redirect(w, r, "/post/"+PostID, http.StatusSeeOther)
 }
 
 func (s *Server) GetNewCommentHandler(w http.ResponseWriter, r *http.Request) {
@@ -116,13 +132,14 @@ func ValidateCommentChar(content string) bool {
 }
 
 func (s *Server) EditCommentHandler(w http.ResponseWriter, r *http.Request) {
-	commentID := r.FormValue("commentId")
-	commentContent := r.FormValue("newCommentContent")
+	CommentID := r.FormValue("CommentId")
+	PostId := r.FormValue("PostId")
+	UpdatedContent := r.FormValue("UpdatedContent")
 
-	err := s.db.EditComment(commentID, commentContent)
+	err := s.db.EditComment(CommentID, UpdatedContent)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/posts", http.StatusSeeOther)
+	http.Redirect(w, r, "/post/"+PostId, http.StatusSeeOther)
 }

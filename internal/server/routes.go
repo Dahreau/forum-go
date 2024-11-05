@@ -38,6 +38,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	mux.HandleFunc("GET /post/{id}", s.GetPostHandler)
 	mux.HandleFunc("POST /comment/delete/{id}", s.DeleteCommentHandler)
+	mux.HandleFunc("POST /comment/edit/{id}", s.EditCommentHandler)
 	mux.HandleFunc("POST /post/comment", s.PostCommentHandler)
 	mux.HandleFunc("/health", s.healthHandler)
 	mux.HandleFunc("GET /adminPanel", s.AdminPanelHandler)

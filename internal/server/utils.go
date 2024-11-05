@@ -12,6 +12,13 @@ func (s *Server) isLoggedIn(r *http.Request) bool {
 	user := r.Context().Value(contextKeyUser)
 	return user != nil
 }
+func (s *Server) getUser(r *http.Request) models.User {
+	user := r.Context().Value(contextKeyUser)
+	if user == nil {
+		return models.User{}
+	}
+	return user.(models.User)
+}
 func IsAdmin(r *http.Request) bool {
 	user := r.Context().Value(contextKeyUser)
 	if user == nil {
