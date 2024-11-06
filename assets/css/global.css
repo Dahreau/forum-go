@@ -175,6 +175,39 @@ a {
     }
 }
 
+.downvote {
+    /* padding: 4px 8px; */
+    border-radius: 18px;
+    /* background: #170F22; */
+    /* border: 1px solid #BBFFC7; */
+    /* box-shadow: 0px 0px 12px #88F49C; */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+    padding: 4px 4px;
+    border: none;
+    border-radius: 12px;
+    stroke: #FF948A;
+    color: #FF948A;
+
+    p {
+        margin: 0;
+        padding: 0;
+    }
+
+}
+
+.downvote:hover {
+    cursor: pointer;
+    stroke: #FE5454;
+
+    #dislike-count {
+        color: #FE5454;
+    }
+}
+
 
 /*******************************************************************/
 /***************************** BUTTONS *****************************/
