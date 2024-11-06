@@ -41,9 +41,9 @@ CREATE TABLE IF NOT EXISTS User_Like (
   -- If the user likes a post
   comment_id CHAR(32),
   -- If the user likes a comment
-  FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
-  FOREIGN KEY (post_id) REFERENCES Post(post_id) ON DELETE CASCADE,
-  FOREIGN KEY (comment_id) REFERENCES Comment(comment_id) ON DELETE CASCADE
+  FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
+  -- FOREIGN KEY (post_id) REFERENCES Post(post_id) ON DELETE CASCADE,
+  -- FOREIGN KEY (comment_id) REFERENCES Comment(comment_id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS Post_Category (
   post_id CHAR(32),

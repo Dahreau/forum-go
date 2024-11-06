@@ -43,8 +43,38 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc("/health", s.healthHandler)
 	mux.HandleFunc("GET /adminPanel", s.AdminPanelHandler)
 	mux.HandleFunc("GET /report", s.reportHandler)
+	mux.HandleFunc("POST /vote", s.VoteHandler)
 
 	return s.authenticate(mux)
+}
+
+func (s *Server) VoteHandler(w http.ResponseWriter, r *http.Request) {
+	if !s.isLoggedIn(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	ComeFrom := r.FormValue("ComeFrom")
+	postID := r.FormValue("post_id")
+	userID := r.FormValue("user_id")
+	vote := r.FormValue("vote")
+	commentID := r.FormValue("comment_id")
+	var isLike bool
+	if vote == "like" {
+		isLike = true
+	} else {
+		isLike = false
+	}
+
+	err := s.db.Vote(postID, commentID, userID, isLike)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if ComeFrom == "post" {
+		http.Redirect(w, r, "/post/"+postID, http.StatusSeeOther)
+	} else {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
 }
 
 func (s *Server) reportHandler(w http.ResponseWriter, r *http.Request) {

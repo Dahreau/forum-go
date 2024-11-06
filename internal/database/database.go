@@ -50,6 +50,7 @@ type Service interface {
 	AddCategory(name string) error
 	DeleteCategory(id string) error
 	EditCategory(id, name string) error
+	Vote(postId, commentId, userId string, isLike bool) error
 }
 
 type service struct {
