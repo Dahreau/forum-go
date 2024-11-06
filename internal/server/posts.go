@@ -103,7 +103,7 @@ func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/posts", http.StatusSeeOther)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func (s *Server) GetNewPostHandler(w http.ResponseWriter, r *http.Request) {

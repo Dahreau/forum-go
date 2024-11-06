@@ -81,6 +81,11 @@
 
 .post-text {
     text-align: left;
+    white-space: pre-line;
+    border: none;
+    box-shadow: none;
+    height: fit-content;
+    background-color: transparent;
 }
 
 .comment {

@@ -81,23 +81,50 @@ func (s *Server) GetRegisterHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
+	type FormData struct {
+		Username string
+		Email    string
+		Errors   map[string]string
+	}
+	formData := FormData{
+		Username: r.FormValue("username"),
+		Email:    r.FormValue("email"),
+		Errors:   make(map[string]string),
+	}
 	PasswordHash, err := bcrypt.GenerateFromPassword([]byte(r.FormValue("password")), bcrypt.DefaultCost)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	IsUnique, _ := s.db.FindEmailUser(r.FormValue("email"))
+	IsUnique, _ := s.db.FindEmailUser(formData.Email)
 	if !IsUnique {
-		render(w, r, "register", map[string]interface{}{"email_used": "Email already used, change it"})
-		return
+		formData.Errors["email_used"] = "Email already used, change it"
 	}
 
 	IsUniqueUsername, _ := s.db.FindUsername(r.FormValue("username"))
 	if !IsUniqueUsername {
-		render(w, r, "register", map[string]interface{}{"username_used": "Username already used, change it"})
-		return
+		formData.Errors["username_used"] = "Username already used, change it"
+	}
+	if len(formData.Username) < 3 {
+		formData.Errors["username_len"] = "Username must be at least 3 characters long"
+	} else if len(formData.Username) > 20 {
+		formData.Errors["username_len"] = "Username must be at most 20 characters long"
+	}
+	if strings.Contains(formData.Username, " ") {
+		formData.Errors["username_spaces"] = "Username must not contain spaces"
+	}
+	if !IsAlphanumeric(formData.Username) {
+		formData.Errors["username_alpha"] = "Username must contain only alphanumeric characters"
 	}
 
+	r.FormValue("Confirmpassword")
+	if r.FormValue("password") != r.FormValue("Confirmpassword") {
+		formData.Errors["password"] = "Passwords don't match"
+	}
+	if len(formData.Errors) > 0 {
+		render(w, r, "register", map[string]interface{}{"FormData": formData})
+		return
+	}
 	user := models.User{Username: r.FormValue("username"), Email: r.FormValue("email"), Password: string(PasswordHash), Role: "user", CreationDate: time.Now(), UserId: strconv.Itoa(rand.Intn(math.MaxInt32))}
 	err = s.db.CreateUser(user)
 	if err != nil {

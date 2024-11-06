@@ -8,8 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" href="/assets/img/logo.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Shojumaru&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/createPost.css">
     <link rel="stylesheet" href="/assets/css/global.css">
@@ -73,10 +71,10 @@
                         <span class="category-box">{{ .Name }}</span>
                         {{ end }}
                     </div>
-                    <div>
-                        <p class="post-text">
+                    <div class="post-text">
+
                             {{ .Post.Content}}
-                        </p>
+                     
                     </div>
                 </div>
                 <!-- Vote Buttons -->

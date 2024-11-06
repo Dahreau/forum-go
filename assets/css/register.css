@@ -63,8 +63,8 @@ input {
     padding: 10px;
     margin: 4px 0;
     border-radius: 52px;
-    color: rosybrown;
-    caret-color: rosybrown;
+    color: #ffc4fb;
+    caret-color: #ffc4fb;
     transition: border-color 0.3s ease;
     box-shadow:
         0 0 7px #FE9AF8,
@@ -83,8 +83,7 @@ input::placeholder {
 }
 
 input:focus {
-    border-top: 2px solid rosybrown;
-    border-bottom: 2px solid rosybrown;
+    box-shadow: 0 0 16px #FE9AF8;
     outline: none;
 }
 

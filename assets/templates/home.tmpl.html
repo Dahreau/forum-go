@@ -8,11 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="icon" href="/assets/img/logo.png" type="image/png">
   <link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Mina:wght@400;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="assets/css/global.css">
@@ -185,34 +181,40 @@
             </div>
             <!-- Report and Delete -->
             <div class="post-actions">
+              {{ if or (eq $.User.Role "moderator") (eq $.User.Role "admin") }}
               <a class="button report" href="/report">Report</a>
-              <button class="delete-button">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_693_342)" filter="url(#filter0_d_693_342)">
-                    <path
-                      d="M18 9L17.16 17.398C17.033 18.671 16.97 19.307 16.68 19.788C16.4257 20.2114 16.0516 20.55 15.605 20.761C15.098 21 14.46 21 13.18 21H10.82C9.541 21 8.902 21 8.395 20.76C7.94805 20.5491 7.57361 20.2106 7.319 19.787C7.031 19.307 6.967 18.671 6.839 17.398L6 9M13.5 15.5V10.5M10.5 15.5V10.5M4.5 6.5H9.115M9.115 6.5L9.501 3.828C9.613 3.342 10.017 3 10.481 3H13.519C13.983 3 14.386 3.342 14.499 3.828L14.885 6.5M9.115 6.5H14.885M14.885 6.5H19.5"
-                      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                  </g>
-                  <defs>
-                    <filter id="filter0_d_693_342" x="0" y="0" width="24" height="24" filterUnits="userSpaceOnUse"
-                      color-interpolation-filters="sRGB">
-                      <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                        result="hardAlpha" />
-                      <feOffset />
-                      <feComposite in2="hardAlpha" operator="out" />
-                      <feColorMatrix type="matrix"
-                        values="0 0 0 0 0.997187 0 0 0 0 0.327812 0 0 0 0 0.327812 0 0 0 1 0" />
-                      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_693_342" />
-                      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_693_342" result="shape" />
-                    </filter>
-                    <clipPath id="clip0_693_342">
-                      <rect width="24" height="24" fill="white" />
-                    </clipPath>
-                  </defs>
-                </svg>
-
-              </button>
+              {{ end }}
+              {{ if or (eq .UserID $.User.UserId) (eq $.User.Role "admin") }}
+              <form action="/posts/delete/{{ .PostId }}" method="post">
+                <input type="hidden" name="postId" value="{{ .PostId }}">
+                <button class="delete-button">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_693_342)" filter="url(#filter0_d_693_342)">
+                      <path
+                        d="M18 9L17.16 17.398C17.033 18.671 16.97 19.307 16.68 19.788C16.4257 20.2114 16.0516 20.55 15.605 20.761C15.098 21 14.46 21 13.18 21H10.82C9.541 21 8.902 21 8.395 20.76C7.94805 20.5491 7.57361 20.2106 7.319 19.787C7.031 19.307 6.967 18.671 6.839 17.398L6 9M13.5 15.5V10.5M10.5 15.5V10.5M4.5 6.5H9.115M9.115 6.5L9.501 3.828C9.613 3.342 10.017 3 10.481 3H13.519C13.983 3 14.386 3.342 14.499 3.828L14.885 6.5M9.115 6.5H14.885M14.885 6.5H19.5"
+                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </g>
+                    <defs>
+                      <filter id="filter0_d_693_342" x="0" y="0" width="24" height="24" filterUnits="userSpaceOnUse"
+                        color-interpolation-filters="sRGB">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                          result="hardAlpha" />
+                        <feOffset />
+                        <feComposite in2="hardAlpha" operator="out" />
+                        <feColorMatrix type="matrix"
+                          values="0 0 0 0 0.997187 0 0 0 0 0.327812 0 0 0 0 0.327812 0 0 0 1 0" />
+                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_693_342" />
+                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_693_342" result="shape" />
+                      </filter>
+                      <clipPath id="clip0_693_342">
+                        <rect width="24" height="24" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </button>
+            </form>
+            {{ end }}
             </div>
           </div>
         </div>
