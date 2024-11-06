@@ -51,7 +51,7 @@
     text-align: left;
 }
 
-.error{
+.error {
     width: 100%;
     text-align: center;
     display: block;
@@ -124,4 +124,8 @@ input:checked+label {
     color: black;
     background-color: #b4b4b4;
     box-shadow: 0 0 24px #fe9af8, inset 0 0 24px #FE9AF8;
+}
+
+.content {
+    resize: none;
 }

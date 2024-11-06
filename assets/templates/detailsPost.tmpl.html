@@ -183,7 +183,7 @@
                     {{ if or (eq .UserID $.User.UserId) (eq $.User.Role "admin") }}
                     <form method="post" class="edit-form" action="/comment/edit/{{.CommentId}}">
                     {{end}}
-                    <textarea class="comment-text" name="UpdatedContent" oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';" {{ if not (or (eq .UserID $.User.UserId) (eq $.User.Role "admin")) }} readonly {{ end }} required>{{.Content}}</textarea>
+                    <textarea class="comment-text no-resize" name="UpdatedContent" oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';" {{ if not (or (eq .UserID $.User.UserId) (eq $.User.Role "admin")) }} readonly {{ end }} required>{{.Content}}</textarea>
                     <!--  Comment Footer -->
                     <div class="comment-footer">
                         <!-- Vote Buttons -->

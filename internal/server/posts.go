@@ -7,6 +7,7 @@ import (
 	"math"
 	"math/rand"
 	"net/http"
+	"sort" // Import pour trier les posts
 	"strconv"
 	"strings"
 	"time"
@@ -18,11 +19,17 @@ func (s *Server) GetPostsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	// Tri des posts par date de création dans l'ordre décroissant
+	sort.Slice(posts, func(i, j int) bool {
+		return posts[i].CreationDate.After(posts[j].CreationDate)
+	})
+
+	// Rendu des posts triés
 	render(w, r, "../posts", map[string]interface{}{"Posts": posts})
 }
 
 func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
-
 	type FormData struct {
 		Title      string
 		Content    string
@@ -98,6 +105,7 @@ func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	http.Redirect(w, r, "/posts", http.StatusSeeOther)
 }
+
 func (s *Server) GetNewPostHandler(w http.ResponseWriter, r *http.Request) {
 	categories, err := s.db.GetCategories()
 	if err != nil {
@@ -110,6 +118,7 @@ func (s *Server) GetNewPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	render(w, r, "createPost", map[string]interface{}{"Categories": categories})
 }
+
 func (s *Server) GetPostHandler(w http.ResponseWriter, r *http.Request) {
 	vars := strings.Split(r.URL.Path, "/")
 	if len(vars) < 3 {
@@ -120,6 +129,7 @@ func (s *Server) GetPostHandler(w http.ResponseWriter, r *http.Request) {
 	post, err := s.db.GetPost(postID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	if post.PostId == "" {
 		http.Error(w, "Post not found", http.StatusNotFound)
