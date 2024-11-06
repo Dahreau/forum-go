@@ -73,8 +73,8 @@
                     </div>
                     <div class="post-text">
 
-                            {{ .Post.Content}}
-                     
+                        {{ .Post.Content}}
+
                     </div>
                 </div>
                 <!-- Vote Buttons -->
@@ -122,7 +122,7 @@
                                 <g filter="url(#filter0_d_668_716)">
                                     <path
                                         d="M8 13.0048V5.00481C8 4.7396 7.89464 4.48524 7.70711 4.29771C7.51957 4.11017 7.26522 4.00481 7 4.00481H5C4.73478 4.00481 4.48043 4.11017 4.29289 4.29771C4.10536 4.48524 4 4.7396 4 5.00481V12.0048C4 12.27 4.10536 12.5244 4.29289 12.7119C4.48043 12.8995 4.73478 13.0048 5 13.0048H8ZM8 13.0048C9.06087 13.0048 10.0783 13.4262 10.8284 14.1764C11.5786 14.9265 12 15.9439 12 17.0048V18.0048C12 18.5352 12.2107 19.044 12.5858 19.419C12.9609 19.7941 13.4696 20.0048 14 20.0048C14.5304 20.0048 15.0391 19.7941 15.4142 19.419C15.7893 19.044 16 18.5352 16 18.0048V13.0048H19C19.5304 13.0048 20.0391 12.7941 20.4142 12.419C20.7893 12.044 21 11.5352 21 11.0048L20 6.00481C19.8562 5.39134 19.5834 4.86457 19.2227 4.50385C18.8619 4.14313 18.4328 3.96799 18 4.00481H11C10.2044 4.00481 9.44129 4.32088 8.87868 4.88349C8.31607 5.4461 8 6.20916 8 7.00481"
-                                        stroke="#FF948A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                         shape-rendering="crispEdges" />
                                 </g>
                             </g>
@@ -156,7 +156,8 @@
                     <input type="hidden" name="PostId" value="{{ .Post.PostId }}">
                     <input type="hidden" name="UserId" value="{{ .User.UserId }}">
                     <textarea class="scroll" name="comment" id="comment-form"
-                        placeholder="Write your comment here... (Grab bottom-right corner to resize)" required></textarea>
+                        placeholder="Write your comment here... (Grab bottom-right corner to resize)"
+                        required></textarea>
                     <button class="button" type="submit">Comment</button>
                 </form>
             </div>
@@ -172,124 +173,130 @@
                 {{ range .Post.Comments}}
                 <div class="comment {{ if or (eq .UserID $.User.UserId) }} ownComment {{ end }}">
                     <!-- Comment Header -->
-                     <div class="comment-header">
-                         <span class="comment-author">{{.Username}}</span>
-                         <span>{{.FormattedCreationDate }}</span>
-                        </div>
-                        <hr>
-                        <!-- Comment Content -->
+                    <div class="comment-header">
+                        <span class="comment-author">{{.Username}}</span>
+                        <span>{{.FormattedCreationDate }}</span>
+                    </div>
+                    <hr>
+                    <!-- Comment Content -->
                     {{ if or (eq .UserID $.User.UserId) (eq $.User.Role "admin") }}
                     <form method="post" class="edit-form" action="/comment/edit/{{.CommentId}}">
-                    {{end}}
-                    <textarea class="comment-text no-resize" name="UpdatedContent" oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';" {{ if not (or (eq .UserID $.User.UserId) (eq $.User.Role "admin")) }} readonly {{ end }} required>{{.Content}}</textarea>
-                    <!--  Comment Footer -->
-                    <div class="comment-footer">
-                        <!-- Vote Buttons -->
-                    <div class="global-box like-btn">
-                        <div class="vote-button upvote">
-                            <!-- SVG for upvote button -->
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_668_665)">
-                                    <g filter="url(#filter0_d_668_665)">
-                                        <path
-                                            d="M8 11V19C8 19.2652 7.89464 19.5196 7.70711 19.7071C7.51957 19.8946 7.26522 20 7 20H5C4.73478 20 4.48043 19.8946 4.29289 19.7071C4.10536 19.5196 4 19.2652 4 19V12C4 11.7348 4.10536 11.4804 4.29289 11.2929C4.48043 11.1054 4.73478 11 5 11H8ZM8 11C9.06087 11 10.0783 10.5786 10.8284 9.82843C11.5786 9.07828 12 8.06087 12 7V6C12 5.46957 12.2107 4.96086 12.5858 4.58579C12.9609 4.21071 13.4696 4 14 4C14.5304 4 15.0391 4.21071 15.4142 4.58579C15.7893 4.96086 16 5.46957 16 6V11H19C19.5304 11 20.0391 11.2107 20.4142 11.5858C20.7893 11.9609 21 12.4696 21 13L20 18C19.8562 18.6135 19.5834 19.1402 19.2227 19.501C18.8619 19.8617 18.4328 20.0368 18 20H11C10.2044 20 9.44129 19.6839 8.87868 19.1213C8.31607 18.5587 8 17.7956 8 17"
-                                            stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round" shape-rendering="crispEdges" />
-                                    </g>
-                                </g>
-                                <defs>
-                                    <filter id="filter0_d_668_665" x="0" y="0" width="25" height="24.0049"
-                                        filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                        <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                                        <feColorMatrix in="SourceAlpha" type="matrix"
-                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
-                                        <feOffset />
-                                        <feGaussianBlur stdDeviation="1.5" />
-                                        <feComposite in2="hardAlpha" operator="out" />
-                                        <feColorMatrix type="matrix"
-                                            values="0 0 0 0 0.532969 0 0 0 0 0.958698 0 0 0 0 0.611019 0 0 0 1 0" />
-                                        <feBlend mode="normal" in2="BackgroundImageFix"
-                                            result="effect1_dropShadow_668_665" />
-                                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_668_665"
-                                            result="shape" />
-                                    </filter>
-                                    <clipPath id="clip0_668_665">
-                                        <rect width="24" height="24" fill="white" />
-                                    </clipPath>
-                                </defs>
-                            </svg>
+                        {{end}}
+                        <textarea class="comment-text no-resize" name="UpdatedContent"
+                            oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';" {{ if
+                            not (or (eq .UserID $.User.UserId) (eq $.User.Role "admin" )) }} readonly {{ end }}
+                            required>{{.Content}}</textarea>
+                        <!--  Comment Footer -->
+                        <div class="comment-footer">
+                            <!-- Vote Buttons -->
+                            <div class="global-box like-btn">
+                                <div class="vote-button upvote">
+                                    <!-- SVG for upvote button -->
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <g clip-path="url(#clip0_668_665)">
+                                            <g filter="url(#filter0_d_668_665)">
+                                                <path
+                                                    d="M8 11V19C8 19.2652 7.89464 19.5196 7.70711 19.7071C7.51957 19.8946 7.26522 20 7 20H5C4.73478 20 4.48043 19.8946 4.29289 19.7071C4.10536 19.5196 4 19.2652 4 19V12C4 11.7348 4.10536 11.4804 4.29289 11.2929C4.48043 11.1054 4.73478 11 5 11H8ZM8 11C9.06087 11 10.0783 10.5786 10.8284 9.82843C11.5786 9.07828 12 8.06087 12 7V6C12 5.46957 12.2107 4.96086 12.5858 4.58579C12.9609 4.21071 13.4696 4 14 4C14.5304 4 15.0391 4.21071 15.4142 4.58579C15.7893 4.96086 16 5.46957 16 6V11H19C19.5304 11 20.0391 11.2107 20.4142 11.5858C20.7893 11.9609 21 12.4696 21 13L20 18C19.8562 18.6135 19.5834 19.1402 19.2227 19.501C18.8619 19.8617 18.4328 20.0368 18 20H11C10.2044 20 9.44129 19.6839 8.87868 19.1213C8.31607 18.5587 8 17.7956 8 17"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    shape-rendering="crispEdges" />
+                                            </g>
+                                        </g>
+                                        <defs>
+                                            <filter id="filter0_d_668_665" x="0" y="0" width="25" height="24.0049"
+                                                filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                                                <feColorMatrix in="SourceAlpha" type="matrix"
+                                                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                                                    result="hardAlpha" />
+                                                <feOffset />
+                                                <feGaussianBlur stdDeviation="1.5" />
+                                                <feComposite in2="hardAlpha" operator="out" />
+                                                <feColorMatrix type="matrix"
+                                                    values="0 0 0 0 0.532969 0 0 0 0 0.958698 0 0 0 0 0.611019 0 0 0 1 0" />
+                                                <feBlend mode="normal" in2="BackgroundImageFix"
+                                                    result="effect1_dropShadow_668_665" />
+                                                <feBlend mode="normal" in="SourceGraphic"
+                                                    in2="effect1_dropShadow_668_665" result="shape" />
+                                            </filter>
+                                            <clipPath id="clip0_668_665">
+                                                <rect width="24" height="24" fill="white" />
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
 
-                            <span id="like-count">{{.Likes}}</span>
-                        </div>
-                        <div class="vote-button downvote">
-                            <span id="dislike-count">{{.Dislikes}}</span>
-                            <!-- SVG for downvote button -->
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_668_716)">
-                                    <g filter="url(#filter0_d_668_716)">
-                                        <path
-                                            d="M8 13.0048V5.00481C8 4.7396 7.89464 4.48524 7.70711 4.29771C7.51957 4.11017 7.26522 4.00481 7 4.00481H5C4.73478 4.00481 4.48043 4.11017 4.29289 4.29771C4.10536 4.48524 4 4.7396 4 5.00481V12.0048C4 12.27 4.10536 12.5244 4.29289 12.7119C4.48043 12.8995 4.73478 13.0048 5 13.0048H8ZM8 13.0048C9.06087 13.0048 10.0783 13.4262 10.8284 14.1764C11.5786 14.9265 12 15.9439 12 17.0048V18.0048C12 18.5352 12.2107 19.044 12.5858 19.419C12.9609 19.7941 13.4696 20.0048 14 20.0048C14.5304 20.0048 15.0391 19.7941 15.4142 19.419C15.7893 19.044 16 18.5352 16 18.0048V13.0048H19C19.5304 13.0048 20.0391 12.7941 20.4142 12.419C20.7893 12.044 21 11.5352 21 11.0048L20 6.00481C19.8562 5.39134 19.5834 4.86457 19.2227 4.50385C18.8619 4.14313 18.4328 3.96799 18 4.00481H11C10.2044 4.00481 9.44129 4.32088 8.87868 4.88349C8.31607 5.4461 8 6.20916 8 7.00481"
-                                            stroke="#FF948A" stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round" shape-rendering="crispEdges" />
-                                    </g>
-                                </g>
-                                <defs>
-                                    <filter id="filter0_d_668_716" x="0" y="-0.000106812" width="25" height="24.0049"
-                                        filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                        <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                                        <feColorMatrix in="SourceAlpha" type="matrix"
-                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
-                                        <feOffset />
-                                        <feGaussianBlur stdDeviation="1.5" />
-                                        <feComposite in2="hardAlpha" operator="out" />
-                                        <feColorMatrix type="matrix"
-                                            values="0 0 0 0 1 0 0 0 0 0.579861 0 0 0 0 0.541667 0 0 0 1 0" />
-                                        <feBlend mode="normal" in2="BackgroundImageFix"
-                                            result="effect1_dropShadow_668_716" />
-                                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_668_716"
-                                            result="shape" />
-                                    </filter>
-                                    <clipPath id="clip0_668_716">
-                                        <rect width="24" height="24" fill="white" />
-                                    </clipPath>
-                                </defs>
-                            </svg>
-                        </div>
-                    </div>
-                    <!-- Delete Comment Button -->
-                    {{ if or (eq .UserID $.User.UserId) (eq $.User.Role "admin") }}
-                    <div class="comment-buttons">
-                        <input type="hidden" name="CommentId" value="{{.CommentId}}">
-                        <input type="hidden" name="PostId" value="{{.PostID}}">
-                        <button class="button edit-comment" type="submit">
-                            <svg class="check-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z" />
-                            </svg>
+                                    <span id="like-count">{{.Likes}}</span>
+                                </div>
+                                <div class="vote-button downvote">
+                                    <span id="dislike-count">{{.Dislikes}}</span>
+                                    <!-- SVG for downvote button -->
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <g clip-path="url(#clip0_668_716)">
+                                            <g filter="url(#filter0_d_668_716)">
+                                                <path
+                                                    d="M8 13.0048V5.00481C8 4.7396 7.89464 4.48524 7.70711 4.29771C7.51957 4.11017 7.26522 4.00481 7 4.00481H5C4.73478 4.00481 4.48043 4.11017 4.29289 4.29771C4.10536 4.48524 4 4.7396 4 5.00481V12.0048C4 12.27 4.10536 12.5244 4.29289 12.7119C4.48043 12.8995 4.73478 13.0048 5 13.0048H8ZM8 13.0048C9.06087 13.0048 10.0783 13.4262 10.8284 14.1764C11.5786 14.9265 12 15.9439 12 17.0048V18.0048C12 18.5352 12.2107 19.044 12.5858 19.419C12.9609 19.7941 13.4696 20.0048 14 20.0048C14.5304 20.0048 15.0391 19.7941 15.4142 19.419C15.7893 19.044 16 18.5352 16 18.0048V13.0048H19C19.5304 13.0048 20.0391 12.7941 20.4142 12.419C20.7893 12.044 21 11.5352 21 11.0048L20 6.00481C19.8562 5.39134 19.5834 4.86457 19.2227 4.50385C18.8619 4.14313 18.4328 3.96799 18 4.00481H11C10.2044 4.00481 9.44129 4.32088 8.87868 4.88349C8.31607 5.4461 8 6.20916 8 7.00481"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    shape-rendering="crispEdges" />
+                                            </g>
+                                        </g>
+                                        <defs>
+                                            <filter id="filter0_d_668_716" x="0" y="-0.000106812" width="25"
+                                                height="24.0049" filterUnits="userSpaceOnUse"
+                                                color-interpolation-filters="sRGB">
+                                                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                                                <feColorMatrix in="SourceAlpha" type="matrix"
+                                                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                                                    result="hardAlpha" />
+                                                <feOffset />
+                                                <feGaussianBlur stdDeviation="1.5" />
+                                                <feComposite in2="hardAlpha" operator="out" />
+                                                <feColorMatrix type="matrix"
+                                                    values="0 0 0 0 1 0 0 0 0 0.579861 0 0 0 0 0.541667 0 0 0 1 0" />
+                                                <feBlend mode="normal" in2="BackgroundImageFix"
+                                                    result="effect1_dropShadow_668_716" />
+                                                <feBlend mode="normal" in="SourceGraphic"
+                                                    in2="effect1_dropShadow_668_716" result="shape" />
+                                            </filter>
+                                            <clipPath id="clip0_668_716">
+                                                <rect width="24" height="24" fill="white" />
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
+                                </div>
+                            </div>
+                            <!-- Delete Comment Button -->
+                            {{ if or (eq .UserID $.User.UserId) (eq $.User.Role "admin") }}
+                            <div class="comment-buttons">
+                                <input type="hidden" name="CommentId" value="{{.CommentId}}">
+                                <input type="hidden" name="PostId" value="{{.PostID}}">
+                                <button class="button edit-comment" type="submit">
+                                    <svg class="check-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z" />
+                                    </svg>
 
-                        </button>
+                                </button>
                     </form>
                     <form method="post" action="/comment/delete/{{.CommentId}}">
                         <input type="hidden" name="CommentId" value="{{.CommentId}}">
                         <input type="hidden" name="PostId" value="{{.PostID}}">
                         <input type="hidden" name="UserId" value="{{.UserID}}">
                         <button class="button logout-button delete-comment" type="submit">
-                            <svg class="plus-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M19 12.998H13V18.998H11V12.998H5V10.998H11V4.998H13V10.998H19V12.998Z"/>
-                                </svg>
-                                
+                            <svg class="plus-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M19 12.998H13V18.998H11V12.998H5V10.998H11V4.998H13V10.998H19V12.998Z" />
+                            </svg>
+
                         </button>
                     </form>
-                    </div>
-                    {{end}}
-                    </div>
                 </div>
                 {{end}}
             </div>
         </div>
+        {{end}}
+    </div>
+    </div>
 
     </div>
 
@@ -304,7 +311,7 @@
 </html>
 <script>
     // Ajuste la hauteur du textarea à l'affichage pour afficher tout le contenu sans scroll
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".comment-text").forEach(textarea => {
             textarea.style.height = textarea.scrollHeight + 'px';
         });
@@ -312,7 +319,7 @@
 
     // Remove display none from edit-comment button when textarea content changes
     document.querySelectorAll(".comment-text").forEach(textarea => {
-        textarea.addEventListener("input", function() {
+        textarea.addEventListener("input", function () {
             const editButton = this.closest(".comment").querySelector(".edit-comment");
             if (editButton) {
                 editButton.style.display = "inline-block";
@@ -320,13 +327,13 @@
         });
     });
     document.querySelectorAll('form').forEach(form => {
-    form.addEventListener('submit', (event) => {
-        const textarea = form.querySelector('textarea');
-        if (textarea && textarea.value.trim() === '') {
-            event.preventDefault();
-            alert("Comment can't be empty");
-        }
+        form.addEventListener('submit', (event) => {
+            const textarea = form.querySelector('textarea');
+            if (textarea && textarea.value.trim() === '') {
+                event.preventDefault();
+                alert("Comment can't be empty");
+            }
+        });
     });
-});
-    
+
 </script>
