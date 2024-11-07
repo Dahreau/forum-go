@@ -11,10 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Mina:wght@400;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/global.css">
-  <link rel="stylesheet" href="assets/css/header.css">
-  <link rel="stylesheet" href="assets/css/home.css">
-
+  <link rel="stylesheet" href="assets/css/report.css">
   <title>Aniverse Homepage</title>
 </head>
 
@@ -30,7 +27,7 @@
       {{ if .User }}
       <h1 class="welcome">Welcome {{ .User.Username}}</h1>
       <form method="post" action="/logout">
-        <button class="logout-button button" type="submit"><span>Log out</span><svg id="logout-icon"
+        <button class="logout-button" type="submit"><span>Log out</span><svg id="logout-icon"
             xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24">
             <path
               d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z" />
@@ -49,13 +46,13 @@
       {{ end }}
     </div>
   </header>
-  <textarea class="scroll" name="content" id="content"
-    placeholder="Give more detail about the report, if not needed leave empty"></textarea>
+  <h2>Give detail about the report issue</h2>
+  <textarea class="report-text" name="reportcontent" id="reportcontent"
+    placeholder="Explain your report, kindly and politely"></textarea>
   <!-- Footer Section -->
   <button class="button Report-button">Confirm Report</button>
   <footer class="footer-section">
     <div class="footer-text">Footer, licence</div>
   </footer>
 </body>
-
 </html>
