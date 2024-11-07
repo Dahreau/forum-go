@@ -2,71 +2,88 @@ package database
 
 import (
 	"forum-go/internal/models"
+	"strings"
 )
 
 func (s *service) GetPosts() ([]models.Post, error) {
-	// Exécute la requête SQL pour récupérer les posts avec leurs catégories, triés par date
+	// Query to retrieve posts with concatenated category IDs and names
 	rows, err := s.db.Query(`
-		SELECT p.post_id, p.title, p.content, p.user_id, p.creation_date, p.update_date, 
-			   c.category_id, c.name 
-		FROM Post p 
-		LEFT JOIN Post_Category pc ON p.post_id = pc.post_id 
-		LEFT JOIN Category c ON pc.category_id = c.category_id
-		ORDER BY p.creation_date DESC`) // Trie par date de création décroissante
+		SELECT 
+			p.post_id, 
+			p.title, 
+			p.content, 
+			p.user_id, 
+			p.creation_date, 
+			p.update_date, 
+			GROUP_CONCAT(c.category_id) AS category_ids, 
+			GROUP_CONCAT(c.name) AS category_names 
+		FROM 
+			Post p
+		LEFT JOIN 
+			Post_Category pc ON p.post_id = pc.post_id
+		LEFT JOIN 
+			Category c ON pc.category_id = c.category_id
+		GROUP BY 
+			p.post_id
+		ORDER BY 
+			p.creation_date DESC;`)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	// Récupère tous les utilisateurs
+	// Retrieve all users
 	users, err := s.GetUsers()
 	if err != nil {
 		return nil, err
 	}
 
-	// Utilise un slice pour garantir l'ordre
 	var posts []models.Post
-	postMap := make(map[string]*models.Post)
 
 	for rows.Next() {
 		var post models.Post
-		var category models.Category
-		err := rows.Scan(&post.PostId, &post.Title, &post.Content, &post.UserID, &post.CreationDate, &post.UpdateDate, &category.CategoryId, &category.Name)
+		var categoryIDs, categoryNames string
+		err := rows.Scan(&post.PostId, &post.Title, &post.Content, &post.UserID, &post.CreationDate, &post.UpdateDate, &categoryIDs, &categoryNames)
 		if err != nil {
 			return nil, err
 		}
 		post.FormattedCreationDate = post.CreationDate.Format("Jan 02, 2006 - 15:04:05")
 
-		// Vérifie si le post existe déjà dans postMap
-		if existingPost, ok := postMap[post.PostId]; ok {
-			existingPost.Categories = append(existingPost.Categories, category)
-		} else {
-			// Attache l'utilisateur correspondant
-			for _, user := range users {
-				if user.UserId == post.UserID {
-					post.User = user
-					break
-				}
+		// Parse concatenated category IDs and names
+		categoryIdList := strings.Split(categoryIDs, ",")
+		categoryNameList := strings.Split(categoryNames, ",")
+
+		for i := range categoryIdList {
+			category := models.Category{
+				CategoryId: categoryIdList[i],
+				Name:       categoryNameList[i],
 			}
 			post.Categories = append(post.Categories, category)
-			postMap[post.PostId] = &post
-			post.Comments, err = s.GetComments(post)
-			post.NbOfComments = len(post.Comments)
-			if err != nil {
-				return nil, err
-			}
-			posts = append(posts, post) // Ajoute le post dans le slice pour conserver l'ordre
 		}
-	}
 
-	// Récupère les likes des posts
-	for i := range posts {
-		userlikes, err := s.GetPostLikes(posts[i].PostId)
+		// Attach user information
+		for _, user := range users {
+			if user.UserId == post.UserID {
+				post.User = user
+				break
+			}
+		}
+
+		// Fetch comments and likes
+		post.Comments, err = s.GetComments(post)
 		if err != nil {
 			return nil, err
 		}
-		posts[i].UserLikes = userlikes
-		posts[i].Likes, posts[i].Dislikes = s.GetLikesCount(userlikes)
+		post.NbOfComments = len(post.Comments)
+
+		userLikes, err := s.GetPostLikes(post.PostId)
+		if err != nil {
+			return nil, err
+		}
+		post.UserLikes = userLikes
+		post.Likes, post.Dislikes = s.GetLikesCount(userLikes)
+
+		posts = append(posts, post)
 	}
 
 	return posts, nil

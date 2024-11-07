@@ -11,11 +11,11 @@ import (
 func (s *service) Vote(postID, commentID, userID string, isLike bool) error {
 	var row *sql.Row
 	var userlike models.UserLike
-	if commentID != "''" {
+	if commentID != "''" && commentID != "" {
 		query := "SELECT * FROM User_like WHERE comment_id=? AND user_id=?"
 		row = s.db.QueryRow(query, commentID, userID)
 	} else {
-		query := "SELECT * FROM User_like WHERE post_id=? AND user_id=?"
+		query := "SELECT * FROM User_like WHERE post_id=? AND user_id=? AND comment_id = ''"
 		row = s.db.QueryRow(query, postID, userID)
 	}
 	if err := row.Scan(&userlike.LikeId, &userlike.IsLike, &userlike.UserId, &userlike.PostId, &userlike.CommentId); err != nil {
