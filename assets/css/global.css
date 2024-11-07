@@ -16,7 +16,7 @@ body {
 }
 
 body {
-    gap: 32px;
+    gap: 16px;
     align-items: center;
     background-image: url(/assets/img/13.png);
     background-size: cover;
@@ -34,7 +34,7 @@ body {
 /* Footer Section */
 .footer-section {
     width: 100%;
-    height: 80px;
+    height: 48px;
     background: #10091B;
     display: flex;
     justify-content: center;
@@ -90,9 +90,16 @@ textarea::placeholder {
 }
 
 label {
+    font-size: 1.25em;
+    color: #ffc4fb;
+    text-shadow:
+        0 0 7px #FE9AF8;
+    margin-top: 8px;
     display: block;
-    margin-bottom: 0px;
+    text-align: left;
     font-family: 'Mina', sans-serif;
+    margin-bottom: 0px;
+    display: block;
 }
 
 a {
@@ -118,7 +125,7 @@ a {
 .vote-button {
     /* padding: 4px 8px; */
     border-radius: 18px;
-    /* background: #170F22; */
+    background: transparent;
     /* border: 1px solid #BBFFC7; */
     /* box-shadow: 0px 0px 12px #88F49C; */
     cursor: pointer;
@@ -159,13 +166,25 @@ a {
 #like-count {
     font-family: 'Mina', sans-serif;
     color: #56c76a;
+    min-width: 9px;
 }
 
 #dislike-count {
     font-family: 'Mina', sans-serif;
     color: #FF948A;
+    min-width: 9px;
 }
-
+.liked {
+   svg {
+       fill: #BBFFC7;
+   }
+}
+.disliked {
+    svg {
+        fill: #FF948A;
+        stroke: #FE5454;
+    }
+}
 .vote-button:hover {
     cursor: pointer;
     stroke: #BBFFC7;
@@ -236,7 +255,6 @@ a {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 10px;
 }
 
 .category-box {

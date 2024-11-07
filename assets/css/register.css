@@ -35,16 +35,6 @@ form {
     margin-top: 16px;
 }
 
-label {
-    font-size: 1.25em;
-    color: #ffc4fb;
-    text-shadow:
-        0 0 7px #FE9AF8;
-    margin-top: 8px;
-    display: block;
-    text-align: left;
-}
-
 button:hover {
     background-color: rgba(187, 255, 199, 0.8);
     border-radius: 16px;

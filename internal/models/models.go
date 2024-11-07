@@ -21,7 +21,10 @@ type Category struct {
 	CategoryId string `db:"category_id"`
 	Name       string `db:"name"`
 }
-
+type Post_Comment interface {
+	GetUserLikes() []UserLike
+	GetId() string
+}
 type Post struct {
 	PostId                string       `db:"post_id"`
 	Title                 string       `db:"title"`
@@ -34,20 +37,24 @@ type Post struct {
 	Categories            []Category   `db:"-"`
 	Comments              []Comment    `db:"-"`
 	NbOfComments          int          `db:"-"`
+	UserLikes             []UserLike   `db:"-"`
 	Likes                 int          `db:"-"`
 	Dislikes              int          `db:"-"`
+	HasVoted              int          `db:"-"`
 }
 
 type Comment struct {
-	CommentId             string    `db:"comment_id"`
-	Content               string    `db:"content"`
-	CreationDate          time.Time `db:"creation_date"`
-	FormattedCreationDate string    `db:"-"`
-	UserID                string    `db:"user_id"`
-	PostID                string    `db:"post_id"`
-	Username              string    `db:"-"`
-	Likes                 int       `db:"-"`
-	Dislikes              int       `db:"-"`
+	CommentId             string     `db:"comment_id"`
+	Content               string     `db:"content"`
+	CreationDate          time.Time  `db:"creation_date"`
+	FormattedCreationDate string     `db:"-"`
+	UserID                string     `db:"user_id"`
+	PostID                string     `db:"post_id"`
+	Username              string     `db:"-"`
+	UserLikes             []UserLike `db:"-"`
+	Likes                 int        `db:"-"`
+	Dislikes              int        `db:"-"`
+	HasVoted              int        `db:"-"`
 }
 
 type PostCategory struct {
@@ -61,4 +68,18 @@ type UserLike struct {
 	PostId    string `db:"post_id"`
 	CommentId string `db:"comment_id"`
 	IsLike    bool   `db:"is_like"`
+}
+
+func (post Post) GetUserLikes() []UserLike {
+	return post.UserLikes
+}
+func (post Post) GetId() string {
+	return post.PostId
+}
+
+func (comment Comment) GetUserLikes() []UserLike {
+	return comment.UserLikes
+}
+func (comment Comment) GetId() string {
+	return comment.CommentId
 }

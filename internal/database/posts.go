@@ -7,12 +7,12 @@ import (
 func (s *service) GetPosts() ([]models.Post, error) {
 	// Exécute la requête SQL pour récupérer les posts avec leurs catégories, triés par date
 	rows, err := s.db.Query(`
-        SELECT p.post_id, p.title, p.content, p.user_id, p.creation_date, p.update_date, 
-               c.category_id, c.name 
-        FROM Post p 
-        LEFT JOIN Post_Category pc ON p.post_id = pc.post_id 
-        LEFT JOIN Category c ON pc.category_id = c.category_id
-        ORDER BY p.creation_date DESC`) // Trie par date de création décroissante
+		SELECT p.post_id, p.title, p.content, p.user_id, p.creation_date, p.update_date, 
+			   c.category_id, c.name 
+		FROM Post p 
+		LEFT JOIN Post_Category pc ON p.post_id = pc.post_id 
+		LEFT JOIN Category c ON pc.category_id = c.category_id
+		ORDER BY p.creation_date DESC`) // Trie par date de création décroissante
 	if err != nil {
 		return nil, err
 	}
@@ -58,6 +58,17 @@ func (s *service) GetPosts() ([]models.Post, error) {
 			posts = append(posts, post) // Ajoute le post dans le slice pour conserver l'ordre
 		}
 	}
+
+	// Récupère les likes des posts
+	for i := range posts {
+		userlikes, err := s.GetPostLikes(posts[i].PostId)
+		if err != nil {
+			return nil, err
+		}
+		posts[i].UserLikes = userlikes
+		posts[i].Likes, posts[i].Dislikes = s.GetLikesCount(userlikes)
+	}
+
 	return posts, nil
 }
 
@@ -96,6 +107,12 @@ func (s *service) GetPost(id string) (models.Post, error) {
 	if err != nil {
 		return post, err
 	}
+	userlikes, err := s.GetPostLikes(post.PostId)
+	if err != nil {
+		return post, err
+	}
+	post.UserLikes = userlikes
+	post.Likes, post.Dislikes = s.GetLikesCount(userlikes)
 	post.FormattedCreationDate = post.CreationDate.Format("Jan 02, 2006 - 15:04:05")
 	post.User = user
 	post.Categories = categories

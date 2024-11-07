@@ -27,6 +27,15 @@ func (s *service) GetComments(post models.Post) ([]models.Comment, error) {
 		comment.FormattedCreationDate = comment.CreationDate.Format("02/01/06 - 15:04")
 		comments = append(comments, comment)
 	}
+	// Récupère les likes des posts
+	for i := range comments {
+		userlikes, err := s.GetCommentLikes(comments[i].CommentId)
+		if err != nil {
+			return nil, err
+		}
+		comments[i].UserLikes = userlikes
+		comments[i].Likes, comments[i].Dislikes = s.GetLikesCount(userlikes)
+	}
 	return comments, nil
 }
 

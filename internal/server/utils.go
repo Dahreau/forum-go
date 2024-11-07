@@ -44,3 +44,15 @@ func IsAlphanumeric(s string) bool {
 	}
 	return true
 }
+
+func GetUserVote(post_comment models.Post_Comment, userId string) int {
+	for _, like := range post_comment.GetUserLikes() {
+		if like.UserId == userId {
+			if like.IsLike {
+				return 1
+			}
+			return -1
+		}
+	}
+	return 0
+}

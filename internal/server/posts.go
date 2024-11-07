@@ -19,14 +19,35 @@ func (s *Server) GetPostsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 	// Tri des posts par date de création dans l'ordre décroissant
 	sort.Slice(posts, func(i, j int) bool {
 		return posts[i].CreationDate.After(posts[j].CreationDate)
 	})
-
 	// Rendu des posts triés
 	render(w, r, "../posts", map[string]interface{}{"Posts": posts})
+}
+
+func (s *Server) GetPostHandler(w http.ResponseWriter, r *http.Request) {
+	vars := strings.Split(r.URL.Path, "/")
+	if len(vars) < 3 {
+		http.Error(w, "Invalid URL", http.StatusBadRequest)
+		return
+	}
+	postID := vars[2]
+	post, err := s.db.GetPost(postID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if post.PostId == "" {
+		http.Error(w, "Post not found", http.StatusNotFound)
+		return
+	}
+	post.HasVoted = GetUserVote(post, s.getUser(r).UserId)
+	for i, comment := range post.Comments {
+		post.Comments[i].HasVoted = GetUserVote(comment, s.getUser(r).UserId)
+	}
+	render(w, r, "detailsPost", map[string]interface{}{"Post": post})
 }
 
 func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
@@ -92,7 +113,7 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/posts", http.StatusSeeOther)
+	http.Redirect(w, r, "/post/"+newPost.PostId, http.StatusSeeOther)
 }
 
 func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
@@ -117,25 +138,6 @@ func (s *Server) GetNewPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	render(w, r, "createPost", map[string]interface{}{"Categories": categories})
-}
-
-func (s *Server) GetPostHandler(w http.ResponseWriter, r *http.Request) {
-	vars := strings.Split(r.URL.Path, "/")
-	if len(vars) < 3 {
-		http.Error(w, "Invalid URL", http.StatusBadRequest)
-		return
-	}
-	postID := vars[2]
-	post, err := s.db.GetPost(postID)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	if post.PostId == "" {
-		http.Error(w, "Post not found", http.StatusNotFound)
-		return
-	}
-	render(w, r, "detailsPost", map[string]interface{}{"Post": post})
 }
 
 func IsUniquePost(posts []models.Post, post string) bool {

@@ -37,12 +37,11 @@
 .tabs {
     display: flex;
     justify-content: center;
-    gap: 48px;
+    gap: 32px;
     margin-bottom: 20px;
     padding: 1px 32px;
     background-color: rgb(16, 9, 27);
     align-items: center;
-    ;
 }
 
 .tab {
@@ -56,6 +55,8 @@
     display: flex;
     /* border-radius: 24px; */
     transition: all 0.3s ease;
+    flex-wrap: nowrap;
+    width: auto;
 }
 
 .icon {

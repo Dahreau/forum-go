@@ -11,7 +11,7 @@ import (
 func (s *service) Vote(postID, commentID, userID string, isLike bool) error {
 	var row *sql.Row
 	var userlike models.UserLike
-	if postID == "" {
+	if commentID != "''" {
 		query := "SELECT * FROM User_like WHERE comment_id=? AND user_id=?"
 		row = s.db.QueryRow(query, commentID, userID)
 	} else {
@@ -40,4 +40,59 @@ func (s *service) Vote(postID, commentID, userID string, isLike bool) error {
 	query := "UPDATE User_like SET isLiked=? WHERE like_id=?"
 	_, err := s.db.Exec(query, isLike, userlike.LikeId)
 	return err
+}
+
+func (s *service) GetPostLikes(postID string) ([]models.UserLike, error) {
+	query := "SELECT * FROM User_like WHERE post_id=? AND comment_id = ''"
+	rows, err := s.db.Query(query, postID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var userlikes []models.UserLike
+	for rows.Next() {
+		var userlike models.UserLike
+		if err := rows.Scan(&userlike.LikeId, &userlike.IsLike, &userlike.UserId, &userlike.PostId, &userlike.CommentId); err != nil {
+			return nil, err
+		}
+		userlikes = append(userlikes, userlike)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return userlikes, nil
+}
+func (s *service) GetCommentLikes(commentID string) ([]models.UserLike, error) {
+	query := "SELECT * FROM User_like WHERE comment_id=?"
+	rows, err := s.db.Query(query, commentID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var userlikes []models.UserLike
+	for rows.Next() {
+		var userlike models.UserLike
+		if err := rows.Scan(&userlike.LikeId, &userlike.IsLike, &userlike.UserId, &userlike.PostId, &userlike.CommentId); err != nil {
+			return nil, err
+		}
+		userlikes = append(userlikes, userlike)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return userlikes, nil
+}
+
+func (s *service) GetLikesCount(userlikes []models.UserLike) (int, int) {
+	var likes, dislikes int
+	for _, like := range userlikes {
+		if like.IsLike {
+			likes++
+		} else {
+			dislikes++
+		}
+	}
+	return likes, dislikes
 }

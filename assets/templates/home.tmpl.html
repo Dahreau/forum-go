@@ -1,243 +1,404 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="icon" href="/assets/img/logo.png" type="image/png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Mina:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/global.css" />
+    <link rel="stylesheet" href="assets/css/header.css" />
+    <link rel="stylesheet" href="assets/css/home.css" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="icon" href="/assets/img/logo.png" type="image/png">
-  <link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Mina:wght@400;700&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/global.css">
-  <link rel="stylesheet" href="assets/css/header.css">
-  <link rel="stylesheet" href="assets/css/home.css">
+    <title>Aniverse Homepage</title>
+  </head>
 
-  <title>Aniverse Homepage</title>
-</head>
-
-<body>
-  <!-- Header Section -->
-  <header class="header-section">
-    <div class="logo-container">
-      <a href="/">
-        <div class="logo"><img src="/assets/img/logo.png" alt="Logo Aniverse" width="50"></div>
-        <div class="logo-text">Aniverse</div>
-      </a>
-    </div>
-    <div class="user-info">
-      {{ if .User }}
-      <h1 class="welcome">Welcome {{ .User.Username}}</h1>
-      <form method="post" action="/logout">
-        <button class="logout-button button" type="submit"><span>Log out</span><svg id="logout-icon"
-            xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24">
-            <path
-              d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z" />
-          </svg></button>
-      </form>
-      <!-- <div class="logout-button">
+  <body>
+    <!-- Header Section -->
+    <header class="header-section">
+      <div class="logo-container">
+        <a href="/">
+          <div class="logo">
+            <img src="/assets/img/logo.png" alt="Logo Aniverse" width="50" />
+          </div>
+          <div class="logo-text">Aniverse</div>
+        </a>
+      </div>
+      <div class="user-info">
+        {{ if .User }}
+        <h1 class="welcome">Welcome {{ .User.Username}}</h1>
+        <form method="post" action="/logout">
+          <button class="logout-button button" type="submit">
+            <span>Log out</span
+            ><svg
+              id="logout-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="-2 -2 24 24"
+            >
+              <path
+                d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z"
+              />
+            </svg>
+          </button>
+        </form>
+        <!-- <div class="logout-button">
               <a href="#" class="logout-link">Log out</a>
           </div> -->
-      {{ if eq .User.Role "admin" }}
-      <a class=button href="/adminPanel">Admin Panel</a>
-      {{ end }}
-      {{ else }}
-      <h1 class="welcome">Guest</h1>
-      <a class="button" href="/login">Login</a>
-      <a class="button register" href="/register">Register</a>
-      {{ end }}
-    </div>
-  </header>
+        {{ if eq .User.Role "admin" }}
+        <a class="button" href="/adminPanel">Admin Panel</a>
+        {{ end }} {{ else }}
+        <h1 class="welcome">Guest</h1>
+        <a class="button" href="/login">Login</a>
+        <a class="button register" href="/register">Register</a>
+        {{ end }}
+      </div>
+    </header>
 
-  <!-- Main Content Section -->
-  <div class="content-wrapper">
-    <!-- Tabs Section -->
-    <div class="global-box tabs">
-      <button class="tab active">All posts</button>
-      <button class="tab">Created
-        <svg class="icon" width="24" height="24" viewBox="-2 -2 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9 20.0283C12.5 17.5283 11 22.5283 13.5 20.0283C15.5 18.0283 16.3333 19.3617 17 20.5284" />
+    <!-- Main Content Section -->
+    <div class="content-wrapper">
+      <!-- Tabs Section -->
+      <div class="global-box tabs">
+        <button class="tab active">All posts</button>
+        <button class="tab">
+          Created
+          <svg
+            class="icon"
+            width="24"
+            height="24"
+            viewBox="-2 -2 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M9 20.0283C12.5 17.5283 11 22.5283 13.5 20.0283C15.5 18.0283 16.3333 19.3617 17 20.5284"
+            />
+            <path
+              d="M6 16V20L9 17.5M6 16L9 17.5M6 16L7.84615 12L10.6154 6M9 17.5L10.8462 13.5L13.6154 7.5M13.6154 7.5L10.6154 6M13.6154 7.5L14.3077 6M10.6154 6L11.5676 3.93678C11.8042 3.42421 12.4179 3.20894 12.9228 3.46141L14.1331 4.06654C14.6162 4.30809 14.8202 4.88962 14.5938 5.38003L14.3077 6M14.3077 6L15 6.5L13.5 9.5H13"
+            />
+          </svg>
+        </button>
+        <button class="tab">
+          Liked
+          <svg
+            class="icon"
+            width="24"
+            height="24"
+            viewBox="-2 -2 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M5.71999 11.1137L11.72 19.1137L17.72 11.1137C20.22 7.61369 15.72 1.11369 11.72 8.11371C7.71999 1.11369 3.22002 7.61369 5.71999 11.1137Z"
+            />
+          </svg>
+        </button>
+      </div>
+      {{ if .User }}
+      <a href="/posts/create" class="button Newpost-button"
+        ><span>New Post</span>
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <path
-            d="M6 16V20L9 17.5M6 16L9 17.5M6 16L7.84615 12L10.6154 6M9 17.5L10.8462 13.5L13.6154 7.5M13.6154 7.5L10.6154 6M13.6154 7.5L14.3077 6M10.6154 6L11.5676 3.93678C11.8042 3.42421 12.4179 3.20894 12.9228 3.46141L14.1331 4.06654C14.6162 4.30809 14.8202 4.88962 14.5938 5.38003L14.3077 6M14.3077 6L15 6.5L13.5 9.5H13" />
+            d="M19 12.998H13V18.998H11V12.998H5V10.998H11V4.998H13V10.998H19V12.998Z"
+          />
         </svg>
-      </button>
-      <button class="tab">Liked
-        <svg class="icon" width="24" height="24" viewBox="-2 -2 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M5.71999 11.1137L11.72 19.1137L17.72 11.1137C20.22 7.61369 15.72 1.11369 11.72 8.11371C7.71999 1.11369 3.22002 7.61369 5.71999 11.1137Z" />
-        </svg>
-      </button>
-    </div>
-    {{ if .User }}
-    <a href="/posts/create" class="button Newpost-button"><span>New Post</span>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M19 12.998H13V18.998H11V12.998H5V10.998H11V4.998H13V10.998H19V12.998Z" />
-      </svg>
-    </a>
-    {{ end }}
+      </a>
+      {{ end }}
 
-    <div class="main-content">
+      <div class="main-content">
+        <!-- Filters Section -->
+        <aside class="filters-section">
+          <div class="filters-title">Filters</div>
+          <select class="filter-category">
+            <option>Choose a category</option>
+            {{ range .Categories }}
+            <option value="{{ .CategoryId }}">{{ .Name }}</option>
+            {{ end }}
+          </select>
+          <button class="button btn-reset">Reset filters</button>
+        </aside>
 
-      <!-- Filters Section -->
-      <aside class="filters-section">
-        <div class="filters-title">Filters</div>
-        <select class="filter-category">
-          <option>Choose a category</option>
-          {{ range .Categories }}
-          <option value="{{ .CategoryId }}">{{ .Name }}</option>
-          {{ end }}
-        </select>
-        <button class="button btn-reset">Reset filters</button>
-      </aside>
-
-      <!-- Post List Section -->
-      <section class="post-list">
-        {{ range .Posts }}
-        <div class="post-item">
-          <a href="/post/{{ .PostId }}">
-            <div class="post-title">{{ .Title }}</div>
-            <div class="post-meta">
-              <span> </span>
-              <span class="post-author">{{ .User.Username}}</span>
-              <span class="post-date">{{ .FormattedCreationDate }}</span>
-              <span class="comment-count">{{ .NbOfComments}} Comments</span>
-            </div>
-          </a>
-          <div class="misc">
-            <div class="vote-tags-container">
-              <div class="global-box like-btn">
-                <form action="/vote" method="post">
-                  <input type="hidden" name="post_id" value="{{ .PostId }}">
-                  <input type="hidden" name="user_id" value="{{ $.User.UserId }}">
-                  <input type="hidden" name="vote" value="like">
-                  <button type="submit" class="vote-button upvote">
-
-                    <!-- SVG for upvote button -->
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <g clip-path="url(#clip0_668_665)">
-                        <g filter="url(#filter0_d_668_665)">
-                          <path
-                            d="M8 11V19C8 19.2652 7.89464 19.5196 7.70711 19.7071C7.51957 19.8946 7.26522 20 7 20H5C4.73478 20 4.48043 19.8946 4.29289 19.7071C4.10536 19.5196 4 19.2652 4 19V12C4 11.7348 4.10536 11.4804 4.29289 11.2929C4.48043 11.1054 4.73478 11 5 11H8ZM8 11C9.06087 11 10.0783 10.5786 10.8284 9.82843C11.5786 9.07828 12 8.06087 12 7V6C12 5.46957 12.2107 4.96086 12.5858 4.58579C12.9609 4.21071 13.4696 4 14 4C14.5304 4 15.0391 4.21071 15.4142 4.58579C15.7893 4.96086 16 5.46957 16 6V11H19C19.5304 11 20.0391 11.2107 20.4142 11.5858C20.7893 11.9609 21 12.4696 21 13L20 18C19.8562 18.6135 19.5834 19.1402 19.2227 19.501C18.8619 19.8617 18.4328 20.0368 18 20H11C10.2044 20 9.44129 19.6839 8.87868 19.1213C8.31607 18.5587 8 17.7956 8 17"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            shape-rendering="crispEdges" />
+        <!-- Post List Section -->
+        <section class="post-list">
+          {{ range .Posts }}
+          <div class="post-item">
+            <a href="/post/{{ .PostId }}">
+              <div class="post-title">{{ .Title }}</div>
+              <div class="post-meta">
+                <span> </span>
+                <span class="post-author">{{ .User.Username}}</span>
+                <span class="post-date">{{ .FormattedCreationDate }}</span>
+                <span class="comment-count">{{ .NbOfComments}} Comments</span>
+              </div>
+            </a>
+            <div class="misc">
+              <div class="vote-tags-container">
+                <div class="global-box like-btn">
+                  <form action="/vote" method="post">
+                    <input type="hidden" name="post_id" value="{{ .PostId }}" />
+                    <input
+                      type="hidden"
+                      name="user_id"
+                      value="{{ $.User.UserId }}"
+                    />
+                    <input type="hidden" name="vote" value="like" />
+                    <button
+                      type="submit"
+                      class="vote-button upvote {{ if eq .HasVoted 1}}liked{{ end }}"
+                    >
+                      <!-- SVG for upvote button -->
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g clip-path="url(#clip0_668_665)">
+                          <g filter="url(#filter0_d_668_665)">
+                            <path
+                              d="M8 11V19C8 19.2652 7.89464 19.5196 7.70711 19.7071C7.51957 19.8946 7.26522 20 7 20H5C4.73478 20 4.48043 19.8946 4.29289 19.7071C4.10536 19.5196 4 19.2652 4 19V12C4 11.7348 4.10536 11.4804 4.29289 11.2929C4.48043 11.1054 4.73478 11 5 11H8ZM8 11C9.06087 11 10.0783 10.5786 10.8284 9.82843C11.5786 9.07828 12 8.06087 12 7V6C12 5.46957 12.2107 4.96086 12.5858 4.58579C12.9609 4.21071 13.4696 4 14 4C14.5304 4 15.0391 4.21071 15.4142 4.58579C15.7893 4.96086 16 5.46957 16 6V11H19C19.5304 11 20.0391 11.2107 20.4142 11.5858C20.7893 11.9609 21 12.4696 21 13L20 18C19.8562 18.6135 19.5834 19.1402 19.2227 19.501C18.8619 19.8617 18.4328 20.0368 18 20H11C10.2044 20 9.44129 19.6839 8.87868 19.1213C8.31607 18.5587 8 17.7956 8 17"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              shape-rendering="crispEdges"
+                            />
+                          </g>
                         </g>
+                        <defs>
+                          <filter
+                            id="filter0_d_668_665"
+                            x="0"
+                            y="0"
+                            width="25"
+                            height="24.0049"
+                            filterUnits="userSpaceOnUse"
+                            color-interpolation-filters="sRGB"
+                          >
+                            <feFlood
+                              flood-opacity="0"
+                              result="BackgroundImageFix"
+                            />
+                            <feColorMatrix
+                              in="SourceAlpha"
+                              type="matrix"
+                              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                              result="hardAlpha"
+                            />
+                            <feOffset />
+                            <feGaussianBlur stdDeviation="1.5" />
+                            <feComposite in2="hardAlpha" operator="out" />
+                            <feColorMatrix
+                              type="matrix"
+                              values="0 0 0 0 0.532969 0 0 0 0 0.958698 0 0 0 0 0.611019 0 0 0 1 0"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in2="BackgroundImageFix"
+                              result="effect1_dropShadow_668_665"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in="SourceGraphic"
+                              in2="effect1_dropShadow_668_665"
+                              result="shape"
+                            />
+                          </filter>
+                          <clipPath id="clip0_668_665">
+                            <rect width="24" height="24" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+
+                      <span id="like-count">{{ .Likes }}</span>
+                    </button>
+                  </form>
+                  <form action="/vote" method="post">
+                    <input type="hidden" name="post_id" value="{{ .PostId }}" />
+                    <input
+                      type="hidden"
+                      name="user_id"
+                      value="{{ $.User.UserId }}"
+                    />
+                    <input type="hidden" name="vote" value="dislike" />
+                    <button
+                      class="vote-button downvote {{ if eq .HasVoted -1}}disliked{{ end }}"
+                    >
+                      <span id="dislike-count">{{ .Dislikes }}</span>
+                      <!-- SVG for downvote button -->
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g clip-path="url(#clip0_668_716)">
+                          <g filter="url(#filter0_d_668_716)">
+                            <path
+                              d="M8 13.0048V5.00481C8 4.7396 7.89464 4.48524 7.70711 4.29771C7.51957 4.11017 7.26522 4.00481 7 4.00481H5C4.73478 4.00481 4.48043 4.11017 4.29289 4.29771C4.10536 4.48524 4 4.7396 4 5.00481V12.0048C4 12.27 4.10536 12.5244 4.29289 12.7119C4.48043 12.8995 4.73478 13.0048 5 13.0048H8ZM8 13.0048C9.06087 13.0048 10.0783 13.4262 10.8284 14.1764C11.5786 14.9265 12 15.9439 12 17.0048V18.0048C12 18.5352 12.2107 19.044 12.5858 19.419C12.9609 19.7941 13.4696 20.0048 14 20.0048C14.5304 20.0048 15.0391 19.7941 15.4142 19.419C15.7893 19.044 16 18.5352 16 18.0048V13.0048H19C19.5304 13.0048 20.0391 12.7941 20.4142 12.419C20.7893 12.044 21 11.5352 21 11.0048L20 6.00481C19.8562 5.39134 19.5834 4.86457 19.2227 4.50385C18.8619 4.14313 18.4328 3.96799 18 4.00481H11C10.2044 4.00481 9.44129 4.32088 8.87868 4.88349C8.31607 5.4461 8 6.20916 8 7.00481"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              shape-rendering="crispEdges"
+                            />
+                          </g>
+                        </g>
+                        <defs>
+                          <filter
+                            id="filter0_d_668_716"
+                            x="0"
+                            y="-0.000106812"
+                            width="25"
+                            height="24.0049"
+                            filterUnits="userSpaceOnUse"
+                            color-interpolation-filters="sRGB"
+                          >
+                            <feFlood
+                              flood-opacity="0"
+                              result="BackgroundImageFix"
+                            />
+                            <feColorMatrix
+                              in="SourceAlpha"
+                              type="matrix"
+                              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                              result="hardAlpha"
+                            />
+                            <feOffset />
+                            <feGaussianBlur stdDeviation="1.5" />
+                            <feComposite in2="hardAlpha" operator="out" />
+                            <feColorMatrix
+                              type="matrix"
+                              values="0 0 0 0 1 0 0 0 0 0.579861 0 0 0 0 0.541667 0 0 0 1 0"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in2="BackgroundImageFix"
+                              result="effect1_dropShadow_668_716"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in="SourceGraphic"
+                              in2="effect1_dropShadow_668_716"
+                              result="shape"
+                            />
+                          </filter>
+                          <clipPath id="clip0_668_716">
+                            <rect width="24" height="24" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                    </button>
+                  </form>
+                </div>
+              </div>
+              <div class="categories">
+                {{ range .Categories }}
+                <span class="category-box">{{ .Name }}</span>
+                {{ end }}
+              </div>
+              <!-- Report and Delete -->
+              <div class="post-actions">
+                {{ if or (eq $.User.Role "moderator") (eq $.User.Role "admin")
+                }}
+                <a class="button report" href="/report">Report</a>
+                {{ end }} {{ if or (eq .UserID $.User.UserId) (eq $.User.Role
+                "admin") }}
+                <form action="/posts/delete/{{ .PostId }}" method="post">
+                  <input type="hidden" name="postId" value="{{ .PostId }}" />
+                  <button class="delete-button">
+                    <svg
+                      width="32"
+                      height="32"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g
+                        clip-path="url(#clip0_693_342)"
+                        filter="url(#filter0_d_693_342)"
+                      >
+                        <path
+                          d="M18 9L17.16 17.398C17.033 18.671 16.97 19.307 16.68 19.788C16.4257 20.2114 16.0516 20.55 15.605 20.761C15.098 21 14.46 21 13.18 21H10.82C9.541 21 8.902 21 8.395 20.76C7.94805 20.5491 7.57361 20.2106 7.319 19.787C7.031 19.307 6.967 18.671 6.839 17.398L6 9M13.5 15.5V10.5M10.5 15.5V10.5M4.5 6.5H9.115M9.115 6.5L9.501 3.828C9.613 3.342 10.017 3 10.481 3H13.519C13.983 3 14.386 3.342 14.499 3.828L14.885 6.5M9.115 6.5H14.885M14.885 6.5H19.5"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
                       </g>
                       <defs>
-                        <filter id="filter0_d_668_665" x="0" y="0" width="25" height="24.0049"
-                          filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                          <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                          <feColorMatrix in="SourceAlpha" type="matrix"
-                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+                        <filter
+                          id="filter0_d_693_342"
+                          x="0"
+                          y="0"
+                          width="24"
+                          height="24"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
                           <feOffset />
-                          <feGaussianBlur stdDeviation="1.5" />
                           <feComposite in2="hardAlpha" operator="out" />
-                          <feColorMatrix type="matrix"
-                            values="0 0 0 0 0.532969 0 0 0 0 0.958698 0 0 0 0 0.611019 0 0 0 1 0" />
-                          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_668_665" />
-                          <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_668_665" result="shape" />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 0.997187 0 0 0 0 0.327812 0 0 0 0 0.327812 0 0 0 1 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="BackgroundImageFix"
+                            result="effect1_dropShadow_693_342"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="effect1_dropShadow_693_342"
+                            result="shape"
+                          />
                         </filter>
-                        <clipPath id="clip0_668_665">
+                        <clipPath id="clip0_693_342">
                           <rect width="24" height="24" fill="white" />
                         </clipPath>
                       </defs>
                     </svg>
-
-                    <span id="like-count">{{ .Likes }}</span>
                   </button>
                 </form>
-                <form action="/vote" method="post">
-                  <input type="hidden" name="post_id" value="{{ .PostId }}">
-                  <input type="hidden" name="user_id" value="{{ $.User.UserId }}">
-                  <input type="hidden" name="vote" value="dislike">
-                <button class="vote-button downvote">
-                  <span id="dislike-count">{{ .Dislikes }}</span>
-                  <!-- SVG for downvote button -->
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g clip-path="url(#clip0_668_716)">
-                      <g filter="url(#filter0_d_668_716)">
-                        <path
-                          d="M8 13.0048V5.00481C8 4.7396 7.89464 4.48524 7.70711 4.29771C7.51957 4.11017 7.26522 4.00481 7 4.00481H5C4.73478 4.00481 4.48043 4.11017 4.29289 4.29771C4.10536 4.48524 4 4.7396 4 5.00481V12.0048C4 12.27 4.10536 12.5244 4.29289 12.7119C4.48043 12.8995 4.73478 13.0048 5 13.0048H8ZM8 13.0048C9.06087 13.0048 10.0783 13.4262 10.8284 14.1764C11.5786 14.9265 12 15.9439 12 17.0048V18.0048C12 18.5352 12.2107 19.044 12.5858 19.419C12.9609 19.7941 13.4696 20.0048 14 20.0048C14.5304 20.0048 15.0391 19.7941 15.4142 19.419C15.7893 19.044 16 18.5352 16 18.0048V13.0048H19C19.5304 13.0048 20.0391 12.7941 20.4142 12.419C20.7893 12.044 21 11.5352 21 11.0048L20 6.00481C19.8562 5.39134 19.5834 4.86457 19.2227 4.50385C18.8619 4.14313 18.4328 3.96799 18 4.00481H11C10.2044 4.00481 9.44129 4.32088 8.87868 4.88349C8.31607 5.4461 8 6.20916 8 7.00481"
-                          stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                          shape-rendering="crispEdges" />
-                      </g>
-                    </g>
-                    <defs>
-                      <filter id="filter0_d_668_716" x="0" y="-0.000106812" width="25" height="24.0049"
-                        filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                        <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                          result="hardAlpha" />
-                        <feOffset />
-                        <feGaussianBlur stdDeviation="1.5" />
-                        <feComposite in2="hardAlpha" operator="out" />
-                        <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.579861 0 0 0 0 0.541667 0 0 0 1 0" />
-                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_668_716" />
-                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_668_716" result="shape" />
-                      </filter>
-                      <clipPath id="clip0_668_716">
-                        <rect width="24" height="24" fill="white" />
-                      </clipPath>
-                    </defs>
-                  </svg>
-                </button>
-              </form>
+                {{ end }}
               </div>
             </div>
-            <div class="categories">
-              {{ range .Categories }}
-              <span class="category-box">{{ .Name }}</span>
-              {{ end }}
-            </div>
-            <!-- Report and Delete -->
-            <div class="post-actions">
-              {{ if or (eq $.User.Role "moderator") (eq $.User.Role "admin") }}
-              <a class="button report" href="/report">Report</a>
-              {{ end }}
-              {{ if or (eq .UserID $.User.UserId) (eq $.User.Role "admin") }}
-              <form action="/posts/delete/{{ .PostId }}" method="post">
-                <input type="hidden" name="postId" value="{{ .PostId }}">
-                <button class="delete-button">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g clip-path="url(#clip0_693_342)" filter="url(#filter0_d_693_342)">
-                      <path
-                        d="M18 9L17.16 17.398C17.033 18.671 16.97 19.307 16.68 19.788C16.4257 20.2114 16.0516 20.55 15.605 20.761C15.098 21 14.46 21 13.18 21H10.82C9.541 21 8.902 21 8.395 20.76C7.94805 20.5491 7.57361 20.2106 7.319 19.787C7.031 19.307 6.967 18.671 6.839 17.398L6 9M13.5 15.5V10.5M10.5 15.5V10.5M4.5 6.5H9.115M9.115 6.5L9.501 3.828C9.613 3.342 10.017 3 10.481 3H13.519C13.983 3 14.386 3.342 14.499 3.828L14.885 6.5M9.115 6.5H14.885M14.885 6.5H19.5"
-                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    </g>
-                    <defs>
-                      <filter id="filter0_d_693_342" x="0" y="0" width="24" height="24" filterUnits="userSpaceOnUse"
-                        color-interpolation-filters="sRGB">
-                        <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                          result="hardAlpha" />
-                        <feOffset />
-                        <feComposite in2="hardAlpha" operator="out" />
-                        <feColorMatrix type="matrix"
-                          values="0 0 0 0 0.997187 0 0 0 0 0.327812 0 0 0 0 0.327812 0 0 0 1 0" />
-                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_693_342" />
-                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_693_342" result="shape" />
-                      </filter>
-                      <clipPath id="clip0_693_342">
-                        <rect width="24" height="24" fill="white" />
-                      </clipPath>
-                    </defs>
-                  </svg>
-                </button>
-              </form>
-              {{ end }}
-            </div>
           </div>
-        </div>
-        {{ end }}
-      </section>
+          {{ end }}
+        </section>
+      </div>
     </div>
-  </div>
 
-  <!-- Footer Section -->
-  <footer class="footer-section">
-    <span class="footer-text">FOOTER, LICENCE</span>
-  </footer>
-</body>
-
+    <!-- Footer Section -->
+    <footer class="footer-section">
+      <span class="footer-text">FOOTER, LICENCE</span>
+    </footer>
+  </body>
 </html>

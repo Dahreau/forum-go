@@ -50,10 +50,10 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 func (s *Server) VoteHandler(w http.ResponseWriter, r *http.Request) {
 	if !s.isLoggedIn(r) {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}
-	ComeFrom := r.FormValue("ComeFrom")
+	ComeFrom := r.FormValue("come_from")
 	postID := r.FormValue("post_id")
 	userID := r.FormValue("user_id")
 	vote := r.FormValue("vote")
@@ -70,7 +70,7 @@ func (s *Server) VoteHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if ComeFrom == "post" {
+	if ComeFrom == "details" {
 		http.Redirect(w, r, "/post/"+postID, http.StatusSeeOther)
 	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -115,6 +115,9 @@ func (s *Server) HomePageHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
+	}
+	for i, post := range s.posts {
+		s.posts[i].HasVoted = GetUserVote(post, s.getUser(r).UserId)
 	}
 	render(w, r, "home", map[string]interface{}{"Categories": s.categories, "Posts": s.posts})
 }
