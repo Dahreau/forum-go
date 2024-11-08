@@ -54,6 +54,37 @@ body {
     line-height: 24px;
     color: #FFFFFF;
 }
+.content-wrapper {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 32px;
+    padding: 15px 32px;
+    text-align: center;
+}
+.main-title {
+    position: relative;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+    font-family: 'Shojumaru', sans-serif;
+    color: #7789FF;
+    text-shadow:
+        0 0 7px #111A7C,
+        0 0 10px #111A7C,
+        0 0 21px #111A7C,
+        0 0 42px #7789FF,
+        0 0 82px #7789FF;
+}
+
+.error-message {
+    color: #FF948A;
+    font-family: 'Mina', sans-serif;
+    font-size: 32px;
+    text-align: center;
+}
 
 /*******************************************************************/
 /*************************** Text Form *****************************/

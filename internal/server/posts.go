@@ -3,7 +3,6 @@ package server
 import (
 	"fmt"
 	"forum-go/internal/models"
-	"log"
 	"math"
 	"math/rand"
 	"net/http"
@@ -16,7 +15,7 @@ import (
 func (s *Server) GetPostsHandler(w http.ResponseWriter, r *http.Request) {
 	posts, err := s.db.GetPosts()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	// Tri des posts par date de création dans l'ordre décroissant
@@ -36,11 +35,11 @@ func (s *Server) GetPostHandler(w http.ResponseWriter, r *http.Request) {
 	postID := vars[2]
 	post, err := s.db.GetPost(postID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	if post.PostId == "" {
-		http.Error(w, "Post not found", http.StatusNotFound)
+		s.errorHandler(w, r, http.StatusNotFound, "Post not found")
 		return
 	}
 	post.HasVoted = GetUserVote(post, s.getUser(r).UserId)
@@ -65,9 +64,9 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 		Errors:     make(map[string]string),
 	}
 	if erri != nil {
-		log.Println(erri)
+		s.errorHandler(w, r, http.StatusBadRequest, erri.Error())
+		return
 	}
-
 	// Validate title
 	if ValidateTitle(formData.Title) {
 		formData.Errors["Title"] = "Title cannot be empty"
@@ -110,7 +109,7 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 	err := s.db.AddPost(newPost, categories)
 	s.posts = append(s.posts, newPost)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	http.Redirect(w, r, "/post/"+newPost.PostId, http.StatusSeeOther)
@@ -121,7 +120,7 @@ func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(PostID)
 	err := s.db.DeletePost(PostID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -130,7 +129,7 @@ func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
 func (s *Server) GetNewPostHandler(w http.ResponseWriter, r *http.Request) {
 	categories, err := s.db.GetCategories()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	if !s.isLoggedIn(r) {

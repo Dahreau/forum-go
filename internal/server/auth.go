@@ -26,7 +26,6 @@ func (s *Server) PostLoginHandler(w http.ResponseWriter, r *http.Request) {
 	password := r.FormValue("password")
 	user, err := s.db.GetUser(email, password)
 	if user.UserId == "" || err != nil {
-
 		render(w, r, "login", map[string]interface{}{"Error": "Invalid username or password. Please try again.", "email": email})
 		return
 	}
@@ -45,7 +44,7 @@ func (s *Server) PostLoginHandler(w http.ResponseWriter, r *http.Request) {
 	user.SessionExpire = sql.NullTime{Time: expiration, Valid: true}
 	err = s.db.UpdateUser(user)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	http.SetCookie(w, &cookie)
@@ -93,7 +92,7 @@ func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	PasswordHash, err := bcrypt.GenerateFromPassword([]byte(r.FormValue("password")), bcrypt.DefaultCost)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	IsUnique, _ := s.db.FindEmailUser(formData.Email)
@@ -128,7 +127,7 @@ func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
 	user := models.User{Username: r.FormValue("username"), Email: r.FormValue("email"), Password: string(PasswordHash), Role: "user", CreationDate: time.Now(), UserId: strconv.Itoa(rand.Intn(math.MaxInt32))}
 	err = s.db.CreateUser(user)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
@@ -141,7 +140,7 @@ func (s *Server) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	users, err := s.db.GetUsers()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	render(w, r, "../users", map[string]interface{}{"users": users})
@@ -157,7 +156,7 @@ func (s *Server) DeleteUsersHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	err := s.db.DeleteUser(id)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	for i, user := range s.users {

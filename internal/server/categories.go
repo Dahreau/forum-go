@@ -9,7 +9,7 @@ import (
 func (s *Server) GetCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 	categories, err := s.db.GetCategories()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	render(w, r, "../categories", map[string]interface{}{"Categories": categories})
@@ -23,7 +23,7 @@ func (s *Server) PostCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	err := s.db.AddCategory(category)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	http.Redirect(w, r, "/categories", http.StatusSeeOther)
@@ -33,7 +33,7 @@ func (s *Server) DeleteCategoriesHandler(w http.ResponseWriter, r *http.Request)
 	categoryID := r.FormValue("categoryId")
 	err := s.db.DeleteCategory(categoryID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	for i, category := range s.categories {
@@ -54,7 +54,7 @@ func (s *Server) EditCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	err := s.db.EditCategory(categoryID, categoryName)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	for i, category := range s.categories {

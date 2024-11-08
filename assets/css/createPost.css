@@ -18,20 +18,7 @@
     text-align: center;
 }
 
-.main-title {
-    position: relative;
-    margin-bottom: 20px;
-    text-align: center;
-    width: 100%;
-    font-family: 'Shojumaru', sans-serif;
-    color: #7789FF;
-    text-shadow:
-        0 0 7px #111A7C,
-        0 0 10px #111A7C,
-        0 0 21px #111A7C,
-        0 0 42px #7789FF,
-        0 0 82px #7789FF;
-}
+
 
 .form-section {
     display: flex;

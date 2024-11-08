@@ -6,7 +6,6 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -46,7 +45,7 @@ func (s *Server) PostCommentHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	err := s.db.AddComment(newComment)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	http.Redirect(w, r, "/post/"+newComment.PostID, http.StatusSeeOther)
@@ -55,7 +54,7 @@ func (s *Server) PostCommentHandler(w http.ResponseWriter, r *http.Request) {
 func (s *Server) GetCommentsHandler(w http.ResponseWriter, r *http.Request) {
 	posts, err := s.db.GetPosts()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	render(w, r, "../posts", map[string]interface{}{"Posts": posts})
@@ -83,7 +82,7 @@ func (s *Server) DeleteCommentHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	err := s.db.DeleteComment(CommentID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	http.Redirect(w, r, "/post/"+PostID, http.StatusSeeOther)
@@ -92,7 +91,7 @@ func (s *Server) DeleteCommentHandler(w http.ResponseWriter, r *http.Request) {
 func (s *Server) GetNewCommentHandler(w http.ResponseWriter, r *http.Request) {
 	categories, err := s.db.GetCategories()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	if !s.isLoggedIn(r) {
@@ -101,26 +100,6 @@ func (s *Server) GetNewCommentHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	render(w, r, "createPost", map[string]interface{}{"Categories": categories})
 }
-
-func (s *Server) GetCommentHandler(w http.ResponseWriter, r *http.Request) {
-	vars := strings.Split(r.URL.Path, "/")
-	if len(vars) < 3 {
-		http.Error(w, "Invalid URL", http.StatusBadRequest)
-		return
-	}
-	postID := vars[2]
-	post, err := s.db.GetPost(postID)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	if post.PostId == "" {
-		http.Error(w, "Post not found", http.StatusNotFound)
-		return
-	}
-	render(w, r, "detailsPost", map[string]interface{}{"Post": post})
-}
-
-// Handler in the post.go file line 130
 
 const MaxCharComment = 400
 
@@ -138,7 +117,7 @@ func (s *Server) EditCommentHandler(w http.ResponseWriter, r *http.Request) {
 
 	err := s.db.EditComment(CommentID, UpdatedContent)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	http.Redirect(w, r, "/post/"+PostId, http.StatusSeeOther)

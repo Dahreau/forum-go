@@ -3,6 +3,7 @@ package server
 import (
 	"encoding/json"
 	"fmt"
+	"forum-go/internal/models"
 	"log"
 	"net/http"
 )
@@ -40,6 +41,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc("POST /comment/delete/{id}", s.DeleteCommentHandler)
 	mux.HandleFunc("POST /comment/edit/{id}", s.EditCommentHandler)
 	mux.HandleFunc("POST /post/comment", s.PostCommentHandler)
+
 	mux.HandleFunc("/health", s.healthHandler)
 	mux.HandleFunc("GET /adminPanel", s.AdminPanelHandler)
 	mux.HandleFunc("GET /report", s.reportHandler)
@@ -67,7 +69,7 @@ func (s *Server) VoteHandler(w http.ResponseWriter, r *http.Request) {
 
 	err := s.db.Vote(postID, commentID, userID, isLike)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	if ComeFrom == "details" {
@@ -84,7 +86,7 @@ func (s *Server) reportHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	users, err := s.db.GetUsers()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	render(w, r, "report", map[string]interface{}{"users": users})
@@ -98,22 +100,26 @@ func (s *Server) AdminPanelHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	users, err := s.db.GetUsers()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	render(w, r, "adminPanel", map[string]interface{}{"users": users})
 }
 
 func (s *Server) HomePageHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		s.errorHandler(w, r, http.StatusNotFound, "Page not found")
+		return
+	}
 	err := error(nil)
 	s.categories, err = s.db.GetCategories()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	s.posts, err = s.db.GetPosts()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 	for i, post := range s.posts {
@@ -143,4 +149,10 @@ func (s *Server) healthHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_, _ = w.Write(jsonResp)
+}
+
+func (s *Server) errorHandler(w http.ResponseWriter, r *http.Request, status int, message string) {
+	w.WriteHeader(status)
+	error := models.Error{Message: message, StatusCode: status}
+	render(w, r, "error", map[string]interface{}{"Error": error})
 }

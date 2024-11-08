@@ -69,6 +69,10 @@ type UserLike struct {
 	CommentId string `db:"comment_id"`
 	IsLike    bool   `db:"is_like"`
 }
+type Error struct {
+	Message    string
+	StatusCode int
+}
 
 func (post Post) GetUserLikes() []UserLike {
 	return post.UserLikes

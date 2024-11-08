@@ -18,9 +18,9 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Mina:wght@400;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="assets/css/global.css" />
-    <link rel="stylesheet" href="assets/css/header.css" />
-    <link rel="stylesheet" href="assets/css/home.css" />
+    <link rel="stylesheet" href="/assets/css/global.css" />
+    <link rel="stylesheet" href="/assets/css/header.css" />
+    <link rel="stylesheet" href="/assets/css/home.css" />
 
     <title>Aniverse Homepage</title>
   </head>
@@ -138,7 +138,7 @@
         <!-- Post List Section -->
         <section class="post-list">
           {{ range .Posts }}
-          <div class="post-item">
+          <div class="post-item {{ if eq .UserID $.User.UserId}}ownPost{{end}}">
             <a href="/post/{{ .PostId }}">
               <div class="post-title">{{ .Title }}</div>
               <div class="post-meta">
