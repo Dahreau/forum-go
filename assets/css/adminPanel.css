@@ -1,9 +1,13 @@
 .user-section {
-    width: auto;
+    width: 95vw;
     padding: 16px;
     height: 80%;
     display: flex;
     flex-direction: column;
+
+    h1 {     
+        text-align: center;
+    }
 }
 
 .userlist {
@@ -28,8 +32,19 @@ hr {
     stroke: pink
 }
 
+td {
+    padding: 8px;
+    border: 1px solid #7789FF;
+    color: white;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
 @media (max-width: 768px) {
-    .user-section{
+    .user-section {
         width: 50vw;
         padding: 16px;
         height: 80%;

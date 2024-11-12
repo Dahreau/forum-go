@@ -52,16 +52,25 @@
         <div class="user-section global-box">
             <h1>Users List</h1>
             <div class="userlist scroll">
-                {{ range .users }}
-                <div>
-                    <h2>{{ .Username }}</h2>
-                    <p>{{ .UserId }}</p>
-                    <p>{{ .Email }}</p>
-                    <p>{{ .Role }}</p>
-                    <button class="logout-button button"><a href="/delete/users/{{ .UserId}}">Delete</a></button>
-                    <hr>
-                </div>
-                {{ end }}
+                <table>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                    {{ range .users }}
+                    <tr>
+                        <td>{{ .Username }}</td>
+                        <td>{{ .Email }}</td>
+                        <td>{{ .Role }}</td>
+                        <td>
+                            <button class="logout-button button"> <a
+                                    href="/delete/users/{{.UserId}}">Delete</a></button>
+                        </td>
+                    </tr>
+                    {{ end }}
+                </table>
             </div>
         </div>
 
