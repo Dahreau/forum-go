@@ -123,6 +123,11 @@ func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
+	err = s.db.DeleteLikes(PostID)
+	if err != nil {
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+		return
+	}
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 

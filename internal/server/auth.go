@@ -29,6 +29,10 @@ func (s *Server) PostLoginHandler(w http.ResponseWriter, r *http.Request) {
 		render(w, r, "login", map[string]interface{}{"Error": "Invalid username or password. Please try again.", "email": email})
 		return
 	}
+	if user.Role == "ban" {
+		render(w, r, "login", map[string]interface{}{"Error": "You are banned", "email": email})
+		return
+	}
 	//Simulates login
 	userID := generateToken(32)
 
@@ -164,6 +168,40 @@ func (s *Server) DeleteUsersHandler(w http.ResponseWriter, r *http.Request) {
 			s.users = append(s.users[:i], s.users[i+1:]...)
 			break
 		}
+	}
+	http.Redirect(w, r, "/adminPanel", http.StatusSeeOther)
+}
+
+func (s *Server) BanUserHandler(w http.ResponseWriter, r *http.Request) {
+	path := r.URL.Path
+	pathParts := strings.Split(path, "/")
+	// Check if the path matches the structure
+	id := ""
+	if len(pathParts) >= 4 && pathParts[2] == "users" {
+		id = pathParts[3] // Extract user ID from the path
+	}
+	userToUpdate := models.User{}
+	for _, user := range s.users {
+		if user.UserId == id {
+			userToUpdate = user
+			break
+		}
+	}
+	if userToUpdate.Role == "ban" {
+		userToUpdate.Role = "user"
+	} else {
+		userToUpdate.Role = "ban"
+	}
+	for i, user := range s.users {
+		if user.UserId == id {
+			s.users[i] = userToUpdate
+			break
+		}
+	}
+	err := s.db.UpdateUser(userToUpdate)
+	if err != nil {
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+		return
 	}
 	http.Redirect(w, r, "/adminPanel", http.StatusSeeOther)
 }

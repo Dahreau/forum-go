@@ -32,20 +32,36 @@ hr {
     stroke: pink
 }
 
-td {
+td,th {
     padding: 8px;
-    border: 1px solid #7789FF;
     color: white;
 }
 
+td:not(:last-child), th:not(:last-child) {
+    border-right: 1px solid #7789FF;
+}
+tr:not(:last-child)>td, tr:not(:last-child)>th {
+    border-bottom: 1px solid #7789FF;
+
+}
+
 table {
-    border-collapse: collapse;
+    border-radius: 16px;
+    border: 1px solid #7789FF;
+    border-collapse: separate;
+    border-spacing: 0px;
     width: 100%;
+}
+.actions-td{
+    display: flex;
+    justify-content: flex-start;
+    gap: 8px;
+
 }
 
 @media (max-width: 768px) {
     .user-section {
-        width: 50vw;
+        width: 95vw;
         padding: 16px;
         height: 80%;
         display: flex;

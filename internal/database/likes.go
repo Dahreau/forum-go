@@ -96,3 +96,14 @@ func (s *service) GetLikesCount(userlikes []models.UserLike) (int, int) {
 	}
 	return likes, dislikes
 }
+
+func (s *service) DeleteLikes(postID string) error {
+	query := "DELETE FROM User_like WHERE post_id=?"
+	_, err := s.db.Exec(query, postID)
+	return err
+}
+func (s *service) DeleteCommentLikes(commentID string) error {
+	query := "DELETE FROM User_like WHERE comment_id=?"
+	_, err := s.db.Exec(query, commentID)
+	return err
+}

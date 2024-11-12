@@ -51,6 +51,8 @@ type Service interface {
 	DeleteCategory(id string) error
 	EditCategory(id, name string) error
 	Vote(postId, commentId, userId string, isLike bool) error
+	DeleteLikes(postId string) error
+	DeleteCommentLikes(commentId string) error
 }
 
 type service struct {
