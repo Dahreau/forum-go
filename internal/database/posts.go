@@ -1,6 +1,7 @@
 package database
 
 import (
+	"database/sql"
 	"forum-go/internal/models"
 	"strings"
 )
@@ -43,9 +44,17 @@ func (s *service) GetPosts() ([]models.Post, error) {
 	for rows.Next() {
 		var post models.Post
 		var categoryIDs, categoryNames string
-		err := rows.Scan(&post.PostId, &post.Title, &post.Content, &post.UserID, &post.CreationDate, &post.UpdateDate, &categoryIDs, &categoryNames)
+		var categoryId sql.NullString
+		var categoryName sql.NullString
+		err := rows.Scan(&post.PostId, &post.Title, &post.Content, &post.UserID, &post.CreationDate, &post.UpdateDate, &categoryId, &categoryName)
 		if err != nil {
 			return nil, err
+		}
+		if categoryId.Valid {
+			categoryIDs = categoryId.String
+		}
+		if categoryName.Valid {
+			categoryNames = categoryName.String
 		}
 		post.FormattedCreationDate = post.CreationDate.Format("Jan 02, 2006 - 15:04:05")
 
@@ -59,6 +68,9 @@ func (s *service) GetPosts() ([]models.Post, error) {
 				Name:       categoryNameList[i],
 			}
 			post.Categories = append(post.Categories, category)
+		}
+		if len(post.Categories) == 1 && post.Categories[0].CategoryId == "" {
+			post.Categories = nil
 		}
 
 		// Attach user information
@@ -110,13 +122,21 @@ func (s *service) GetPost(id string) (models.Post, error) {
 	var categories []models.Category
 	for rows.Next() {
 		var category models.Category
+		var categoryID sql.NullString
+		var categoryName sql.NullString
 		err := rows.Scan(
 			&post.PostId, &post.Title, &post.Content, &post.UserID, &post.CreationDate, &post.UpdateDate,
 			&user.UserId, &user.Username, &user.Email,
-			&category.CategoryId, &category.Name,
+			&categoryID, &categoryName,
 		)
 		if err != nil {
 			return post, err
+		}
+		if categoryID.Valid {
+			category.CategoryId = categoryID.String
+		}
+		if categoryName.Valid {
+			category.Name = categoryName.String
 		}
 		categories = append(categories, category)
 	}
@@ -128,11 +148,15 @@ func (s *service) GetPost(id string) (models.Post, error) {
 	if err != nil {
 		return post, err
 	}
+	post.Categories = categories
+	if len(post.Categories) == 1 && post.Categories[0].CategoryId == "" {
+		post.Categories = nil
+	}
 	post.UserLikes = userlikes
 	post.Likes, post.Dislikes = s.GetLikesCount(userlikes)
 	post.FormattedCreationDate = post.CreationDate.Format("Jan 02, 2006 - 15:04:05")
 	post.User = user
-	post.Categories = categories
+
 	return post, nil
 }
 

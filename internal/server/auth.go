@@ -205,3 +205,92 @@ func (s *Server) BanUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	http.Redirect(w, r, "/adminPanel", http.StatusSeeOther)
 }
+
+func (s *Server) PromoteUserHandler(w http.ResponseWriter, r *http.Request) {
+	if !IsAdmin(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	path := r.URL.Path
+	pathParts := strings.Split(path, "/")
+	// Check if the path matches the structure
+	id := ""
+	if len(pathParts) >= 4 && pathParts[2] == "users" {
+		id = pathParts[3] // Extract user ID from the path
+	}
+	userToUpdate := models.User{}
+	for _, user := range s.users {
+		if user.UserId == id {
+			userToUpdate = user
+			break
+		}
+	}
+	if userToUpdate.Role == "admin" {
+		s.errorHandler(w, r, http.StatusInternalServerError, "User is already an admin")
+		return
+	} else if userToUpdate.Role == "user" {
+		userToUpdate.Role = "moderator"
+	} else if userToUpdate.Role == "moderator" {
+		userToUpdate.Role = "admin"
+	} else {
+		s.errorHandler(w, r, http.StatusInternalServerError, "User is banned")
+		return
+	}
+	for i, user := range s.users {
+		if user.UserId == id {
+			s.users[i] = userToUpdate
+			break
+		}
+	}
+	err := s.db.UpdateUser(userToUpdate)
+	if err != nil {
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+		return
+	}
+	http.Redirect(w, r, "/adminPanel", http.StatusSeeOther)
+}
+
+func (s *Server) DemoteUserHandler(w http.ResponseWriter, r *http.Request) {
+	if !IsAdmin(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	path := r.URL.Path
+	pathParts := strings.Split(path, "/")
+	// Check if the path matches the structure
+	id := ""
+	if len(pathParts) >= 4 && pathParts[2] == "users" {
+		id = pathParts[3] // Extract user ID from the path
+	}
+	userToUpdate := models.User{}
+	for _, user := range s.users {
+		if user.UserId == id {
+			userToUpdate = user
+			break
+		}
+	}
+	if userToUpdate.Role == "user" {
+		s.errorHandler(w, r, http.StatusInternalServerError, "User is already a user")
+		return
+	} else if userToUpdate.Role == "moderator" {
+		userToUpdate.Role = "user"
+	} else if userToUpdate.Role == "admin" {
+		s.errorHandler(w, r, http.StatusForbidden, "You can't demote an admin, contact the big boss \"dahreau\" on discord")
+		return
+	} else {
+		s.errorHandler(w, r, http.StatusInternalServerError, "User is banned")
+		return
+	}
+	for i, user := range s.users {
+		if user.UserId == id {
+			s.users[i] = userToUpdate
+			break
+		}
+	}
+	err := s.db.UpdateUser(userToUpdate)
+	if err != nil {
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+		return
+	}
+	http.Redirect(w, r, "/adminPanel", http.StatusSeeOther)
+}

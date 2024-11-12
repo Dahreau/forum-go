@@ -83,7 +83,6 @@
                       <input type="hidden" name="post_id" value="{{ .Post.PostId }}">
                       <input type="hidden" name="user_id" value="{{ .User.UserId }}">
                       <input type="hidden" name="vote" value="like">
-                      <input type="hidden" name="come_from" value="details">
                       <button type="submit" class="vote-button upvote {{ if eq .Post.HasVoted 1}}liked{{ end }}">
     
                         <!-- SVG for upvote button -->
@@ -122,7 +121,6 @@
                     <form action="/vote" method="post">
                       <input type="hidden" name="post_id" value="{{ .Post.PostId }}">
                       <input type="hidden" name="user_id" value="{{ .User.UserId }}">
-                      <input type="hidden" name="come_from" value="details">
                       <input type="hidden" name="vote" value="dislike">
                     <button class="vote-button downvote {{ if eq .Post.HasVoted -1}}disliked{{ end }}">
                       <span id="dislike-count">{{ .Post.Dislikes }}</span>
@@ -242,7 +240,6 @@
                               <input type="hidden" name="comment_id" value="{{ .CommentId }}">
                               <input type="hidden" name="user_id" value="{{ $.User.UserId }}">
                               <input type="hidden" name="vote" value="like">
-                              <input type="hidden" name="come_from" value="details">
                               <button type="submit" class="vote-button upvote {{ if eq .HasVoted 1}}liked{{ end }}">
             
                                 <!-- SVG for upvote button -->
@@ -281,7 +278,6 @@
                               <input type="hidden" name="post_id" value="{{ $.Post.PostId }}">
                               <input type="hidden" name="comment_id" value="{{ .CommentId }}">
                               <input type="hidden" name="user_id" value="{{ $.User.UserId }}">
-                              <input type="hidden" name="come_from" value="details">
                               <input type="hidden" name="vote" value="dislike">
                             <button class="vote-button downvote {{ if eq .HasVoted -1}}disliked{{ end }}">
                               <span id="dislike-count">{{ .Dislikes }}</span>
@@ -334,32 +330,5 @@
 </body>
 
 </html>
-<script>
-    // Ajuste la hauteur du textarea à l'affichage pour afficher tout le contenu sans scroll
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll(".comment-text").forEach(textarea => {
-            textarea.style.height = 'auto'; // Reset the height to auto
-            textarea.style.height = textarea.scrollHeight + 'px'; // Set it to the scrollHeight
-        });
-    });
-
-    // Remove display none from edit-comment button when textarea content changes
-    document.querySelectorAll(".comment-text").forEach(textarea => {
-        textarea.addEventListener("input", function () {
-            const editButton = this.closest(".comment").querySelector(".edit-comment");
-            if (editButton) {
-                editButton.style.display = "inline-block";
-            }
-        });
-    });
-    document.querySelectorAll('form').forEach(form => {
-        form.addEventListener('submit', (event) => {
-            const textarea = form.querySelector('textarea');
-            if (textarea && textarea.value.trim() === '') {
-                event.preventDefault();
-                alert("Comment can't be empty");
-            }
-        });
-    });
-
-</script>
+<script src="/assets/js/index.js"></script>
+<script src="/assets/js/detailsPost.js"></script>

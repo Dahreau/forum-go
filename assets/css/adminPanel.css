@@ -36,7 +36,9 @@ td,th {
     padding: 8px;
     color: white;
 }
-
+tr:not(:first-child):hover{
+    background-color: rgb(255, 196, 251, 0.05);
+}
 td:not(:last-child), th:not(:last-child) {
     border-right: 1px solid #7789FF;
 }

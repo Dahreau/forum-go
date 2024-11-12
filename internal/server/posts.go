@@ -132,13 +132,13 @@ func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GetNewPostHandler(w http.ResponseWriter, r *http.Request) {
+	if !s.isLoggedIn(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
 	categories, err := s.db.GetCategories()
 	if err != nil {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
-		return
-	}
-	if !s.isLoggedIn(r) {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 	render(w, r, "createPost", map[string]interface{}{"Categories": categories})

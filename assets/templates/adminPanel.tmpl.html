@@ -1,103 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="icon" href="/assets/img/logo.png" type="image/png" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Shojumaru&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/assets/css/global.css" />
-    <link rel="stylesheet" href="/assets/css/header.css" />
-    <link rel="stylesheet" href="/assets/css/home.css" />
-    <link rel="stylesheet" href="/assets/css/adminPanel.css" />
-    <title>Admin Panel</title>
-  </head>
 
-  <body>
-    <!-- Header Section -->
-    <header class="header-section">
-      <div class="logo-container">
-        <a href="/">
-          <div class="logo">
-            <img src="/assets/img/logo.png" alt="Logo Aniverse" width="50" />
-          </div>
-          <div class="logo-text">Aniverse</div>
-        </a>
-      </div>
-      <div class="user-info">
-        {{ if .User }}
-        <h1 class="welcome">Welcome {{ .User.Username}}</h1>
-        <form method="post" action="/logout">
-          <button class="logout-button button" type="submit">
-            <span>Log out</span
-            ><svg
-              id="logout-icon"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="-2 -2 24 24"
-            >
-              <path
-                d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z"
-              />
-            </svg>
-          </button>
-        </form>
-        <!-- <div class="logout-button">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="icon" href="/assets/img/logo.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Shojumaru&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/global.css" />
+  <link rel="stylesheet" href="/assets/css/header.css" />
+  <link rel="stylesheet" href="/assets/css/home.css" />
+  <link rel="stylesheet" href="/assets/css/adminPanel.css" />
+  <title>Admin Panel</title>
+</head>
+
+<body>
+  <!-- Header Section -->
+  <header class="header-section">
+    <div class="logo-container">
+      <a href="/">
+        <div class="logo">
+          <img src="/assets/img/logo.png" alt="Logo Aniverse" width="50" />
+        </div>
+        <div class="logo-text">Aniverse</div>
+      </a>
+    </div>
+    <div class="user-info">
+      {{ if .User }}
+      <h1 class="welcome">Welcome {{ .User.Username}}</h1>
+      <form method="post" action="/logout">
+        <button class="logout-button button" type="submit">
+          <span>Log out</span><svg id="logout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24">
+            <path
+              d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z" />
+          </svg>
+        </button>
+      </form>
+      <!-- <div class="logout-button">
               <a href="#" class="logout-link">Log out</a>
           </div> -->
-        {{ if eq .User.Role "admin" }} {{ end }} {{ else }}
-        <h1 class="welcome">Guest</h1>
-        <a class="button" href="/login">Login</a>
-        <a class="button register" href="/register">Register</a>
-        {{ end }}
-      </div>
-    </header>
-    <div class="main-content">
-      <div class="user-section global-box">
-        <h1>Users List</h1>
-        <div class="userlist scroll">
-          <table>
-            <tr>
-              <th>Username</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Actions</th>
-            </tr>
-            {{ range .users }}
-            <tr>
-              <td>{{ .Username }}</td>
-              <td>{{ .Email }}</td>
-              <td>{{ .Role }}</td>
-              <td class="actions-td">
-                <button class="logout-button button">
-                  <a href="/delete/users/{{.UserId}}">Delete</a>
-                </button>
-                {{ if eq .Role "ban"}}
-                <button class="button">
-                  <a href="/ban/users/{{.UserId}}">Unban</a>
-                </button>
-                {{ else }}
-                <button class="logout-button button">
-                  <a href="/ban/users/{{.UserId}}">BAN !!!</a>
-                </button>
-                {{ end }}
-              </td>
-            </tr>
-            {{ end }}
-          </table>
-        </div>
+      {{ if eq .User.Role "admin" }} {{ end }} {{ else }}
+      <h1 class="welcome">Guest</h1>
+      <a class="button" href="/login">Login</a>
+      <a class="button register" href="/register">Register</a>
+      {{ end }}
+    </div>
+  </header>
+  <div class="main-content">
+    <div class="user-section global-box">
+      <h1>Users List</h1>
+      <div class="userlist scroll">
+        <table>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+          {{ range .users }}
+          <tr>
+            <td>{{ .Username }}</td>
+            <td>{{ .Email }}</td>
+            <td>{{ .Role }}</td>
+            <td class="actions-td">
+              <button class="logout-button button">
+                <a href="/delete/users/{{.UserId}}">Delete</a>
+              </button>
+              {{ if eq .Role "ban"}}
+              <a href="/ban/users/{{.UserId}}">
+                <button class="button">Unban</button>
+              </a>
+              {{ else }}
+              <a href="/ban/users/{{.UserId}}">
+                <button class="logout-button button">BAN !!!</button>
+              </a>
+              {{ end }}
+              {{ if or (eq .Role "user") (eq .Role "moderator")}}
+              <a href="/promote/users/{{.UserId}}">
+                <button class="button">Promote</button>
+              </a>
+              {{ end }}
+              {{ if and (not (eq .UserId $.User.UserId)) (eq .Role "moderator") }}
+              <a href="/demote/users/{{.UserId}}">
+                <button class="logout-button button">Demote</button>
+              </a>
+              {{ end }}
+            </td>
+          </tr>
+          {{ end }}
+        </table>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>

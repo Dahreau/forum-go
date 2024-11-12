@@ -26,7 +26,10 @@ body {
     overflow-x: hidden;
     overflow-y: overlay;
 }
-
+::selection {
+    background: #FFC4FB;
+    color: #10091B;
+}
 .welcome {
     font-size: 1.25rem;
 }

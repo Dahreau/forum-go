@@ -15,6 +15,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets"))))
 
 	mux.HandleFunc("/", s.HomePageHandler)
+	mux.HandleFunc("/created", s.HomePageHandler)
 
 	mux.HandleFunc("GET /login", s.GetLoginHandler)
 	mux.HandleFunc("POST /login", s.PostLoginHandler)
@@ -27,6 +28,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc("GET /users", s.GetUsersHandler)
 	mux.HandleFunc("GET /delete/users/{id}", s.DeleteUsersHandler)
 	mux.HandleFunc("GET /ban/users/{id}", s.BanUserHandler)
+	mux.HandleFunc("GET /promote/users/{id}", s.PromoteUserHandler)
+	mux.HandleFunc("GET /demote/users/{id}", s.DemoteUserHandler)
 
 	mux.HandleFunc("GET /posts", s.GetPostsHandler)
 	mux.HandleFunc("GET /posts/create", s.GetNewPostHandler)
@@ -56,7 +59,6 @@ func (s *Server) VoteHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}
-	ComeFrom := r.FormValue("come_from")
 	postID := r.FormValue("post_id")
 	userID := r.FormValue("user_id")
 	vote := r.FormValue("vote")
@@ -73,10 +75,10 @@ func (s *Server) VoteHandler(w http.ResponseWriter, r *http.Request) {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
-	if ComeFrom == "details" {
-		http.Redirect(w, r, "/post/"+postID, http.StatusSeeOther)
-	} else {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+	referer := r.Header.Get("Referer")
+	if referer != "" {
+		http.Redirect(w, r, referer, http.StatusSeeOther)
+		return
 	}
 }
 
@@ -108,8 +110,12 @@ func (s *Server) AdminPanelHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) HomePageHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
+	if r.URL.Path != "/" && r.URL.Path != "/created" && r.URL.Path != "/liked" {
 		s.errorHandler(w, r, http.StatusNotFound, "Page not found")
+		return
+	}
+	if !s.isLoggedIn(r) && (r.URL.Path == "/created" || r.URL.Path == "/liked") {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 	err := error(nil)
@@ -126,7 +132,24 @@ func (s *Server) HomePageHandler(w http.ResponseWriter, r *http.Request) {
 	for i, post := range s.posts {
 		s.posts[i].HasVoted = GetUserVote(post, s.getUser(r).UserId)
 	}
-	render(w, r, "home", map[string]interface{}{"Categories": s.categories, "Posts": s.posts})
+	postsToRender := []models.Post{}
+	if r.URL.Path == "/created" {
+		for _, post := range s.posts {
+			if post.UserID == s.getUser(r).UserId {
+				postsToRender = append(postsToRender, post)
+			}
+		}
+	} else if r.URL.Path == "/liked" {
+		for _, post := range s.posts {
+			if post.HasVoted == 1 {
+				postsToRender = append(postsToRender, post)
+			}
+		}
+	} else {
+		postsToRender = s.posts
+	}
+
+	render(w, r, "home", map[string]interface{}{"Categories": s.categories, "Posts": postsToRender})
 }
 func (s *Server) HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
 	resp := make(map[string]string)
