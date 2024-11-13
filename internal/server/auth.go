@@ -3,10 +3,7 @@ package server
 import (
 	"database/sql"
 	"forum-go/internal/models"
-	"math"
-	"math/rand"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
@@ -127,7 +124,7 @@ func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
 		render(w, r, "register", map[string]interface{}{"FormData": formData})
 		return
 	}
-	user := models.User{Username: r.FormValue("username"), Email: r.FormValue("email"), Password: string(PasswordHash), Role: "user", CreationDate: time.Now(), UserId: strconv.Itoa(rand.Intn(math.MaxInt32))}
+	user := models.User{Username: r.FormValue("username"), Email: r.FormValue("email"), Password: string(PasswordHash), Role: "user", CreationDate: time.Now(), UserId: ParseUUID(GenerateUUID())}
 	err = s.db.CreateUser(user)
 	if err != nil {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())

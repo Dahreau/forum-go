@@ -3,11 +3,8 @@ package server
 import (
 	"fmt"
 	"forum-go/internal/models"
-	"math"
-	"math/rand"
 	"net/http"
 	"sort" // Import pour trier les posts
-	"strconv"
 	"strings"
 	"time"
 )
@@ -87,7 +84,7 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	newPost := models.Post{
-		PostId:  strconv.Itoa(rand.Intn(math.MaxInt32)),
+		PostId:  ParseUUID(GenerateUUID()),
 		Title:   r.FormValue("title"),
 		Content: r.FormValue("content"),
 		UserID:  r.FormValue("UserId"),

@@ -3,9 +3,7 @@ package database
 import (
 	"database/sql"
 	"forum-go/internal/models"
-	"math"
-	"math/rand"
-	"strconv"
+	"forum-go/internal/server"
 )
 
 func (s *service) Vote(postID, commentID, userID string, isLike bool) error {
@@ -26,7 +24,7 @@ func (s *service) Vote(postID, commentID, userID string, isLike bool) error {
 	}
 
 	if userlike.LikeId == "" {
-		userlike.LikeId = strconv.Itoa(rand.Intn(math.MaxInt32))
+		userlike.LikeId = server.ParseUUID(server.GenerateUUID())
 		query := "INSERT INTO User_like (like_id, user_id, post_id, comment_id, isLiked) VALUES (?,?,?,?,?)"
 		_, err := s.db.Exec(query, userlike.LikeId, userID, postID, commentID, isLike)
 		return err

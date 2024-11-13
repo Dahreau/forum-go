@@ -2,10 +2,7 @@ package server
 
 import (
 	"forum-go/internal/models"
-	"math"
-	"math/rand"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -35,7 +32,7 @@ func (s *Server) PostCommentHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	newComment := models.Comment{
-		CommentId:    strconv.Itoa(rand.Intn(math.MaxInt32)),
+		CommentId:    ParseUUID(GenerateUUID()),
 		Content:      r.FormValue("comment"),
 		CreationDate: time.Now(),
 		UserID:       r.FormValue("UserId"),

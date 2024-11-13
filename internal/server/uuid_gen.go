@@ -6,8 +6,7 @@ import (
 	"runtime"
 )
 
-func ParseUUID(generator func() uuid.UUID) (UUID string) {
-	id := generator()
+func ParseUUID(id uuid.UUID) (UUID string) {
 	UUID = id.String()
 	return UUID
 }
