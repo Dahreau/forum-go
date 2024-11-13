@@ -117,6 +117,14 @@
     font-family: 'Mina', sans-serif;
 }
 
+#selected-categories{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+}
+
 .btn-reset {
     gap: 8px;
     font-size: 16px;
