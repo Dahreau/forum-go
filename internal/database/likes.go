@@ -3,7 +3,7 @@ package database
 import (
 	"database/sql"
 	"forum-go/internal/models"
-	"forum-go/internal/server"
+	"forum-go/internal/shared"
 )
 
 func (s *service) Vote(postID, commentID, userID string, isLike bool) error {
@@ -24,7 +24,7 @@ func (s *service) Vote(postID, commentID, userID string, isLike bool) error {
 	}
 
 	if userlike.LikeId == "" {
-		userlike.LikeId = server.ParseUUID(server.GenerateUUID())
+		userlike.LikeId = shared.ParseUUID(shared.GenerateUUID())
 		query := "INSERT INTO User_like (like_id, user_id, post_id, comment_id, isLiked) VALUES (?,?,?,?,?)"
 		_, err := s.db.Exec(query, userlike.LikeId, userID, postID, commentID, isLike)
 		return err

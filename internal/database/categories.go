@@ -2,7 +2,7 @@ package database
 
 import (
 	"forum-go/internal/models"
-	"forum-go/internal/server"
+	"forum-go/internal/shared"
 )
 
 func (s *service) GetCategories() ([]models.Category, error) {
@@ -26,7 +26,7 @@ func (s *service) GetCategories() ([]models.Category, error) {
 
 func (s *service) AddCategory(name string) error {
 	category := models.Category{
-		CategoryId: server.ParseUUID(server.GenerateUUID()),
+		CategoryId: shared.ParseUUID(shared.GenerateUUID()),
 		Name:       name,
 	}
 	query := "INSERT INTO Category (category_id,name) VALUES (?,?)"

@@ -3,6 +3,7 @@ package server
 import (
 	"database/sql"
 	"forum-go/internal/models"
+	"forum-go/internal/shared"
 	"net/http"
 	"strings"
 	"time"
@@ -124,7 +125,7 @@ func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
 		render(w, r, "register", map[string]interface{}{"FormData": formData})
 		return
 	}
-	user := models.User{Username: r.FormValue("username"), Email: r.FormValue("email"), Password: string(PasswordHash), Role: "user", CreationDate: time.Now(), UserId: ParseUUID(GenerateUUID())}
+	user := models.User{Username: r.FormValue("username"), Email: r.FormValue("email"), Password: string(PasswordHash), Role: "user", CreationDate: time.Now(), UserId: shared.ParseUUID(shared.GenerateUUID())}
 	err = s.db.CreateUser(user)
 	if err != nil {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())

@@ -2,6 +2,7 @@ package server
 
 import (
 	"forum-go/internal/models"
+	"forum-go/internal/shared"
 	"net/http"
 	"time"
 )
@@ -32,7 +33,7 @@ func (s *Server) PostCommentHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	newComment := models.Comment{
-		CommentId:    ParseUUID(GenerateUUID()),
+		CommentId:    shared.ParseUUID(shared.GenerateUUID()),
 		Content:      r.FormValue("comment"),
 		CreationDate: time.Now(),
 		UserID:       r.FormValue("UserId"),

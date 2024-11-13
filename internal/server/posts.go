@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"forum-go/internal/models"
+	"forum-go/internal/shared"
 	"net/http"
 	"sort" // Import pour trier les posts
 	"strings"
@@ -84,7 +85,7 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	newPost := models.Post{
-		PostId:  ParseUUID(GenerateUUID()),
+		PostId:  shared.ParseUUID(shared.GenerateUUID()),
 		Title:   r.FormValue("title"),
 		Content: r.FormValue("content"),
 		UserID:  r.FormValue("UserId"),
