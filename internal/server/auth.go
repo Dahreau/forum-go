@@ -33,11 +33,10 @@ func (s *Server) PostLoginHandler(w http.ResponseWriter, r *http.Request) {
 		render(w, r, "login", map[string]interface{}{"Error": "You are banned", "email": email})
 		return
 	}
-	//Simulates login
 	userID := generateToken(32)
 
 	//Creates cookie session
-	expiration := time.Now().Add(24 * time.Hour)
+	expiration := time.Now().Add(time.Hour)
 	cookie := http.Cookie{
 		Name:    s.SESSION_ID,
 		Value:   userID,
