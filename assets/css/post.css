@@ -80,6 +80,7 @@
     overflow: auto;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .tags-section {
@@ -100,11 +101,12 @@
 .comment {
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
     /* margin: 0 16px; */
     border: 1px solid #7789FF;
     border-radius: 16px;
     /* gap: 16px; */
-    width: 94%;
+    width: 100%;
     padding: 8px;
     text-align: left;
 
@@ -246,6 +248,14 @@
         width: auto;
     }
 
+    .comment-form{
+        flex-direction: column;
+        align-items: center;
+        button {
+            width: 100%;
+        }
+        
+    }
 }
 
 .no-resize {

@@ -1,9 +1,10 @@
 package shared
 
 import (
-	"github.com/gofrs/uuid"
 	"log"
 	"runtime"
+
+	"github.com/gofrs/uuid"
 )
 
 func ParseUUID(id uuid.UUID) (UUID string) {

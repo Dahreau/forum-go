@@ -80,7 +80,7 @@
 .main-content {
     display: flex;
     gap: 20px;
-    width: 90%;
+    width: 95%;
     font-family: 'Mina', 'sans-serif';
 }
 
@@ -94,7 +94,7 @@
     align-items: center;
     box-shadow: 0px 0px 24px #FE9AF8, inset 0px 0px 24px #FE9AF8;
     border-radius: 24px;
-    width: 256px;
+    width: 320px;
     padding: 16px 12px;
     height: fit-content;
     background-color: rgba(15, 7, 53, 0.842);
@@ -108,7 +108,6 @@
 .filter-category {
     width: 100%;
     padding: 8px;
-    margin-bottom: 16px;
     background: #10091B;
     color: #7789FF;
     border: 1px solid #7789FF;
@@ -123,6 +122,15 @@
     flex-wrap: wrap;
     gap: 8px;
     width: 100%;
+
+    .category-box{
+        cursor: pointer;
+        transition: all 0.4s ease;
+    }
+    .category-box:hover{
+        background-color: #FFC4FB;
+        color: #10091B;
+    }
 }
 
 .btn-reset {
@@ -194,6 +202,7 @@
 .misc {
     display: flex;
     justify-content: space-between;
+    box-sizing: border-box;
     align-items: center;
     margin-top: 16px;
     gap: 8px;

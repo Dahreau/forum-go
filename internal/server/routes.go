@@ -15,7 +15,6 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets"))))
 
 	mux.HandleFunc("/", s.HomePageHandler)
-	mux.HandleFunc("/created", s.HomePageHandler)
 
 	mux.HandleFunc("GET /login", s.GetLoginHandler)
 	mux.HandleFunc("POST /login", s.PostLoginHandler)

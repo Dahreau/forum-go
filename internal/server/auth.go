@@ -131,6 +131,7 @@ func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
+	s.users = append(s.users, user)
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 

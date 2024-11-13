@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   setActiveTab();
+  sortOptions();
 });
 
 const select = document.getElementById("filter-category");
@@ -53,6 +54,16 @@ select.onchange = addCategory;
 function sortOptions() {
   const options = Array.from(select.options).slice(1); // Ignore first option
   options.sort((a, b) => a.text.localeCompare(b.text));
-  select.innerHTML = '<option value="">Choisissez une catégorie</option>';
+  select.innerHTML = '<option value="">Select one or more categories</option>';
   options.forEach((option) => select.add(option));
+}
+
+const btnResetFilters = document.getElementById("btn-reset-filters");
+if (btnResetFilters) {
+  btnResetFilters.onclick = function () {
+    originalOptions.forEach((option) => select.add(option));
+    selectedCategories.innerHTML = "";
+    select.selectedIndex = 0;
+    sortOptions();
+  };
 }

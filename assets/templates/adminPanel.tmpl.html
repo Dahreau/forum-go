@@ -66,26 +66,30 @@
             <td>{{ .Email }}</td>
             <td>{{ .Role }}</td>
             <td class="actions-td">
-              <button class="logout-button button">
-                <a href="/delete/users/{{.UserId}}">Delete</a>
-              </button>
+              {{ if not (eq .UserId $.User.UserId) }}
+              <a href="/delete/users/{{.UserId}}">
+                <button class="logout-button button btn-action">
+                  Delete
+                </button>
+              </a>
+              {{ end }}
               {{ if eq .Role "ban"}}
               <a href="/ban/users/{{.UserId}}">
-                <button class="button">Unban</button>
+                <button class="button btn-action">Unban</button>
               </a>
-              {{ else }}
+              {{ else if not (eq .UserId $.User.UserId) }}
               <a href="/ban/users/{{.UserId}}">
-                <button class="logout-button button">BAN !!!</button>
+                <button class="logout-button button btn-action">BAN !!!</button>
               </a>
               {{ end }}
               {{ if or (eq .Role "user") (eq .Role "moderator")}}
               <a href="/promote/users/{{.UserId}}">
-                <button class="button">Promote</button>
+                <button class="button btn-action">Promote</button>
               </a>
               {{ end }}
               {{ if and (not (eq .UserId $.User.UserId)) (eq .Role "moderator") }}
               <a href="/demote/users/{{.UserId}}">
-                <button class="logout-button button">Demote</button>
+                <button class="logout-button button btn-action">Demote</button>
               </a>
               {{ end }}
             </td>

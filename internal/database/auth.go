@@ -88,3 +88,21 @@ func (s *service) UpdateUser(user models.User) error {
 	_, err := s.db.Exec(query, user.Email, user.Username, user.Password, user.Role, user.SessionId, user.SessionExpire, user.UserId)
 	return err
 }
+
+func (s *service) GetBanUsers() ([]models.User, error) {
+	query := "select * from user where role=ban"
+	rows, err := s.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	users := []models.User{}
+	for rows.Next() {
+		var user models.User
+		if err := rows.Scan(&user.UserId, &user.Email, &user.Username, &user.Password, &user.Role, &user.CreationDate, &user.SessionId, &user.SessionExpire); err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+	return users, nil
+}

@@ -25,6 +25,7 @@ type Service interface {
 	CreateUser(user models.User) error
 	GetUsers() ([]models.User, error)
 	GetUser(email, password string) (models.User, error)
+	GetBanUsers() ([]models.User, error)
 	Close() error
 
 	FindEmailUser(email string) (bool, error)

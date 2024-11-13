@@ -91,13 +91,12 @@
       <aside class="filters-section">
         <div class="filters-title">Filters</div>
         <select class="filter-category" id="filter-category">
-          <option value="">Choose a category</option>
           {{ range .Categories }}
           <option value="{{ .CategoryId }}">{{ .Name }}</option>
           {{ end }}
         </select>
         <div id="selected-categories"></div>
-        <button class="button btn-reset">Reset filters</button>
+        <button id="btn-reset-filters" class="button btn-reset">Reset filters</button>
       </aside>
 
       <!-- Post List Section -->
@@ -253,4 +252,5 @@
 </body>
 <script src="/assets/js/index.js"></script>
 <script src="/assets/js/home.js"></script>
+
 </html>

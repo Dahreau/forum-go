@@ -58,7 +58,11 @@ table {
     display: flex;
     justify-content: flex-start;
     gap: 8px;
-
+    min-height: 40px;
+}
+.btn-action{
+    padding: 8px;
+    box-shadow: 0px 0px 4px;
 }
 
 @media (max-width: 768px) {

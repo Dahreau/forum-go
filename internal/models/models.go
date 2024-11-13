@@ -23,7 +23,6 @@ type Category struct {
 }
 type Post_Comment interface {
 	GetUserLikes() []UserLike
-	GetId() string
 }
 type Post struct {
 	PostId                string       `db:"post_id"`
@@ -77,13 +76,7 @@ type Error struct {
 func (post Post) GetUserLikes() []UserLike {
 	return post.UserLikes
 }
-func (post Post) GetId() string {
-	return post.PostId
-}
 
 func (comment Comment) GetUserLikes() []UserLike {
 	return comment.UserLikes
-}
-func (comment Comment) GetId() string {
-	return comment.CommentId
 }
