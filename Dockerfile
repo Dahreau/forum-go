@@ -38,6 +38,6 @@ COPY --from=build /app/query.sql .
 # Ensure the binary is executable
 RUN chmod +x /app/forum-go
 
-EXPOSE 8081
+EXPOSE 8080
 
 CMD ["./forum-go"]
