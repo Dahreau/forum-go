@@ -135,19 +135,6 @@ func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 
-func (s *Server) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
-	if !IsAdmin(r) {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
-	}
-	users, err := s.db.GetUsers()
-	if err != nil {
-		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
-		return
-	}
-	render(w, r, "../users", map[string]interface{}{"users": users})
-}
-
 func (s *Server) DeleteUsersHandler(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 	pathParts := strings.Split(path, "/")

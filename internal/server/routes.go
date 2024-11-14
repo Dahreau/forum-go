@@ -24,13 +24,11 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc("GET /register", s.GetRegisterHandler)
 	mux.HandleFunc("POST /register", s.PostRegisterHandler)
 
-	mux.HandleFunc("GET /users", s.GetUsersHandler)
 	mux.HandleFunc("GET /delete/users/{id}", s.DeleteUsersHandler)
 	mux.HandleFunc("GET /ban/users/{id}", s.BanUserHandler)
 	mux.HandleFunc("GET /promote/users/{id}", s.PromoteUserHandler)
 	mux.HandleFunc("GET /demote/users/{id}", s.DemoteUserHandler)
 
-	mux.HandleFunc("GET /posts", s.GetPostsHandler)
 	mux.HandleFunc("GET /posts/create", s.GetNewPostHandler)
 	mux.HandleFunc("POST /posts/create", s.PostNewPostsHandler)
 	mux.HandleFunc("POST /posts/delete/{id}", s.DeletePostsHandler)

@@ -4,25 +4,10 @@ import (
 	"fmt"
 	"forum-go/internal/models"
 	"forum-go/internal/shared"
-	"net/http"
-	"sort" // Import pour trier les posts
+	"net/http" // Import pour trier les posts
 	"strings"
 	"time"
 )
-
-func (s *Server) GetPostsHandler(w http.ResponseWriter, r *http.Request) {
-	posts, err := s.db.GetPosts()
-	if err != nil {
-		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
-		return
-	}
-	// Tri des posts par date de création dans l'ordre décroissant
-	sort.Slice(posts, func(i, j int) bool {
-		return posts[i].CreationDate.After(posts[j].CreationDate)
-	})
-	// Rendu des posts triés
-	render(w, r, "../posts", map[string]interface{}{"Posts": posts})
-}
 
 func (s *Server) GetPostHandler(w http.ResponseWriter, r *http.Request) {
 	vars := strings.Split(r.URL.Path, "/")
