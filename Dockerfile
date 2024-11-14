@@ -25,7 +25,7 @@ FROM alpine:latest
 
 WORKDIR /app
 
-RUN apk add --no-cache sqlite gcc musl-dev
+RUN apk add --no-cache sqlite
 
 # Copy the binary from the build stage
 COPY --from=build /app/forum-go .
