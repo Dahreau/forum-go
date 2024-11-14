@@ -16,6 +16,14 @@
     overflow: scroll;
     height: auto;
 }
+.main-content{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.addcategories{
+    width: fit-content;
+}
 
 hr {
     color: #7789FF;
