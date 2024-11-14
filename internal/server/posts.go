@@ -72,7 +72,7 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Validate content
 	if ValidatePostChar(formData.Content) {
-		formData.Errors["Content"] = "Content cannot be empty or more than 1000 characters"
+		formData.Errors["Content"] = "Content cannot be empty or more than 2000 characters"
 	}
 
 	// Validate Categories
@@ -151,7 +151,7 @@ func IsUniquePost(posts []models.Post, post string) bool {
 	return true
 }
 
-const MaxChar = 1000
+const MaxChar = 2000
 
 func ValidatePostChar(content string) bool {
 	if len(content) > MaxChar || len(content) == 0 {

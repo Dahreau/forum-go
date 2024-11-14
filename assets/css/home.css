@@ -157,6 +157,7 @@
 .post-list {
     flex-grow: 1;
     display: flex;
+    width: 80%;
     flex-direction: column;
     gap: 20px;
 }

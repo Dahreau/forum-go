@@ -7,18 +7,26 @@ import (
 )
 
 func (s *Server) GetCategoriesHandler(w http.ResponseWriter, r *http.Request) {
+	if !s.isLoggedIn(r) || !IsAdmin(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
 	categories, err := s.db.GetCategories()
 	if err != nil {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
-	render(w, r, "../categories", map[string]interface{}{"Categories": categories})
+	render(w, r, "categories", map[string]interface{}{"Categories": categories})
 }
 
 func (s *Server) PostCategoriesHandler(w http.ResponseWriter, r *http.Request) {
+	if !s.isLoggedIn(r) || !IsAdmin(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
 	category := r.FormValue("categoryName")
 	if !IsUniqueCategory(s.categories, category) {
-		render(w, r, "../categories", map[string]interface{}{"Categories": s.categories, "Error": "Category already exists"})
+		render(w, r, "categories", map[string]interface{}{"Categories": s.categories, "Error": "Category already exists"})
 		return
 	}
 	err := s.db.AddCategory(category)
@@ -30,6 +38,10 @@ func (s *Server) PostCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) DeleteCategoriesHandler(w http.ResponseWriter, r *http.Request) {
+	if !s.isLoggedIn(r) || !IsAdmin(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
 	categoryID := r.FormValue("categoryId")
 	err := s.db.DeleteCategory(categoryID)
 	if err != nil {
@@ -46,10 +58,14 @@ func (s *Server) DeleteCategoriesHandler(w http.ResponseWriter, r *http.Request)
 }
 
 func (s *Server) EditCategoriesHandler(w http.ResponseWriter, r *http.Request) {
+	if !s.isLoggedIn(r) || !IsAdmin(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
 	categoryID := r.FormValue("categoryId")
 	categoryName := r.FormValue("newCategoryName")
 	if !IsUniqueCategory(s.categories, categoryName) {
-		render(w, r, "../categories", map[string]interface{}{"Categories": s.categories, "Error": "Category already exists"})
+		render(w, r, "categories", map[string]interface{}{"Categories": s.categories, "Error": "Category already exists"})
 		return
 	}
 	err := s.db.EditCategory(categoryID, categoryName)

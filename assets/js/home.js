@@ -1,27 +1,28 @@
+const select = document.getElementById("filter-category");
+const selectedCategories = document.getElementById("selected-categories");
+const originalOptions = Array.from(select.options);
+
 document.addEventListener("DOMContentLoaded", () => {
   function setActiveTab() {
     const tabs = document.querySelectorAll(".tab");
     const path = window.location.pathname;
 
-    // Définir l'onglet actif en fonction de l'URL
-    tabs.forEach((tab) => tab.classList.remove("active")); // Réinitialiser l'onglet actif
+    if (tabs.length > 0) {
+      // Définir l'onglet actif en fonction de l'URL
+      tabs.forEach((tab) => tab.classList.remove("active")); // Réinitialiser l'onglet actif
 
-    if (path === "/created") {
-      tabs[1].classList.add("active");
-    } else if (path === "/liked") {
-      tabs[2].classList.add("active");
-    } else {
-      tabs[0].classList.add("active"); // Par défaut, "All posts"
+      if (path === "/created") {
+        tabs[1].classList.add("active");
+      } else if (path === "/liked") {
+        tabs[2].classList.add("active");
+      } else {
+        tabs[0].classList.add("active"); // Par défaut, "All posts"
+      }
     }
   }
-
-  setActiveTab();
   sortOptions();
+  setActiveTab();
 });
-
-const select = document.getElementById("filter-category");
-const selectedCategories = document.getElementById("selected-categories");
-const originalOptions = Array.from(select.options);
 
 function addCategory() {
   const selectedOption = select.options[select.selectedIndex];
@@ -35,6 +36,7 @@ function addCategory() {
     };
     selectedCategories.appendChild(categoryElement);
     select.remove(select.selectedIndex);
+    sortOptions();
   }
 }
 
@@ -56,14 +58,34 @@ function sortOptions() {
   options.sort((a, b) => a.text.localeCompare(b.text));
   select.innerHTML = '<option value="">Select one or more categories</option>';
   options.forEach((option) => select.add(option));
+  displayPosts();
 }
 
 const btnResetFilters = document.getElementById("btn-reset-filters");
 if (btnResetFilters) {
   btnResetFilters.onclick = function () {
-    originalOptions.forEach((option) => select.add(option));
-    selectedCategories.innerHTML = "";
-    select.selectedIndex = 0;
-    sortOptions();
+    Array.from(selectedCategories.children).forEach((category) => {
+      removeCategory(
+        category.id.split("-")[1],
+        category.textContent.replace("×", "").trim()
+      );
+    });
   };
+}
+
+function displayPosts() {
+  const posts = document.querySelectorAll(".post-item");
+  const arrayCategories = Array.from(selectedCategories.children).map(
+    (category) => category.textContent.replace("×", "").trim()
+  );
+
+  posts.forEach((post) => {
+    const categories = Array.from(post.querySelectorAll(".category-box")).map(
+      (category) => category.textContent
+    );
+    const isDisplayed = arrayCategories.every((category) =>
+      categories.includes(category)
+    );
+    post.style.display = isDisplayed ? "block" : "none";
+  });
 }
