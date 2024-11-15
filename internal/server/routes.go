@@ -15,6 +15,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets"))))
 
 	mux.HandleFunc("/", s.HomePageHandler)
+	mux.HandleFunc("/about", s.AboutPageHandler)
 
 	mux.HandleFunc("GET /login", s.GetLoginHandler)
 	mux.HandleFunc("POST /login", s.PostLoginHandler)
@@ -147,6 +148,9 @@ func (s *Server) HomePageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	render(w, r, "home", map[string]interface{}{"Categories": s.categories, "Posts": postsToRender})
+}
+func (s *Server) AboutPageHandler(w http.ResponseWriter, r *http.Request) {
+	render(w, r, "about", nil)
 }
 func (s *Server) HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
 	resp := make(map[string]string)

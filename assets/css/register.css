@@ -1,15 +1,4 @@
-.title {
-    font-family: "Shojumaru";
-    color: #7789FF;
-    text-shadow:
-        0 0 7px #111A7C,
-        0 0 10px #111A7C,
-        0 0 21px #111A7C,
-        0 0 42px #7789FF,
-        0 0 82px #7789FF;
-    font-size: 27px;
-    margin-top: -4%;
-}
+
 
 .container {
     flex-grow: 1;

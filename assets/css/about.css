@@ -1,0 +1,32 @@
+.content-wrapper{
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+}
+.global-box {
+display: flex;
+flex-direction: column;
+padding: 32px;
+gap: 16px;
+a{
+
+    font-size: 20px;
+    font-family: 'Mina', sans-serif;
+    text-shadow: 0 0 7px #111A7C, 0 0 10px #111A7C, 0 0 21px #111A7C, 0 0 42px #7789FF, 0 0 82px #7789FF;
+    img{
+        width: 24px;
+        stroke: white;
+        vertical-align: text-top;
+    }
+}
+a:hover{
+    color: #FFC4FB;
+    cursor: pointer;
+}
+}
+
+ul{
+    padding: 0;
+    text-align: left;
+    list-style-type: none;
+}

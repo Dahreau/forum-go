@@ -20,16 +20,21 @@
     <!-- Header Section -->
     <header class="header-section">
         <div class="logo-container">
-            <a href="/"><div class="logo"><img src="/assets/img/logo.png" alt="Logo Aniverse" width="50"></div>
-            <div class="logo-text">Aniverse</div></a>
+            <a href="/">
+                <div class="logo"><img src="/assets/img/logo.png" alt="Logo Aniverse" width="50"></div>
+                <div class="logo-text">Aniverse</div>
+            </a>
         </div>
         <div class="user-info">
             {{ if .User }}
             <h1 class="welcome">Welcome {{ .User.Username}}</h1>
             <form method="post" action="/logout">
-                <button class="logout-button button" type="submit"><span>Log out</span><svg id="logout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24">
-                <path d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z"/>
-            </svg></button></form>
+                <button class="logout-button button" type="submit"><span>Log out</span><svg id="logout-icon"
+                        xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24">
+                        <path
+                            d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z" />
+                    </svg></button>
+            </form>
             <!-- <div class="logout-button">
                 <a href="#" class="logout-link">Log out</a>
             </div> -->
@@ -51,17 +56,19 @@
             <!-- Messages d'erreur -->
             {{ if .FormData.Errors}}
             <div>
-                    {{ range .FormData.Errors }}
-                        <p class="error-message">{{ . }}</p>
-                    {{ end }}
+                {{ range .FormData.Errors }}
+                <p class="error-message">{{ . }}</p>
+                {{ end }}
             </div>
             {{ end }}
 
             <label for="username">Username :</label>
-            <input type="text" name="username" id="username" value="{{.FormData.Username}}"required placeholder="Enter your username here...">
+            <input type="text" name="username" id="username" value="{{.FormData.Username}}" required
+                placeholder="Enter your username here...">
 
             <label for="email">Email :</label>
-            <input type="email" name="email" id="email" value="{{.FormData.Email}}"required placeholder="Enter your email here...">
+            <input type="email" name="email" id="email" value="{{.FormData.Email}}" required
+                placeholder="Enter your email here...">
 
             <label for="password">Password :</label>
             <input type="password" name="password" id="password" required placeholder="Enter your password here...">
@@ -73,10 +80,10 @@
             <button class="button btn-submit" type="submit">Sign up</button>
         </form>
     </div>
-<!-- Footer Section -->
-<div class="footer-section">
-    <span class="footer-text">FOOTER, LICENCE</span>
-</div>
+    <!-- Footer Section -->
+    <footer class="footer-section">
+        <span class="footer-text">© 2024 Aniverse. All rights reserved - <a href="/about">Our team</a></span>
+    </footer>
 </body>
 
 </html>

@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="icon" href="/assets/img/logo.png" type="image/png" />
   <link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Mina:wght@400;700&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="/assets/css/global.css" />
@@ -91,6 +90,7 @@
       <aside class="filters-section">
         <div class="filters-title">Filters</div>
         <select class="filter-category" id="filter-category">
+          <option value="">Select one or more categories</option>
           {{ range .Categories }}
           <option value="{{ .CategoryId }}">{{ .Name }}</option>
           {{ end }}
@@ -247,7 +247,7 @@
 
   <!-- Footer Section -->
   <footer class="footer-section">
-    <span class="footer-text">FOOTER, LICENCE</span>
+    <span class="footer-text">© 2024 Aniverse. All rights reserved - <a href="/about">Our team</a></span>
   </footer>
 </body>
 <script src="/assets/js/index.js"></script>
