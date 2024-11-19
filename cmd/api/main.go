@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"forum-go/internal/server"
+	"forum-go/security"
 )
 
 func gracefulShutdown(apiServer *http.Server) {
@@ -34,13 +35,14 @@ func gracefulShutdown(apiServer *http.Server) {
 }
 
 func main() {
-
+	go security.CleanupInactiveClients()
 	server := server.NewServer()
 
 	go gracefulShutdown(server)
 
 	fmt.Println("Server started on port", server.Addr)
-	err := server.ListenAndServe()
+	// err := server.ListenAndServe()
+	err := server.ListenAndServeTLS("", "")
 	if err != nil && err != http.ErrServerClosed {
 		panic(fmt.Sprintf("http server error: %s", err))
 	}
