@@ -16,7 +16,7 @@ var clients = make(map[string]*client)
 var mu sync.Mutex
 
 // Paramètres de la limitation de débit
-const maxRequests = 18              // Nombre maximum de requêtes autorisées
+const maxRequests = 12              // Nombre maximum de requêtes autorisées
 const timeWindow = 10 * time.Second // Intervalle de temps pour limiter les requêtes
 
 // Fonction principale pour gérer les requêtes avec limitation
