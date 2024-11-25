@@ -17,6 +17,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc("/", s.HomePageHandler)
 	mux.HandleFunc("/about", s.AboutPageHandler)
 
+	mux.HandleFunc("/activity", s.ActivityPageHandler)
+
 	mux.HandleFunc("GET /login", s.GetLoginHandler)
 	mux.HandleFunc("POST /login", s.PostLoginHandler)
 
@@ -33,6 +35,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc("GET /posts/create", s.GetNewPostHandler)
 	mux.HandleFunc("POST /posts/create", s.PostNewPostsHandler)
 	mux.HandleFunc("POST /posts/delete/{id}", s.DeletePostsHandler)
+	mux.HandleFunc("POST /posts/edit/{id}", s.EditPostHandler)
 
 	mux.HandleFunc("GET /categories", s.GetCategoriesHandler)
 	mux.HandleFunc("POST /categories/add", s.PostCategoriesHandler)
@@ -72,6 +75,73 @@ func (s *Server) VoteHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
+	}
+	post, err := s.db.GetPost(postID)
+	if err != nil {
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+	}
+	if commentID == "" {
+		if isLike {
+			if post.UserID != s.getUser(r).UserId {
+				newActivity := models.NewActivity(post.UserID, userID, string(models.GET_POST_LIKED), postID, "", post.Title)
+				err = s.db.CreateActivity(newActivity)
+				if err != nil {
+					s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+				}
+			}
+			newActivity := models.NewActivity(s.getUser(r).UserId, userID, string(models.POST_LIKED), postID, "", post.Title)
+			err = s.db.CreateActivity(newActivity)
+			if err != nil {
+				s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+			}
+		} else {
+			if post.UserID != s.getUser(r).UserId {
+				newActivity := models.NewActivity(post.UserID, userID, string(models.GET_POST_DISLIKED), postID, "", post.Title)
+				err = s.db.CreateActivity(newActivity)
+				if err != nil {
+					s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+				}
+			}
+			newActivity := models.NewActivity(s.getUser(r).UserId, userID, string(models.POST_DISLIKED), postID, "", post.Title)
+			err = s.db.CreateActivity(newActivity)
+			if err != nil {
+				s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+			}
+		}
+	} else {
+		ActualComment := models.Comment{}
+		for _, comment := range post.Comments {
+			if comment.CommentId == commentID {
+				ActualComment = comment
+			}
+		}
+		if isLike {
+			if ActualComment.UserID != s.getUser(r).UserId {
+				newActivity := models.NewActivity(ActualComment.UserID, userID, string(models.GET_COMMENT_LIKED), postID, ActualComment.CommentId, ActualComment.Content)
+				err = s.db.CreateActivity(newActivity)
+				if err != nil {
+					s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+				}
+			}
+			newActivity := models.NewActivity(s.getUser(r).UserId, userID, string(models.COMMENT_LIKED), postID, ActualComment.CommentId, ActualComment.Content)
+			err = s.db.CreateActivity(newActivity)
+			if err != nil {
+				s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+			}
+		} else {
+			if ActualComment.UserID != s.getUser(r).UserId {
+				newActivity := models.NewActivity(ActualComment.UserID, userID, string(models.GET_COMMENT_DISLIKED), postID, ActualComment.CommentId, ActualComment.Content)
+				err = s.db.CreateActivity(newActivity)
+				if err != nil {
+					s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+				}
+			}
+			newActivity := models.NewActivity(s.getUser(r).UserId, userID, string(models.COMMENT_DISLIKED), postID, ActualComment.CommentId, ActualComment.Content)
+			err = s.db.CreateActivity(newActivity)
+			if err != nil {
+				s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+			}
+		}
 	}
 	referer := r.Header.Get("Referer")
 	if referer != "" {

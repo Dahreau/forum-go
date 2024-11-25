@@ -49,6 +49,23 @@
     font-size: 1.25rem;
 }
 
+.notif{
+    display: flex;
+    color: #7789FF;
+    border: 1px solid #7789FF;
+    box-shadow: 0px 0px 24px #102FF9, inset 0px 0px 24px #102FF9;
+    svg{
+        stroke: #7789FF;
+    }
+}
+.notif:hover{
+background-color: #7789FF!important;
+color: white!important;
+svg{
+    stroke: white!important;
+}
+
+}
 /* .welcome-text {
     font-weight: 300;
     font-size: 20px;

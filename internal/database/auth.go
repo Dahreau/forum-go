@@ -42,6 +42,10 @@ func (s *service) GetUser(email, password string) (models.User, error) {
 	if err != nil {
 		return models.User{}, err
 	}
+	user.Activities, err = s.GetActivities(user)
+	if err != nil {
+		return models.User{}, err
+	}
 	return user, nil
 }
 

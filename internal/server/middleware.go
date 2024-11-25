@@ -22,6 +22,17 @@ func (s *Server) authenticate(next http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 			return
 		}
+		user.Activities, err = s.db.GetActivities(user)
+		if err != nil {
+			next.ServeHTTP(w, r)
+			return
+		}
+		user.UnreadActivities = 0
+		for _, activity := range user.Activities {
+			if !activity.IsRead {
+				user.UnreadActivities++
+			}
+		}
 		// Set the user in the request context
 		ctx := context.WithValue(r.Context(), contextKeyUser, user)
 		next.ServeHTTP(w, r.WithContext(ctx))

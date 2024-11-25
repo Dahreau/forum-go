@@ -28,12 +28,21 @@ document.querySelectorAll(".comment-text").forEach((textarea) => {
     }
   });
 });
+// Remove display none from edit-post button when textarea content changes
+let postText = document.querySelector(".post-text");
+
+postText.addEventListener("input", function () {
+  const editButton = this.closest(".post-content").querySelector(".edit-post");
+  if (editButton) {
+    editButton.style.display = "inline-block";
+  }
+});
 document.querySelectorAll("form").forEach((form) => {
   form.addEventListener("submit", (event) => {
     const textarea = form.querySelector("textarea");
     if (textarea && textarea.value.trim() === "") {
       event.preventDefault();
-      alert("Comment can't be empty");
+      alert("Field can't be empty");
     }
   });
 });

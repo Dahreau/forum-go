@@ -26,6 +26,7 @@
     flex-direction: column;
     /* gap: 16px; */
     width: 100%;
+    height: 100%;
 }
 
 
@@ -64,7 +65,17 @@
     width: 30vw;
     /* width: 100%; */
 }
-
+.post-footer-btns{
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+.edit-form-post{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 .comments-header {
     display: flex;
     justify-content: center;
@@ -91,13 +102,17 @@
 
 .post-text {
     text-align: left;
-    white-space: pre-line;
     border: none;
     box-shadow: none;
-    height: fit-content;
     background-color: transparent;
+    height: 100%;
+    resize: vertical;
 }
-
+.edit-post-btns{
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
 .comment {
     display: flex;
     flex-direction: column;
@@ -203,12 +218,12 @@
 }
 
 .delete-comment,
-.edit-comment {
+.edit-comment, .edit-post {
     padding: 4px;
     border-radius: 8px;
 }
 
-.edit-comment {
+.edit-comment, .edit-post {
     display: none;
 }
 

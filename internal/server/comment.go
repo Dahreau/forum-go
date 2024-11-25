@@ -46,6 +46,16 @@ func (s *Server) PostCommentHandler(w http.ResponseWriter, r *http.Request) {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
+	post, err := s.db.GetPost(newComment.PostID)
+	if err != nil {
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+	}
+	if post.UserID != newComment.UserID {
+		newActivity := models.NewActivity(post.UserID, newComment.UserID, string(models.GET_COMMENT), newComment.PostID, newComment.CommentId, newComment.Content)
+		s.db.CreateActivity(newActivity)
+	}
+	newActivity := models.NewActivity(newComment.UserID, newComment.UserID, string(models.COMMENT_CREATED), newComment.PostID, newComment.CommentId, newComment.Content)
+	s.db.CreateActivity(newActivity)
 	http.Redirect(w, r, "/post/"+newComment.PostID, http.StatusSeeOther)
 }
 

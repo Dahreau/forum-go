@@ -54,6 +54,11 @@ type Service interface {
 	Vote(postId, commentId, userId string, isLike bool) error
 	DeleteLikes(postId string) error
 	DeleteCommentLikes(commentId string) error
+
+	GetActivities(user models.User) ([]models.Activity, error)
+	CreateActivity(activity models.Activity) error
+	UpdateActivity(activity models.Activity) error
+	ReadActivites(userId string) error
 }
 
 type service struct {
