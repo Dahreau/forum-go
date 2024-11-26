@@ -1,0 +1,66 @@
+.content-wrapper{
+    gap:8px;
+    font-family: 'Mina',sans-serif;
+}
+
+.modRequest-card{
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    padding: 16px;
+    box-sizing: border-box;
+}
+.modRequest-card-header{
+    display: flex;
+    justify-content: space-between;
+}
+.modRequest-card-body{
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    text-align: left;
+}
+.modRequest-card-footer{
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    align-items: center;
+}
+.modRequest-card-title{
+    display: flex;
+    gap: 4px;
+    font-weight: 600;
+}
+.japonais{
+    color: #FFC4FB;
+}
+
+hr {
+    color: #7789FF;
+    box-shadow: 0px 0px 16px #102FF9;
+    background-color: #7789FF;
+    height: 2px;
+    border-width: 0;
+    margin-top: 12px;
+    width: 100%;
+}
+.pending{
+    color:#e7a349;
+}
+.accepted{
+    color:#56c76a;
+}
+.rejected{
+    color:#FF948A;
+}
+
+@media (min-width: 768px) {
+    .modRequest-card {
+        width: 80vw;
+    }
+}
+@media (min-width: 1000px){
+    .modRequest-card{
+        width: 60vw;
+    }
+}

@@ -64,6 +64,11 @@
             />
           </svg>
         </a>
+        {{if or (eq .User.Role "user") (eq .User.Role "moderator")}}
+        <div>
+        <a href="/modRequest" class="button register"> Mod Request</a>
+        </div>
+        {{end}}
         <form method="post" action="/logout">
           <button class="logout-button button" type="submit">
             <span>Log out</span
@@ -354,7 +359,7 @@
                 }}
                 <a class="button report" href="/report">Report</a>
                 {{ end }} {{ if or (eq .UserID $.User.UserId) (eq $.User.Role
-                "admin") }}
+                "admin") (eq $.User.Role "moderator")}}
                 <form action="/posts/delete/{{ .PostId }}" method="post">
                   <input type="hidden" name="postId" value="{{ .PostId }}" />
                   <button class="delete-button">

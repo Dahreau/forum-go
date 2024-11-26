@@ -68,3 +68,13 @@ CREATE TABLE IF NOT EXISTS Activity(
     FOREIGN KEY (post_id) REFERENCES Post(post_id) ON DELETE CASCADE     -- FK vers la table Post
     
 );
+
+
+CREATE TABLE IF NOT EXISTS Request(
+    request_id CHAR(32) PRIMARY KEY,
+    user_id CHAR(32) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    content TEXT NOT NULL,
+    creation_date DATETIME NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
+);

@@ -24,6 +24,13 @@ func IsAdmin(r *http.Request) bool {
 	}
 	return user.(models.User).Role == "admin"
 }
+func IsModerator(r *http.Request) bool {
+	user := r.Context().Value(contextKeyUser)
+	if user == nil {
+		return false
+	}
+	return user.(models.User).Role == "moderator"
+}
 
 func IsAlphanumeric(s string) bool {
 	for _, char := range s {

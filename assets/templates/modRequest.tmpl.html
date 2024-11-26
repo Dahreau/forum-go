@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="icon" href="/assets/img/logo.png" type="image/png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Mina:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/css/global.css" />
+    <link rel="stylesheet" href="/assets/css/header.css" />
+    <link rel="stylesheet" href="/assets/css/modRequest.css">
+    <title>Mod Request</title>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header-section">
+        <div class="logo-container">
+          <a href="/">
+            <div class="logo">
+              <img src="/assets/img/logo.png" alt="Logo Aniverse" width="50" />
+            </div>
+            <div class="logo-text">Aniverse</div>
+          </a>
+        </div>
+        <div class="user-info">
+          {{ if .User }}
+          <h1 class="welcome">Welcome {{ .User.Username}}</h1>
+          <a href="/activity" class="notif button"
+            >{{ .User.UnreadActivities}}
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 3V5"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M12 5C8.69 5 6 7.69 6 11V17C5 17 4 18 4 19H12M12 5C15.31 5 18 7.69 18 11V17C19 17 20 18 20 19H12"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M10 20C10 21.1 10.9 22 12 22C13.1 22 14 21.1 14 20"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </a>
+          <form method="post" action="/logout">
+            <button class="logout-button button" type="submit">
+              <span>Log out</span
+              ><svg
+                id="logout-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="-2 -2 24 24"
+              >
+                <path
+                  d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z"
+                />
+              </svg>
+            </button>
+          </form>
+          <!-- <div class="logout-button">
+                <a href="#" class="logout-link">Log out</a>
+            </div> -->
+          {{ if eq .User.Role "admin" }}
+          <a class="button" href="/adminPanel">Admin Panel</a>
+          {{ end }} {{ else }}
+          <h1 class="welcome">Guest</h1>
+          <a class="button" href="/login">Login</a>
+          <a class="button register" href="/register">Register</a>
+          {{ end }}
+        </div>
+      </header>
+      <div class="content-wrapper">
+        {{ if eq .User.Role "user" }}
+        {{if eq .HasPendingRequest false}}
+        <form action="/modRequest" method="POST">
+            <input type="hidden" name="userid" value="{{.User.UserId}}">
+            <input type="hidden" name="username"value="{{.User.Username}}">
+            <textarea name="content" placeholder="Explain your request"></textarea>
+            <button type="submit" class="button">Submit</button>
+        </form>
+        {{else}}
+        <h2>You already have a pending request. Be patient <span class="japonais">お願いします</span>.</h2>
+        {{end}}
+        {{else}}
+        <h2>You have been accepted to be moderator. <span class="japonais">おめでとう</span>.</h2>
+        {{end}}
+        {{if .UserRequests }}
+        {{range .UserRequests}}
+        <div class="modRequest-card global-box">
+            <div class="modRequest-card-header">
+              <span>{{.Username}}</span>
+              <span class="{{.Status}}">{{.Status}}</span>
+              <span>{{.FormattedCreationDate}}</span>
+          </div>
+          <hr>
+            <div class="modRequest-card-body">
+              <p>{{.Content}}</p>
+            </div>
+        </div>
+        {{end}}
+        {{end}}
+      </div>
+    <!-- Footer Section -->
+    <footer class="footer-section">
+        <span class="footer-text"
+          >© 2024 Aniverse. All rights reserved -
+          <a href="/about">Our team</a></span
+        >
+    </footer>
+</body>
+</html>

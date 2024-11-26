@@ -39,6 +39,15 @@ hr {
     cursor: pointer;
     stroke: pink
 }
+.Admin-buttons {
+    display: flex;
+    justify-content: left;
+    gap: 16px;
+    margin-top: 16px;
+    a {
+        box-sizing: border-box;
+    }
+}
 
 td,th {
     padding: 8px;

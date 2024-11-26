@@ -50,8 +50,13 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc("/health", s.healthHandler)
 	mux.HandleFunc("GET /adminPanel", s.AdminPanelHandler)
 	mux.HandleFunc("GET /report", s.reportHandler)
+	mux.HandleFunc("GET /adminPanel/modrequests", s.ModRequestsHandler)
 	mux.HandleFunc("POST /vote", s.VoteHandler)
 
+	mux.HandleFunc("POST /modRequest", s.PostModRequestHandler)
+	mux.HandleFunc("GET /modRequest", s.GetModRequestHandler)
+	mux.HandleFunc("POST /modRequest/accepted", s.AcceptRequestHandler)
+	mux.HandleFunc("POST /modRequest/rejected", s.RejectRequestHandler)
 	return s.authenticate(mux)
 }
 
@@ -151,7 +156,7 @@ func (s *Server) VoteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) reportHandler(w http.ResponseWriter, r *http.Request) {
-	if !s.isLoggedIn(r) || !IsAdmin(r) {
+	if !s.isLoggedIn(r) || (!IsAdmin(r) && !IsModerator(r)) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}

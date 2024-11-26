@@ -90,6 +90,29 @@ type Activity struct {
 	IsRead                bool      `db:"is_read"`
 }
 
+type Request struct {
+	RequestId             string    `db:"request_id"`
+	UserId                string    `db:"user_id"`
+	Username              string    `db:"-"`
+	Status                string    `db:"status"`
+	CreationDate          time.Time `db:"creation_date"`
+	FormattedCreationDate string    `db:"-"`
+	Content               string    `db:"content"`
+}
+
+func NewRequest(userId, username, content string) Request {
+	request := Request{
+		RequestId:             shared.ParseUUID(shared.GenerateUUID()),
+		UserId:                userId,
+		Username:              username,
+		Status:                "pending",
+		Content:               content,
+		CreationDate:          time.Now(),
+		FormattedCreationDate: time.Now().Format("2006-01-02 15:04:05"),
+	}
+	return request
+}
+
 func NewActivity(userId, actionUserId, actionType, postId, commentId, details string) Activity {
 	activity := Activity{
 		ActivityId:   shared.ParseUUID(shared.GenerateUUID()),
