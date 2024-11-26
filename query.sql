@@ -63,8 +63,8 @@ CREATE TABLE IF NOT EXISTS Activity(
     creation_date DATETIME NOT NULL, -- Date de création de l'activité
     details       TEXT,                           -- Informations supplémentaires
     is_read       BOOLEAN,          -- Indicateur si l'activité a été lue
-    FOREIGN KEY (user_id) REFERENCES User(user_id),      -- FK vers la table User
-    FOREIGN KEY (action_user_id) REFERENCES User(user_id), -- FK vers la table User
-    FOREIGN KEY (post_id) REFERENCES Post(post_id)     -- FK vers la table Post
+    FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,      -- FK vers la table User
+    FOREIGN KEY (action_user_id) REFERENCES User(user_id) ON DELETE CASCADE, -- FK vers la table User
+    FOREIGN KEY (post_id) REFERENCES Post(post_id) ON DELETE CASCADE     -- FK vers la table Post
     
 );
