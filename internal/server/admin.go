@@ -39,7 +39,7 @@ func (s *Server) GetModRequestHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if len(UserRequests) == 0 {
-		render(w, r, "modRequest", nil)
+		render(w, r, "modRequest", map[string]interface{}{"HasPendingRequest": false})
 		return
 	}
 	render(w, r, "modRequest", map[string]interface{}{"UserRequests": UserRequests, "HasPendingRequest": HasPendingRequest})
