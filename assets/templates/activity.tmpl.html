@@ -91,7 +91,7 @@
 
     <!-- Main Section -->
     <div class="content-wrapper">
-      {{ range .User.Activities }}
+      {{ if .User.Activities}} {{ range .User.Activities }}
       <div class="activity-card global-box">
         <div class="activity-card-header">
           <div class="activity-card-title">
@@ -133,6 +133,11 @@
             {{end}}
           </div>
         </div>
+      </div>
+      {{ end }} {{ else }}
+      <div class="activity-card global-box">
+        <h1>No activity yet</h1>
+        <p>When you will have some activity, you will see it here</p>
       </div>
       {{ end }}
     </div>

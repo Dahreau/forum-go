@@ -174,7 +174,7 @@ func (s *Server) AdminPanelHandler(w http.ResponseWriter, r *http.Request) {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
-	render(w, r, "adminPanel", map[string]interface{}{"users": users})
+	render(w, r, "admin/adminPanel", map[string]interface{}{"users": users})
 }
 
 func (s *Server) HomePageHandler(w http.ResponseWriter, r *http.Request) {
