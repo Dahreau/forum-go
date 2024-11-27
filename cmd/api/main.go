@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"forum-go/internal/shared"
+	"github.com/SpauriRosso/dotenv"
 	"log"
 	"net/http"
 	"os/signal"
@@ -34,6 +36,12 @@ func gracefulShutdown(apiServer *http.Server) {
 }
 
 func main() {
+	dotenv.Define(".env.prod")
+	shared.GoogleRedirectURL = dotenv.GetEnv("googleRedirectURL")
+	shared.GoogleClientSecret = dotenv.GetEnv("googleClientSecret")
+	shared.GoogleClientID = dotenv.GetEnv("googleClientID")
+
+	fmt.Println(shared.GoogleClientID)
 
 	server := server.NewServer()
 

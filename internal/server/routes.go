@@ -4,8 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"forum-go/internal/models"
+	"forum-go/internal/shared"
+	"io"
 	"log"
 	"net/http"
+	"net/url"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
@@ -58,9 +61,17 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc("GET /modRequest", s.GetModRequestHandler)
 	mux.HandleFunc("POST /modRequest/accepted", s.AcceptRequestHandler)
 	mux.HandleFunc("POST /modRequest/rejected", s.RejectRequestHandler)
+
 	mux.HandleFunc("GET /adminPanel/reports", s.GetReportsHandler)
 	mux.HandleFunc("POST /reports/accepted", s.AcceptReportHandler)
 	mux.HandleFunc("POST /reports/rejected", s.RejectReportHandler)
+
+	// AUTH ROUTES
+	mux.HandleFunc("/auth/google", s.GoogleLoginHandler)
+	mux.HandleFunc("/auth/google/callback", s.GoogleCallbackHandler)
+	mux.HandleFunc("/auth/github", s.GithubLoginHandler)
+	mux.HandleFunc("/auth/github/callback", s.GithubCallbackHandler)
+
 	return s.authenticate(mux)
 }
 
@@ -286,4 +297,174 @@ func (s *Server) errorHandler(w http.ResponseWriter, r *http.Request, status int
 	w.WriteHeader(status)
 	error := models.Error{Message: message, StatusCode: status}
 	render(w, r, "error", map[string]interface{}{"Error": error})
+}
+
+// Auth
+// Google
+var googleClientID = shared.GoogleClientID
+var googleClientSecret = shared.GoogleClientSecret
+var googleRedirectURL = shared.GoogleRedirectURL
+
+func (s *Server) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
+	url := "https://accounts.google.com/o/oauth2/auth?client_id=" + googleClientID +
+		"&redirect_uri=" + googleRedirectURL +
+		"&response_type=code&scope=email%20profile&state=state"
+	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
+}
+
+func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
+	// Récupère le code d'autorisation
+	code := r.URL.Query().Get("code")
+	if code == "" {
+		http.Error(w, "Code d'autorisation manquant", http.StatusBadRequest)
+		log.Println("Code d'autorisation manquant")
+		return
+	}
+
+	// Échange le code d'autorisation contre un token d'accès
+	tokenResp, err := http.PostForm("https://oauth2.googleapis.com/token", url.Values{
+		"client_id":     {googleClientID},
+		"client_secret": {googleClientSecret},
+		"redirect_uri":  {googleRedirectURL},
+		"grant_type":    {"authorization_code"},
+		"code":          {code},
+	})
+	if err != nil {
+		http.Error(w, "Échec lors de l'échange du token : "+err.Error(), http.StatusInternalServerError)
+		log.Println("Erreur HTTP POST lors de l'échange du token :", err)
+		return
+	}
+	defer tokenResp.Body.Close()
+
+	// Vérifie le statut HTTP
+	if tokenResp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(tokenResp.Body)
+		log.Printf("Erreur lors de l'échange du token: %s", body)
+		http.Error(w, "Erreur lors de l'échange du token avec Google", http.StatusInternalServerError)
+		return
+	}
+
+	// Décoder la réponse JSON contenant le token
+	var tokenData map[string]interface{}
+	if err := json.NewDecoder(tokenResp.Body).Decode(&tokenData); err != nil {
+		http.Error(w, "Erreur lors du parsing du token : "+err.Error(), http.StatusInternalServerError)
+		log.Println("Erreur JSON lors du parsing :", err)
+		return
+	}
+	log.Printf("Réponse JSON token: %+v\n", tokenData)
+
+	// Vérifie et extrait le token d'accès
+	accessToken, ok := tokenData["access_token"]
+	if !ok || accessToken == nil {
+		http.Error(w, "Token d'accès manquant ou invalide", http.StatusInternalServerError)
+		log.Println("Token d'accès non trouvé ou null dans la réponse JSON")
+		return
+	}
+
+	accessTokenStr, ok := accessToken.(string)
+	if !ok {
+		http.Error(w, "Token d'accès n'est pas une chaîne valide", http.StatusInternalServerError)
+		log.Println("Token d'accès non convertible en string")
+		return
+	}
+
+	// Utilise le token d'accès pour récupérer les infos utilisateur
+	req, err := http.NewRequest("GET", "https://www.googleapis.com/oauth2/v2/userinfo", nil)
+	if err != nil {
+		http.Error(w, "Erreur lors de la création de la requête utilisateur : "+err.Error(), http.StatusInternalServerError)
+		log.Println("Erreur HTTP GET lors de la récupération des infos utilisateur :", err)
+		return
+	}
+	req.Header.Set("Authorization", "Bearer "+accessTokenStr)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		http.Error(w, "Erreur lors de la requête utilisateur : "+err.Error(), http.StatusInternalServerError)
+		log.Println("Erreur HTTP GET lors de la récupération des infos utilisateur :", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	// Vérifie le statut HTTP
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		log.Printf("Erreur lors de la récupération des infos utilisateur: %s", body)
+		http.Error(w, "Erreur lors de la récupération des infos utilisateur", http.StatusInternalServerError)
+		return
+	}
+
+	// Décoder les infos utilisateur
+	var userInfo map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&userInfo); err != nil {
+		http.Error(w, "Erreur lors du parsing des infos utilisateur : "+err.Error(), http.StatusInternalServerError)
+		log.Println("Erreur JSON lors du parsing des infos utilisateur :", err)
+		return
+	}
+	log.Printf("Infos utilisateur: %+v\n", userInfo)
+
+	// Affiche les infos utilisateur
+	fmt.Fprintf(w, "Bonjour, %s (%s)", userInfo["name"], userInfo["email"])
+}
+
+var githubClientID = "YOUR_GITHUB_CLIENT_ID"
+var githubClientSecret = "YOUR_GITHUB_CLIENT_SECRET"
+var githubRedirectURL = "http://localhost:8080/auth/github/callback"
+
+func (s *Server) GithubLoginHandler(w http.ResponseWriter, r *http.Request) {
+	url := "https://github.com/login/oauth/authorize?client_id=" + githubClientID +
+		"&redirect_uri=" + githubRedirectURL +
+		"&scope=user:email"
+	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
+}
+
+func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
+	code := r.URL.Query().Get("code")
+
+	// Échanger le code contre un token
+	tokenResp, err := http.PostForm("https://github.com/login/oauth/access_token", url.Values{
+		"client_id":     {githubClientID},
+		"client_secret": {githubClientSecret},
+		"code":          {code},
+		"redirect_uri":  {githubRedirectURL},
+	})
+	if err != nil {
+		http.Error(w, "Failed to exchange token: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer tokenResp.Body.Close()
+
+	var tokenData map[string]interface{}
+	if err := json.NewDecoder(tokenResp.Body).Decode(&tokenData); err != nil {
+		http.Error(w, "Failed to decode token response: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	accessToken := tokenData["access_token"].(string)
+
+	// Récupérer les informations utilisateur avec le token
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", "https://api.github.com/user", nil)
+	if err != nil {
+		http.Error(w, "Failed to create request: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	req.Header.Set("Authorization", "Bearer "+accessToken)
+	resp, err := client.Do(req)
+	if err != nil {
+		http.Error(w, "Failed to get user info: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer resp.Body.Close()
+
+	var userInfo map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&userInfo); err != nil {
+		http.Error(w, "Failed to decode user info: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Sauvegarder ou mettre à jour l'utilisateur dans la base de données SQLite
+	// ...
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

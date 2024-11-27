@@ -1,3 +1,5 @@
+github.com/SpauriRosso/dotenv v0.0.0-20240721170528-a191997eba12 h1:iBELak0szg9eh7+LaIU7k3obwBilQpE+4GCnzHAdDyM=
+github.com/SpauriRosso/dotenv v0.0.0-20240721170528-a191997eba12/go.mod h1:ex0p6M7PxWu5P6oQnLDrFs65cVlPdc9RZBtE0vIWwJ0=
 github.com/gofrs/uuid v4.4.0+incompatible h1:3qXRTX8/NbyulANqlc0lchS1gqAVxRgsuW1YrTJupqA=
 github.com/gofrs/uuid v4.4.0+incompatible/go.mod h1:b2aQJv3Z4Fp6yNu3cdSllBxTCLRxnplIgP/c0N/04lM=
 github.com/mattn/go-sqlite3 v1.14.24 h1:tpSp2G2KyMnnQu99ngJ47EIkWVmliIizyZBfPrBWDRM=
