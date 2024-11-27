@@ -1,6 +1,32 @@
 .content-wrapper{
-    gap:8px;
+    gap:48px;
     font-family: 'Mina',sans-serif;
+}
+#form{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 50%;
+    height: 50%;
+    padding: 12px;
+    align-items: center;
+    button{
+        width: auto;
+        margin: auto;
+    }
+    textarea{
+        width:80%;
+        resize: none;
+    }
+}
+
+.Requests{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.Requests>div:first-child{
+    margin-bottom: 16px;
 }
 
 .modRequest-card{
@@ -44,6 +70,19 @@ hr {
     margin-top: 12px;
     width: 100%;
 }
+
+.form-header{
+ display: flex;
+ flex-direction: column;
+ width: 100%;
+}
+
+.margin-0{
+    margin: 0;
+}
+
+
+
 .pending{
     color:#e7a349;
 }

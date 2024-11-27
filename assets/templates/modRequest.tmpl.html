@@ -91,10 +91,14 @@
       <div class="content-wrapper">
         {{ if eq .User.Role "user" }}
         {{if eq .HasPendingRequest false}}
-        <form action="/modRequest" method="POST">
+        <form class="global-box" id="form" action="/modRequest" method="POST">
+          <div class="form-header">
+          <h2 class="margin-0">Moderation request</h2>
+          <hr>
+          </div>
             <input type="hidden" name="userid" value="{{.User.UserId}}">
             <input type="hidden" name="username"value="{{.User.Username}}">
-            <textarea name="content" placeholder="Explain your request"></textarea>
+            <textarea name="content" rows="7" placeholder="Explain your request"></textarea>
             <button type="submit" class="button">Submit</button>
         </form>
         {{else}}
@@ -104,6 +108,10 @@
         <h2>You have been accepted to be moderator. <span class="japonais">おめでとう</span>.</h2>
         {{end}}
         {{if .UserRequests }}
+        <div class="Requests">
+            <div class="form-header global-box">
+            <h2>List of requests</h2>
+            </div>
         {{range .UserRequests}}
         <div class="modRequest-card global-box">
             <div class="modRequest-card-header">
@@ -117,6 +125,7 @@
             </div>
         </div>
         {{end}}
+      </div>
         {{end}}
       </div>
     <!-- Footer Section -->

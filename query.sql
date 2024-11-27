@@ -78,3 +78,14 @@ CREATE TABLE IF NOT EXISTS Request(
     creation_date DATETIME NOT NULL,
     FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS Report(
+    report_id CHAR(32) PRIMARY KEY,
+    user_id CHAR(32) NOT NULL,
+    post_id CHAR(32) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    content TEXT NOT NULL,
+    creation_date DATETIME NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
+    FOREIGN KEY (post_id) REFERENCES Post(post_id) ON DELETE CASCADE 
+);
