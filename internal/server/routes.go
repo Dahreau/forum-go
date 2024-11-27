@@ -49,7 +49,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	mux.HandleFunc("/health", s.healthHandler)
 	mux.HandleFunc("GET /adminPanel", s.AdminPanelHandler)
-	mux.HandleFunc("GET /report", s.reportHandler)
+	mux.HandleFunc("GET /report/{id}", s.GetReportHandler)
+	mux.HandleFunc("POST /report", s.PostReportHandler)
 	mux.HandleFunc("GET /adminPanel/modrequests", s.ModRequestsHandler)
 	mux.HandleFunc("POST /vote", s.VoteHandler)
 
@@ -57,6 +58,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc("GET /modRequest", s.GetModRequestHandler)
 	mux.HandleFunc("POST /modRequest/accepted", s.AcceptRequestHandler)
 	mux.HandleFunc("POST /modRequest/rejected", s.RejectRequestHandler)
+	mux.HandleFunc("GET /adminPanel/reports", s.GetReportsHandler)
+	mux.HandleFunc("POST /reports/accepted", s.AcceptReportHandler)
+	mux.HandleFunc("POST /reports/rejected", s.RejectReportHandler)
 	return s.authenticate(mux)
 }
 
@@ -155,18 +159,45 @@ func (s *Server) VoteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *Server) reportHandler(w http.ResponseWriter, r *http.Request) {
+func (s *Server) GetReportHandler(w http.ResponseWriter, r *http.Request) {
 	if !s.isLoggedIn(r) || (!IsAdmin(r) && !IsModerator(r)) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
-	users, err := s.db.GetUsers()
+	id := r.URL.Path[len("/report/"):]
+	ReportPost := models.Post{}
+	for _, post := range s.posts {
+		if post.PostId == id {
+			ReportPost = post
+			break
+		}
+	}
+	if ReportPost.PostId == "" {
+		s.errorHandler(w, r, http.StatusNotFound, "Post not found")
+		return
+	}
+
+	render(w, r, "report", map[string]interface{}{"post": ReportPost})
+
+}
+
+func (s *Server) PostReportHandler(w http.ResponseWriter, r *http.Request) {
+	if !s.isLoggedIn(r) || (!IsAdmin(r) && !IsModerator(r)) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	postID := r.FormValue("postid")
+	content := r.FormValue("content")
+	reason := r.FormValue("reason")
+	username := r.FormValue("username")
+	userid := r.FormValue("userid")
+	report := models.NewReport(userid, username, postID, content, reason)
+	err := s.db.CreateReport(report)
 	if err != nil {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
-	render(w, r, "report", map[string]interface{}{"users": users})
-
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func (s *Server) AdminPanelHandler(w http.ResponseWriter, r *http.Request) {

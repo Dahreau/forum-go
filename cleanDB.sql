@@ -33,4 +33,3 @@ CREATE TABLE IF NOT EXISTS Activity(
     FOREIGN KEY (post_id) REFERENCES Post(post_id) ON DELETE CASCADE     -- FK vers la table Post
     
 );
-

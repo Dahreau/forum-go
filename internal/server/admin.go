@@ -104,3 +104,54 @@ func (s *Server) RejectRequestHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	http.Redirect(w, r, "../adminPanel/modrequests", http.StatusSeeOther)
 }
+
+func (s *Server) GetReportsHandler(w http.ResponseWriter, r *http.Request) {
+	if !IsAdmin(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	Reports, err := s.db.GetReports()
+	if err != nil {
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+		return
+	}
+	for i, report := range Reports {
+		for _, post := range s.posts {
+			if post.PostId == report.PostId {
+				Reports[i].Post = post
+				break
+			}
+		}
+	}
+	render(w, r, "admin/reports", map[string]interface{}{"Reports": Reports})
+}
+
+func (s *Server) AcceptReportHandler(w http.ResponseWriter, r *http.Request) {
+	if !IsAdmin(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	r.ParseForm()
+	postid := r.FormValue("postid")
+	err := s.db.DeletePost(postid)
+	if err != nil {
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+		return
+	}
+	http.Redirect(w, r, "../adminPanel/reports", http.StatusSeeOther)
+}
+
+func (s *Server) RejectReportHandler(w http.ResponseWriter, r *http.Request) {
+	if !IsAdmin(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	r.ParseForm()
+	reportId := r.FormValue("reportid")
+	err := s.db.UpdateReportStatus(reportId, "rejected")
+	if err != nil {
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+		return
+	}
+	http.Redirect(w, r, "../adminPanel/reports", http.StatusSeeOther)
+}

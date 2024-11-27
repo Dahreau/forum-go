@@ -81,7 +81,11 @@ hr {
     margin: 0;
 }
 
-
+a{
+    color: #FFC4FB;
+    font-weight: 500;
+    text-decoration: underline;
+}
 
 .pending{
     color:#e7a349;

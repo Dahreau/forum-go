@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS Report(
     status VARCHAR(50) NOT NULL,
     content TEXT NOT NULL,
     creation_date DATETIME NOT NULL,
+    reason VARCHAR(50) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
     FOREIGN KEY (post_id) REFERENCES Post(post_id) ON DELETE CASCADE 
 );

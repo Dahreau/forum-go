@@ -100,6 +100,19 @@ type Request struct {
 	Content               string    `db:"content"`
 }
 
+type Report struct {
+	ReportId              string    `db:"report_id"`
+	UserId                string    `db:"user_id"`
+	Username              string    `db:"-"`
+	PostId                string    `db:"post_id"`
+	Post                  Post      `db:"-"`
+	CreationDate          time.Time `db:"creation_date"`
+	FormattedCreationDate string    `db:"-"`
+	Content               string    `db:"content"`
+	Reason                string    `db:"reason"`
+	Status                string    `db:"status"`
+}
+
 func NewRequest(userId, username, content string) Request {
 	request := Request{
 		RequestId:             shared.ParseUUID(shared.GenerateUUID()),
@@ -126,6 +139,21 @@ func NewActivity(userId, actionUserId, actionType, postId, commentId, details st
 		IsRead:       false,
 	}
 	return activity
+}
+
+func NewReport(userId, username, postId, content, reason string) Report {
+	report := Report{
+		ReportId:              shared.ParseUUID(shared.GenerateUUID()),
+		UserId:                userId,
+		Username:              username,
+		PostId:                postId,
+		CreationDate:          time.Now(),
+		FormattedCreationDate: time.Now().Format("2006-01-02 15:04:05"),
+		Content:               content,
+		Reason:                reason,
+		Status:                "pending",
+	}
+	return report
 }
 
 func (post Post) GetUserLikes() []UserLike {

@@ -59,11 +59,15 @@ type Service interface {
 	CreateActivity(activity models.Activity) error
 	UpdateActivity(activity models.Activity) error
 	ReadActivites(userId string) error
-//admin section
+	//admin section
 	GetRequests() ([]models.Request, error)
 	CreateRequest(request models.Request) error
 	DeleteRequest(requestId string) error
 	UpdateRequestStatus(requestId, status string) error
+	//report section
+	CreateReport(report models.Report) error
+	GetReports() ([]models.Report, error)
+	UpdateReportStatus(reportId, status string) error
 }
 
 type service struct {

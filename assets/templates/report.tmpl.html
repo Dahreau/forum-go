@@ -91,15 +91,43 @@
         {{ end }}
       </div>
     </header>
+    <form action="/report" method="POST">
+      <input type="hidden" value="{{.post.PostId}}" name="postid">
+      <input type="hidden" value="{{.User.UserId}}" name="userid">
+      <input type="hidden" value="{{.User.Username}}" name="username">
+    <label for="report-reason">Reason for report:</label>
+    <select id="report-reason" name="reason" required>
+      <option value="">-- Select a reason --</option>
+      <optgroup class="color" label="Inappropriate content">
+      <option value="spam">Spam</option>
+      <option value="offensive-language">Offensive language</option>
+      <option value="pornography">Pornography</option>
+      <option value="violence">Violence</option>
+    </optgroup>
+    <optgroup class="color"label="Non-compliance with the rules">
+      <option value="off-topic">Off-topic</option>
+      <option value="rule-violation">Rule violation</option>
+    </optgroup>
+    <optgroup class="color"label="Intellectual property">
+      <option value="plagiarism">Plagiarism</option>
+    </optgroup>
+    <optgroup class="color"label="Abuse between members">
+      <option value="harassment">Harassment</option>
+    </optgroup>
+    <optgroup class="color"label="Other">
+      <option value="dead-link">Dead link</option>
+      <option value="other">Other</option>
+    </optgroup>
+    </select>
     <h2>Give detail about the report issue</h2>
     <textarea
       class="report-text"
-      name="reportcontent"
+      name="content"
       id="reportcontent"
       placeholder="Explain your report, kindly and politely"
     ></textarea>
-    <!-- Footer Section -->
     <button class="button Report-button">Confirm Report</button>
+  </form>
     <!-- Footer Section -->
     <footer class="footer-section">
       <span class="footer-text"

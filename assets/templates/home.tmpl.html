@@ -357,7 +357,7 @@
               <div class="post-actions">
                 {{ if or (eq $.User.Role "moderator") (eq $.User.Role "admin")
                 }}
-                <a class="button report" href="/report">Report</a>
+                <a class="button report" href="/report/{{.PostId}}">Report</a>
                 {{ end }} {{ if or (eq .UserID $.User.UserId) (eq $.User.Role
                 "admin") (eq $.User.Role "moderator")}}
                 <form action="/posts/delete/{{ .PostId }}" method="post">
