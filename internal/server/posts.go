@@ -3,33 +3,30 @@ package server
 import (
 	"fmt"
 	"forum-go/internal/models"
-	"forum-go/internal/shared"
-	"net/http" // Import pour trier les posts
+	"log"
+	"math"
+	"math/rand"
+	"net/http"
+	"sort" // Import pour trier les posts
+	"strconv"
 	"strings"
 	"time"
 )
 
-func (s *Server) GetPostHandler(w http.ResponseWriter, r *http.Request) {
-	vars := strings.Split(r.URL.Path, "/")
-	if len(vars) < 3 {
-		http.Error(w, "Invalid URL", http.StatusBadRequest)
-		return
-	}
-	postID := vars[2]
-	post, err := s.db.GetPost(postID)
+func (s *Server) GetPostsHandler(w http.ResponseWriter, r *http.Request) {
+	posts, err := s.db.GetPosts()
 	if err != nil {
-		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if post.PostId == "" {
-		s.errorHandler(w, r, http.StatusNotFound, "Post not found")
-		return
-	}
-	post.HasVoted = GetUserVote(post, s.getUser(r).UserId)
-	for i, comment := range post.Comments {
-		post.Comments[i].HasVoted = GetUserVote(comment, s.getUser(r).UserId)
-	}
-	render(w, r, "detailsPost", map[string]interface{}{"Post": post})
+
+	// Tri des posts par date de création dans l'ordre décroissant
+	sort.Slice(posts, func(i, j int) bool {
+		return posts[i].CreationDate.After(posts[j].CreationDate)
+	})
+
+	// Rendu des posts triés
+	render(w, r, "../posts", map[string]interface{}{"Posts": posts})
 }
 
 func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
@@ -47,9 +44,9 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 		Errors:     make(map[string]string),
 	}
 	if erri != nil {
-		s.errorHandler(w, r, http.StatusBadRequest, erri.Error())
-		return
+		log.Println(erri)
 	}
+
 	// Validate title
 	if ValidateTitle(formData.Title) {
 		formData.Errors["Title"] = "Title cannot be empty"
@@ -57,29 +54,37 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Validate content
 	if ValidatePostChar(formData.Content) {
-		formData.Errors["Content"] = "Content cannot be empty or more than 2000 characters"
+		formData.Errors["Content"] = "Content cannot be empty or more than 1000 characters"
 	}
 
 	// Validate Categories
 	if ValidateCategory(formData.Categories) {
 		formData.Errors["Categories"] = "Please select at least one category"
 	}
+
+	var imageURL string
+	if r.MultipartForm != nil && r.MultipartForm.File["image"] != nil {
+		imageURL, erri = UploadImageHandler(w, r)
+		if erri != nil {
+			formData.Errors["Image"] = "Failed to upload image"
+		}
+	}
+
 	if len(formData.Errors) > 0 {
 		render(w, r, "createPost", map[string]interface{}{"FormData": formData, "Categories": s.categories})
 		return
 	}
 
 	newPost := models.Post{
-		PostId:  shared.ParseUUID(shared.GenerateUUID()),
-		Title:   r.FormValue("title"),
-		Content: r.FormValue("content"),
-		UserID:  r.FormValue("UserId"),
-		//Categories:
+		PostId:                strconv.Itoa(rand.Intn(math.MaxInt32)),
+		Title:                 formData.Title,
+		Content:               formData.Content,
+		UserID:                r.FormValue("UserId"),
+		ImageURL:              imageURL,
 		CreationDate:          time.Now(),
 		FormattedCreationDate: time.Now().Format("Jan 02, 2006 - 15:04:05"),
 	}
 
-	// charControl := ValidatePostChar(newPost.Content)
 	categories := []models.Category{}
 	for _, categoryID := range formData.Categories {
 		for _, category := range s.categories {
@@ -92,30 +97,10 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 	err := s.db.AddPost(newPost, categories)
 	s.posts = append(s.posts, newPost)
 	if err != nil {
-		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	newActivity := models.Activity{
-		ActivityId:   shared.ParseUUID(shared.GenerateUUID()),
-		UserId:       newPost.UserID,
-		ActionUserId: newPost.UserID,
-		PostId:       newPost.PostId,
-		ActionType:   string(models.POST_CREATED),
-		CreationDate: time.Now(),
-		Details:      newPost.Title,
-		IsRead:       false,
-	}
-	for i, user := range s.users {
-		if user.UserId == newPost.UserID {
-			s.users[i].Activities = append(s.users[i].Activities, newActivity)
-		}
-	}
-	err = s.db.CreateActivity(newActivity)
-	if err != nil {
-		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
-		return
-	}
-	http.Redirect(w, r, "/post/"+newPost.PostId, http.StatusSeeOther)
+	http.Redirect(w, r, "/posts", http.StatusSeeOther)
 }
 
 func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
@@ -123,12 +108,7 @@ func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(PostID)
 	err := s.db.DeletePost(PostID)
 	if err != nil {
-		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
-		return
-	}
-	err = s.db.DeleteLikes(PostID)
-	if err != nil {
-		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -147,16 +127,35 @@ func (s *Server) EditPostHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GetNewPostHandler(w http.ResponseWriter, r *http.Request) {
+	categories, err := s.db.GetCategories()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	if !s.isLoggedIn(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
-	categories, err := s.db.GetCategories()
-	if err != nil {
-		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+	render(w, r, "createPost", map[string]interface{}{"Categories": categories})
+}
+
+func (s *Server) GetPostHandler(w http.ResponseWriter, r *http.Request) {
+	vars := strings.Split(r.URL.Path, "/")
+	if len(vars) < 3 {
+		http.Error(w, "Invalid URL", http.StatusBadRequest)
 		return
 	}
-	render(w, r, "createPost", map[string]interface{}{"Categories": categories})
+	postID := vars[2]
+	post, err := s.db.GetPost(postID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if post.PostId == "" {
+		http.Error(w, "Post not found", http.StatusNotFound)
+		return
+	}
+	render(w, r, "detailsPost", map[string]interface{}{"Post": post})
 }
 
 func IsUniquePost(posts []models.Post, post string) bool {
@@ -168,7 +167,7 @@ func IsUniquePost(posts []models.Post, post string) bool {
 	return true
 }
 
-const MaxChar = 2000
+const MaxChar = 1000
 
 func ValidatePostChar(content string) bool {
 	if len(content) > MaxChar || len(content) == 0 {
