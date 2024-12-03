@@ -33,6 +33,7 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 	type FormData struct {
 		Title      string
 		Content    string
+		Image      string
 		Categories []string
 		Errors     map[string]string
 	}
