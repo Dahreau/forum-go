@@ -7,6 +7,7 @@ import (
 	"math"
 	"math/rand"
 	"net/http"
+	"os"
 	"sort" // Import pour trier les posts
 	"strconv"
 	"strings"
@@ -63,6 +64,7 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 		formData.Errors["Categories"] = "Please select at least one category"
 	}
 
+	// Handle image upload
 	var imageURL string
 	if r.MultipartForm != nil && r.MultipartForm.File["image"] != nil {
 		imageURL, erri = UploadImageHandler(w, r)
@@ -71,11 +73,13 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// Check for errors
 	if len(formData.Errors) > 0 {
 		render(w, r, "createPost", map[string]interface{}{"FormData": formData, "Categories": s.categories})
 		return
 	}
 
+	// Create new post
 	newPost := models.Post{
 		PostId:                strconv.Itoa(rand.Intn(math.MaxInt32)),
 		Title:                 formData.Title,
@@ -107,7 +111,24 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
 	PostID := r.FormValue("postId")
 	fmt.Println(PostID)
-	err := s.db.DeletePost(PostID)
+
+	// Fetch the post to get the image path
+	post, err := s.db.GetPost(PostID)
+	if err != nil {
+		http.Error(w, "Failed to fetch post", http.StatusInternalServerError)
+		return
+	}
+
+	// Delete the image file if it exists
+	if post.ImageURL != "" {
+		err = os.Remove(post.ImageURL)
+		if err != nil && !os.IsNotExist(err) { // Ignore errors if the file doesn't exist
+			log.Printf("Failed to delete image file: %v\n", err)
+		}
+	}
+
+	// Delete the post from the database
+	err = s.db.DeletePost(PostID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
