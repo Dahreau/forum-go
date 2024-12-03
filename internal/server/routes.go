@@ -73,8 +73,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 	// AUTH ROUTES
 	mux.HandleFunc("/auth/google", s.GoogleLoginHandler)
 	mux.HandleFunc("/auth/google/callback", s.GoogleCallbackHandler)
-	// mux.HandleFunc("/auth/github", s.GithubLoginHandler)
-	// mux.HandleFunc("/auth/github/callback", s.GithubCallbackHandler)
+
+	mux.HandleFunc("/auth/github", s.GithubLoginHandler)
+	mux.HandleFunc("/auth/github/callback", s.GithubCallbackHandler)
 
 	return s.authenticate(mux)
 }
@@ -306,8 +307,8 @@ func (s *Server) errorHandler(w http.ResponseWriter, r *http.Request, status int
 // Auth
 // Google
 
-var googleClientID = "googleClientID"         // TODO Put googleClientID
-var googleClientSecret = "googleClientSecret" // TODO Put googleClientSecret
+var googleClientID = "google"     // TODO Put googleClientID
+var googleClientSecret = "google" // TODO Put googleClientSecret
 var googleRedirectURL = "http://localhost:8080/auth/google/callback"
 
 func (s *Server) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
