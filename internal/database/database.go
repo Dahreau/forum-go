@@ -29,6 +29,7 @@ type Service interface {
 	Close() error
 
 	FindEmailUser(email string) (bool, error)
+	FindUserByEmail(email string) (models.User, error)
 	FindUsername(username string) (bool, error)
 	UpdateUser(user models.User) error
 	DeleteUser(id string) error

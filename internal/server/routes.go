@@ -1,6 +1,7 @@
 package server
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"forum-go/internal/models"
@@ -9,6 +10,9 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
@@ -69,8 +73,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	// AUTH ROUTES
 	mux.HandleFunc("/auth/google", s.GoogleLoginHandler)
 	mux.HandleFunc("/auth/google/callback", s.GoogleCallbackHandler)
-	mux.HandleFunc("/auth/github", s.GithubLoginHandler)
-	mux.HandleFunc("/auth/github/callback", s.GithubCallbackHandler)
+	// mux.HandleFunc("/auth/github", s.GithubLoginHandler)
+	// mux.HandleFunc("/auth/github/callback", s.GithubCallbackHandler)
 
 	return s.authenticate(mux)
 }
@@ -301,9 +305,10 @@ func (s *Server) errorHandler(w http.ResponseWriter, r *http.Request, status int
 
 // Auth
 // Google
-var googleClientID = shared.GoogleClientID
-var googleClientSecret = shared.GoogleClientSecret
-var googleRedirectURL = shared.GoogleRedirectURL
+
+var googleClientID = "googleClientID"         // TODO Put googleClientID
+var googleClientSecret = "googleClientSecret" // TODO Put googleClientSecret
+var googleRedirectURL = "http://localhost:8080/auth/google/callback"
 
 func (s *Server) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
 	url := "https://accounts.google.com/o/oauth2/auth?client_id=" + googleClientID +
@@ -403,68 +408,88 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Printf("Infos utilisateur: %+v\n", userInfo)
 
-	// Affiche les infos utilisateur
-	fmt.Fprintf(w, "Bonjour, %s (%s)", userInfo["name"], userInfo["email"])
-}
+	// Récupère les informations utilisateur
+	email := userInfo["email"].(string)
+	name := userInfo["name"].(string)
 
-var githubClientID = "YOUR_GITHUB_CLIENT_ID"
-var githubClientSecret = "YOUR_GITHUB_CLIENT_SECRET"
-var githubRedirectURL = "http://localhost:8080/auth/github/callback"
-
-func (s *Server) GithubLoginHandler(w http.ResponseWriter, r *http.Request) {
-	url := "https://github.com/login/oauth/authorize?client_id=" + githubClientID +
-		"&redirect_uri=" + githubRedirectURL +
-		"&scope=user:email"
-	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
-}
-
-func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
-	code := r.URL.Query().Get("code")
-
-	// Échanger le code contre un token
-	tokenResp, err := http.PostForm("https://github.com/login/oauth/access_token", url.Values{
-		"client_id":     {githubClientID},
-		"client_secret": {githubClientSecret},
-		"code":          {code},
-		"redirect_uri":  {githubRedirectURL},
-	})
+	// Vérifiez si l'adresse email existe déjà dans la base de données
+	IsUnique, err := s.db.FindEmailUser(email)
 	if err != nil {
-		http.Error(w, "Failed to exchange token: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-	defer tokenResp.Body.Close()
-
-	var tokenData map[string]interface{}
-	if err := json.NewDecoder(tokenResp.Body).Decode(&tokenData); err != nil {
-		http.Error(w, "Failed to decode token response: "+err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Erreur lors de la vérification de l'utilisateur : "+err.Error(), http.StatusInternalServerError)
+		log.Println("Erreur lors de la vérification de l'utilisateur :", err)
 		return
 	}
 
-	accessToken := tokenData["access_token"].(string)
+	if !IsUnique {
+		// L'adresse email existe déjà dans la base de données
+		log.Println("L'adresse email existe déjà dans la base de données")
 
-	// Récupérer les informations utilisateur avec le token
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", "https://api.github.com/user", nil)
+		// Récupérer l'utilisateur depuis la base de données
+		user, err := s.db.FindUserByEmail(email)
+		if err != nil {
+			http.Error(w, "Erreur lors de la récupération de l'utilisateur : "+err.Error(), http.StatusInternalServerError)
+			log.Println("Erreur lors de la récupération de l'utilisateur :", err)
+			return
+		}
+
+		if user.Role == "ban" {
+			render(w, r, "login", map[string]interface{}{"Error": "You are banned", "email": email})
+			return
+		}
+
+		userID := shared.ParseUUID(shared.GenerateUUID())
+
+		// Créez une session pour l'utilisateur
+		expiration := time.Now().Add(time.Hour)
+		cookie := http.Cookie{
+			Name:    s.SESSION_ID,
+			Value:   userID,
+			Expires: expiration,
+			Path:    "/",
+		}
+		user.SessionId = sql.NullString{String: userID, Valid: true}
+		user.SessionExpire = sql.NullTime{Time: expiration, Valid: true}
+		err = s.db.UpdateUser(user)
+		if err != nil {
+			s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+			return
+		}
+		http.SetCookie(w, &cookie)
+
+		// Redirigez l'utilisateur vers la page d'accueil ou une autre page appropriée
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	// Si l'adresse email n'existe pas, continuez avec le reste de la logique
+	log.Println("L'adresse email n'existe pas dans la base de données")
+
+	// Générer un mot de passe unique
+	password := shared.GenerateUUID().String()
+
+	// Hacher le mot de passe
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		http.Error(w, "Failed to create request: "+err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
-	req.Header.Set("Authorization", "Bearer "+accessToken)
-	resp, err := client.Do(req)
+
+	// Créez un nouvel utilisateur
+	user := models.User{
+		Username:     name,
+		Email:        email,
+		Password:     string(passwordHash),
+		Role:         "user",
+		CreationDate: time.Now(),
+		UserId:       shared.ParseUUID(shared.GenerateUUID()),
+	}
+	err = s.db.CreateUser(user)
 	if err != nil {
-		http.Error(w, "Failed to get user info: "+err.Error(), http.StatusInternalServerError)
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
-	defer resp.Body.Close()
+	s.users = append(s.users, user)
 
-	var userInfo map[string]interface{}
-	if err := json.NewDecoder(resp.Body).Decode(&userInfo); err != nil {
-		http.Error(w, "Failed to decode user info: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	// Sauvegarder ou mettre à jour l'utilisateur dans la base de données SQLite
-	// ...
-
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	// Redirigez l'utilisateur vers la page de connexion ou une autre page appropriée
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
