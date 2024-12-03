@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS Post (
   post_id CHAR(32) PRIMARY KEY,
   title VARCHAR(50) NOT NULL,
   content TEXT NOT NULL,
-  image_url VARCHAR(255) NOT NULL,
+  image_url VARCHAR(255),
   user_id CHAR(32) NOT NULL,
   creation_date DATETIME NOT NULL,
   update_date DATETIME,
