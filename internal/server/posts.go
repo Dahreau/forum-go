@@ -38,7 +38,7 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 		Categories []string
 		Errors     map[string]string
 	}
-	erri := r.ParseForm()
+	erri := r.ParseMultipartForm(20 * 1024 * 1024) // 20MB limit
 	formData := FormData{
 		Title:      r.FormValue("title"),
 		Content:    r.FormValue("content"),
@@ -48,6 +48,7 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 	if erri != nil {
 		log.Println(erri)
 	}
+	fmt.Println(formData)
 
 	// Validate title
 	if ValidateTitle(formData.Title) {
@@ -66,10 +67,11 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Handle image upload
 	var imageURL string
-	if r.MultipartForm != nil && r.MultipartForm.File["image"] != nil {
+	if r.MultipartForm != nil && r.MultipartForm.File["file"] != nil {
 		imageURL, erri = UploadImageHandler(w, r)
+		fmt.Println(formData.Errors)
 		if erri != nil {
-			formData.Errors["Image"] = "Failed to upload image"
+			formData.Errors["Image"] = erri.Error()
 		}
 	}
 
@@ -105,7 +107,7 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/posts", http.StatusSeeOther)
+	http.Redirect(w, r, "/post/"+newPost.PostId, http.StatusSeeOther)
 }
 
 func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
@@ -121,7 +123,8 @@ func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Delete the image file if it exists
 	if post.ImageURL != "" {
-		err = os.Remove(post.ImageURL)
+		err = os.Remove("assets/img/uploads/" + post.ImageURL)
+		fmt.Println(post.ImageURL)
 		if err != nil && !os.IsNotExist(err) { // Ignore errors if the file doesn't exist
 			log.Printf("Failed to delete image file: %v\n", err)
 		}
@@ -175,6 +178,10 @@ func (s *Server) GetPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if post.PostId == "" {
 		http.Error(w, "Post not found", http.StatusNotFound)
+		return
+	}
+	if post.ImageURL != "" {
+		render(w, r, "detailsPost", map[string]interface{}{"Post": post, "ImageURL": post.ImageURL})
 		return
 	}
 	render(w, r, "detailsPost", map[string]interface{}{"Post": post})

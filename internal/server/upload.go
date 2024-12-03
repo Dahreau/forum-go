@@ -1,6 +1,7 @@
 package server
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -18,8 +19,7 @@ func UploadImageHandler(w http.ResponseWriter, r *http.Request) (string, error) 
 		http.Error(w, "File size exceeds limit", http.StatusBadRequest)
 		return "", err
 	}
-
-	file, handler, err := r.FormFile("image")
+	file, handler, err := r.FormFile("file")
 	if err != nil {
 		http.Error(w, "Invalid file upload", http.StatusBadRequest)
 		return "", err
@@ -30,8 +30,8 @@ func UploadImageHandler(w http.ResponseWriter, r *http.Request) (string, error) 
 	ext := filepath.Ext(handler.Filename)
 	allowedExtensions := []string{".jpg", ".jpeg", ".png", ".gif"}
 	if !contains(allowedExtensions, ext) {
-		http.Error(w, "Unsupported file type", http.StatusUnsupportedMediaType)
-		return "", fmt.Errorf("unsupported file type: %s", ext)
+		err := errors.New("Invalid file type")
+		return "", err
 	}
 
 	// Create destination file
@@ -52,7 +52,7 @@ func UploadImageHandler(w http.ResponseWriter, r *http.Request) (string, error) 
 		return "", err
 	}
 
-	return destPath, nil
+	return newFileName, nil
 }
 
 func contains(slice []string, item string) bool {

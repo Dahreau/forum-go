@@ -57,7 +57,7 @@
     <div class="main-content global-box">
       <h1 class="main-title">New Post</h1>
 
-      <form action="" method="post" class="form-section">
+      <form action="" method="post" class="form-section" enctype="multipart/form-data">
         <input type="hidden" value="{{.User.UserId}}" name="UserId" />
         <!-- Title Section-->
         <div class="form-group">
@@ -81,6 +81,9 @@
 
         <!-- Images Section-->
         <div class="form-group">
+          {{ if .FormData.Errors.Image }}
+          <span class="error">{{ .FormData.Errors.Image }}</span>
+          {{ end }}
           <label for="upload">Upload Image:</label>
           <input type="file" class="upload-button" name="file"/>
         </div>

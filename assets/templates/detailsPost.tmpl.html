@@ -105,6 +105,11 @@
             {{end}}
           <textarea class="post-text no-resize" name="UpdatedContent" oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';" {{ if not (or (eq
             .Post.UserID $.User.UserId) (eq $.User.Role "admin" )) }} readonly {{ end }} required>{{ .Post.Content}}</textarea>
+            {{ if .ImageURL}}
+            <div class="image-container">
+              <img src="/assets/img/uploads/{{.ImageURL }}" alt="Image" class="comment-image" />
+            </div>
+            {{end}}
           <div class="post-footer-btns">
             <!-- Vote Buttons -->
             {{ if or (eq .Post.UserID $.User.UserId) (eq $.User.Role "admin") }}
