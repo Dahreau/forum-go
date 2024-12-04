@@ -32,6 +32,10 @@ RUN apk add --no-cache sqlite
 COPY --from=build /app/forum-go .
 COPY --from=build /app/assets /app/assets
 COPY --from=build /app/query.sql .
+COPY --from=build /app/key.pem .
+COPY --from=build /app/cert.pem .
+COPY --from=build /app/server.key .
+COPY --from=build /app/server.crt .
 
 # Copy the prebuilt SQLite database
 COPY --from=build /app/db.sqlite /app/db-init.sqlite

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"forum-go/internal/models"
+	"forum-go/security"
 	"log"
 	"net/http"
 )
@@ -14,8 +15,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets"))))
 
-	mux.HandleFunc("/", s.HomePageHandler)
-	mux.HandleFunc("/about", s.AboutPageHandler)
+	mux.HandleFunc("/", security.RateLimitedHandler(s.HomePageHandler))
+
+	mux.HandleFunc("/about", security.RateLimitedHandler(s.AboutPageHandler))
 
 	mux.HandleFunc("/activity", s.ActivityPageHandler)
 

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"crypto/tls"
 	"fmt"
 	"net/http"
 	"time"
@@ -19,6 +20,24 @@ type Server struct {
 }
 
 func NewServer() *http.Server {
+
+	cert, err := tls.LoadX509KeyPair("cert.pem", "key.pem")
+	if err != nil {
+		fmt.Println("error cerst", err)
+	}
+
+	// Configurer les options TLS
+	tlsConfig := &tls.Config{
+		Certificates: []tls.Certificate{cert},
+		MinVersion:   tls.VersionTLS12, // Force TLS v1.2 ou supérieur
+		// Configurer les suites de chiffrement (optionnel)
+		CipherSuites: []uint16{
+			tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+			tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+		},
+		PreferServerCipherSuites: true, // Prioriser les suites de chiffrement du serveur
+	}
+
 	NewServer := &Server{
 		port:       8080,
 		db:         database.New(),
@@ -50,6 +69,7 @@ func NewServer() *http.Server {
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 30 * time.Second,
+		TLSConfig:    tlsConfig,
 	}
 
 	return server
