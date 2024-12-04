@@ -12,19 +12,216 @@ import (
 
 	"forum-go/internal/models"
 	"forum-go/internal/shared"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
 var (
-	clientID     = "SECRET"
-	clientSecret = "SECRET"
-	redirectURI  = "http://localhost:8080/auth/github/callback"
+	googleClientID     = "SECRET" // TODO Put googleClientID
+	googleClientSecret = "SECRET" // TODO Put googleClientSecret
+	googleRedirectURL  = "http://localhost:8080/auth/google/callback"
+
+	GitHubclientID     = "SECRET" // TODO Put GitHubclientID
+	GitHubclientSecret = "SECRET" // TODO Put GitHubclientSecret
+	GitHubredirectURI  = "http://localhost:8080/auth/github/callback"
 )
+
+//////////////////////////////////////////////////////////////////
+///////////////////////////// GOOGLE /////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+func (s *Server) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
+	url := "https://accounts.google.com/o/oauth2/auth?client_id=" + googleClientID +
+		"&redirect_uri=" + googleRedirectURL +
+		"&response_type=code&scope=email%20profile&state=state"
+	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
+}
+
+func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
+	// Gets the authorization code from the query string
+	code := r.URL.Query().Get("code")
+	if code == "" {
+		http.Error(w, "Authorization code missing", http.StatusBadRequest)
+		log.Println("Authorization code missing")
+		return
+	}
+
+	// Exchange the authorization code for an access token
+	tokenResp, err := http.PostForm("https://oauth2.googleapis.com/token", url.Values{
+		"client_id":     {googleClientID},
+		"client_secret": {googleClientSecret},
+		"redirect_uri":  {googleRedirectURL},
+		"grant_type":    {"authorization_code"},
+		"code":          {code},
+	})
+	if err != nil {
+		http.Error(w, "Exchanging the token failed : "+err.Error(), http.StatusInternalServerError)
+		log.Println("HTTP POST error when exchanging the token :", err)
+		return
+	}
+	defer tokenResp.Body.Close()
+
+	// Check the HTTP status
+	if tokenResp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(tokenResp.Body)
+		log.Printf("Error exchanging token: %s", body)
+		http.Error(w, "Eror exchanging token", http.StatusInternalServerError)
+		return
+	}
+
+	// Decode the token response
+	var tokenData map[string]interface{}
+	if err := json.NewDecoder(tokenResp.Body).Decode(&tokenData); err != nil {
+		http.Error(w, "Error parsing the token : "+err.Error(), http.StatusInternalServerError)
+		log.Println("JSON error when parsing the token :", err)
+		return
+	}
+	log.Printf("JSON token response: %+v\n", tokenData)
+
+	// Verify that the access token is present
+	accessToken, ok := tokenData["access_token"]
+	if !ok || accessToken == nil {
+		http.Error(w, "Access token missing or invalid", http.StatusInternalServerError)
+		log.Println("Access token missing or invalid in the JSON response")
+		return
+	}
+
+	accessTokenStr, ok := accessToken.(string)
+	if !ok {
+		http.Error(w, "Access token is not a valid string", http.StatusInternalServerError)
+		log.Println("Access token is not a valid string")
+		return
+	}
+
+	// Use the access token to fetch user information
+	req, err := http.NewRequest("GET", "https://www.googleapis.com/oauth2/v2/userinfo", nil)
+	if err != nil {
+		http.Error(w, "Error creating user request : "+err.Error(), http.StatusInternalServerError)
+		log.Println("HTTP GET error when creating the user request :", err)
+		return
+	}
+	req.Header.Set("Authorization", "Bearer "+accessTokenStr)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		http.Error(w, "Error fetching user information : "+err.Error(), http.StatusInternalServerError)
+		log.Println("HTTP GET error when fetching user information :", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	// Check the HTTP status
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		log.Printf("Error fetching user information: %s", body)
+		http.Error(w, "Error fetching user information", http.StatusInternalServerError)
+		return
+	}
+
+	// Decode the user information
+	var userInfo map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&userInfo); err != nil {
+		http.Error(w, "Error parsing user information : "+err.Error(), http.StatusInternalServerError)
+		log.Println("JSON error when parsing the user information :", err)
+		return
+	}
+	log.Printf("User information: %+v\n", userInfo)
+
+	// Fetch the user's email and name
+	email := userInfo["email"].(string)
+	name := userInfo["name"].(string)
+
+	// Verify that the email is unique
+	IsUnique, err := s.db.FindEmailUser(email)
+	if err != nil {
+		http.Error(w, "Error checking the user : "+err.Error(), http.StatusInternalServerError)
+		log.Println("Error checking the user :", err)
+		return
+	}
+
+	if !IsUnique {
+		// The email already exists in the database
+		log.Println("The email already exists in the database")
+
+		// Fetch the user from the database
+		user, err := s.db.FindUserByEmail(email)
+		if err != nil {
+			http.Error(w, "Error fetching the user : "+err.Error(), http.StatusInternalServerError)
+			log.Println("Error fetching the user :", err)
+			return
+		}
+
+		if user.Role == "ban" {
+			render(w, r, "login", map[string]interface{}{"Error": "You are banned", "email": email})
+			return
+		}
+
+		userID := shared.ParseUUID(shared.GenerateUUID())
+
+		// Create a session for the user
+		expiration := time.Now().Add(time.Hour)
+		cookie := http.Cookie{
+			Name:    s.SESSION_ID,
+			Value:   userID,
+			Expires: expiration,
+			Path:    "/",
+		}
+		user.SessionId = sql.NullString{String: userID, Valid: true}
+		user.SessionExpire = sql.NullTime{Time: expiration, Valid: true}
+		err = s.db.UpdateUser(user)
+		if err != nil {
+			s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+			return
+		}
+		http.SetCookie(w, &cookie)
+
+		// Redirect the user to the home page
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	// If the email is unique, create a new user
+	log.Println("The email doesn't exist in the database")
+
+	// Generate a random password
+	password := shared.GenerateUUID().String()
+
+	// Hash the password
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	// Create a new user
+	user := models.User{
+		Username:     name,
+		Email:        email,
+		Password:     string(passwordHash),
+		Role:         "user",
+		CreationDate: time.Now(),
+		UserId:       shared.ParseUUID(shared.GenerateUUID()),
+	}
+	err = s.db.CreateUser(user)
+	if err != nil {
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+		return
+	}
+	s.users = append(s.users, user)
+
+	// Redirect the user to the home page
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
+}
+
+//////////////////////////////////////////////////////////////////
+///////////////////////////// GITHUB /////////////////////////////
+//////////////////////////////////////////////////////////////////
 
 // GithubLoginHandler initiates the GitHub OAuth flow.
 func (s *Server) GithubLoginHandler(w http.ResponseWriter, r *http.Request) {
-	authURL := "https://github.com/login/oauth/authorize?client_id=" + clientID +
-		"&redirect_uri=" + url.QueryEscape(redirectURI) +
+	authURL := "https://github.com/login/oauth/authorize?client_id=" + GitHubclientID +
+		"&redirect_uri=" + url.QueryEscape(GitHubredirectURI) +
 		"&scope=user:email"
 
 	http.Redirect(w, r, authURL, http.StatusTemporaryRedirect)
@@ -40,9 +237,9 @@ func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Exchange the authorization code for an access token
 	tokenResp, err := http.PostForm("https://github.com/login/oauth/access_token", url.Values{
-		"client_id":     {clientID},
-		"client_secret": {clientSecret},
-		"redirect_uri":  {redirectURI},
+		"client_id":     {GitHubclientID},
+		"client_secret": {GitHubclientSecret},
+		"redirect_uri":  {GitHubredirectURI},
 		"code":          {code},
 	})
 	if err != nil {

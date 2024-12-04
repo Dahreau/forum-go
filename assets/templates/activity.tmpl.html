@@ -1,152 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="icon" href="/assets/img/logo.png" type="image/png" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Mina:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/assets/css/global.css" />
-    <link rel="stylesheet" href="/assets/css/header.css" />
-    <link rel="stylesheet" href="/assets/css/activity.css" />
-    <title>{{ .User.Username}}'s activity</title>
-  </head>
-  <body>
-    <!-- Header Section -->
-    <header class="header-section">
-      <div class="logo-container">
-        <a href="/">
-          <div class="logo">
-            <img src="/assets/img/logo.png" alt="Logo Aniverse" width="50" />
-          </div>
-          <div class="logo-text">Aniverse</div>
-        </a>
-      </div>
-      <div class="user-info">
-        {{ if .User }}
-        <h1 class="welcome">Welcome {{ .User.Username}}</h1>
-        <a href="/activity" class="notif button"
-          >{{ .User.UnreadActivities}}
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="icon" href="/assets/img/logo.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Mina:wght@400;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/global.css" />
+  <link rel="stylesheet" href="/assets/css/header.css" />
+  <link rel="stylesheet" href="/assets/css/activity.css" />
+  <title>{{ .User.Username}}'s activity</title>
+</head>
+
+<body>
+  <!-- Header Section -->
+  <header class="header-section">
+    <div class="logo-container">
+      <a href="/">
+        <div class="logo">
+          <img src="/assets/img/logo.png" alt="Logo Aniverse" width="50" />
+        </div>
+        <div class="logo-text">Aniverse</div>
+      </a>
+    </div>
+    <div class="user-info">
+      {{ if .User }}
+      <h1 class="welcome">Welcome {{ .User.Username}}</h1>
+      <a href="/activity" class="notif button">{{ .User.UnreadActivities}}
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3V5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M12 5C8.69 5 6 7.69 6 11V17C5 17 4 18 4 19H12M12 5C15.31 5 18 7.69 18 11V17C19 17 20 18 20 19H12"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M10 20C10 21.1 10.9 22 12 22C13.1 22 14 21.1 14 20" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </a>
+      <form method="post" action="/logout">
+        <button class="logout-button button" type="submit">
+          <span>Log out</span><svg id="logout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24">
             <path
-              d="M12 3V5"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M12 5C8.69 5 6 7.69 6 11V17C5 17 4 18 4 19H12M12 5C15.31 5 18 7.69 18 11V17C19 17 20 18 20 19H12"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M10 20C10 21.1 10.9 22 12 22C13.1 22 14 21.1 14 20"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
+              d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z" />
           </svg>
-        </a>
-        <form method="post" action="/logout">
-          <button class="logout-button button" type="submit">
-            <span>Log out</span
-            ><svg
-              id="logout-icon"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="-2 -2 24 24"
-            >
-              <path
-                d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z"
-              />
-            </svg>
-          </button>
-        </form>
-        <!-- <div class="logout-button">
+        </button>
+      </form>
+      <!-- <div class="logout-button">
               <a href="#" class="logout-link">Log out</a>
           </div> -->
-        {{ if eq .User.Role "admin" }}
-        <a class="button" href="/adminPanel">Admin Panel</a>
-        {{ end }} {{ else }}
-        <h1 class="welcome">Guest</h1>
-        <a class="button" href="/login">Login</a>
-        <a class="button register" href="/register">Register</a>
-        {{ end }}
-      </div>
-    </header>
-
-    <!-- Main Section -->
-    <div class="content-wrapper">
-      {{ if .User.Activities}} {{ range .User.Activities }}
-      <div class="activity-card global-box">
-        <div class="activity-card-header">
-          <div class="activity-card-title">
-            {{ if eq .ActionType "postCreated"}}
-            <img src="/assets/img/pen-icon.svg" />You have created a new post {{
-            else if eq .ActionType "commentCreated"}}<img
-              src="/assets/img/pen-icon.svg"
-            />
-            You comment a post {{ else if eq .ActionType "getPostLiked"}}
-            <img src="/assets/img/thumb-up-icon.svg" /> {{ .ActionUsername}} has
-            liked your post ! {{ else if eq .ActionType "getPostDisliked"}}
-            <img src="/assets/img/thumb-down-icon.svg" /> {{ .ActionUsername}}
-            has disliked your post ! :'( {{ else if eq .ActionType
-            "postLiked"}}<img src="/assets/img/thumb-up-icon.svg" /> You liked a
-            post {{ else if eq .ActionType "postDisliked"}}
-            <img src="/assets/img/thumb-down-icon.svg" /> You disliked a post {{
-            else if eq .ActionType "getCommentLiked"}}
-            <img src="/assets/img/thumb-up-icon.svg" />
-            {{ .ActionUsername}} has liked your comment ! {{ else if eq
-            .ActionType "getCommentDisliked"}}
-            <img src="/assets/img/thumb-down-icon.svg" />
-            {{ .ActionUsername}} has disliked your comment ! :'( {{ else if eq
-            .ActionType "commentLiked"}}
-            <img src="/assets/img/thumb-up-icon.svg" />
-            You liked a comment {{ else if eq .ActionType "commentDisliked"}}
-            <img src="/assets/img/thumb-down-icon.svg" />
-            You disliked a comment {{else if eq .ActionType "getComment"}}
-            <img src="/assets/img/pen-icon.svg" />{{.ActionUsername}} has
-            commented your post !{{end}}
-          </div>
-          <div class="activity-card-date">{{ .FormattedCreationDate }}</div>
-        </div>
-        <div class="activity-card-body">
-          <div class="activity-card-description">{{ .Details }}</div>
-          <div class="activity-card-footer">
-            <a href="/post/{{ .PostId}}">See post details</a>
-            {{if eq .IsRead false}}
-            <div class="red-point"></div>
-            {{end}}
-          </div>
-        </div>
-      </div>
+      {{ if eq .User.Role "admin" }}
+      <a class="button" href="/adminPanel">Admin Panel</a>
       {{ end }} {{ else }}
-      <div class="activity-card global-box">
-        <h1>No activity yet</h1>
-        <p>When you will have some activity, you will see it here</p>
-      </div>
+      <h1 class="welcome">Guest</h1>
+      <a class="button" href="/login">Login</a>
+      <a class="button register" href="/register">Register</a>
       {{ end }}
     </div>
-    <!-- Footer Section -->
-    <footer class="footer-section">
-      <span class="footer-text"
-        >© 2024 Aniverse. All rights reserved -
-        <a href="/about">Our team</a></span
-      >
-    </footer>
-  </body>
+  </header>
+
+  <!-- Main Section -->
+  <div class="content-wrapper">
+    {{ if .User.Activities}} {{ range .User.Activities }}
+    <div class="activity-card global-box">
+      <div class="activity-card-header">
+        <div class="activity-card-title">
+          {{ if eq .ActionType "postCreated"}}
+          <img src="/assets/img/pen-icon.svg" />You have created a new post {{
+          else if eq .ActionType "commentCreated"}}<img src="/assets/img/pen-icon.svg" />
+          You comment a post {{ else if eq .ActionType "getPostLiked"}}
+          <img src="/assets/img/thumb-up-icon.svg" /> {{ .ActionUsername}} has
+          liked your post ! {{ else if eq .ActionType "getPostDisliked"}}
+          <img src="/assets/img/thumb-down-icon.svg" /> {{ .ActionUsername}}
+          has disliked your post ! :'( {{ else if eq .ActionType
+          "postLiked"}}<img src="/assets/img/thumb-up-icon.svg" /> You liked a
+          post {{ else if eq .ActionType "postDisliked"}}
+          <img src="/assets/img/thumb-down-icon.svg" /> You disliked a post {{
+          else if eq .ActionType "getCommentLiked"}}
+          <img src="/assets/img/thumb-up-icon.svg" />
+          {{ .ActionUsername}} has liked your comment ! {{ else if eq
+          .ActionType "getCommentDisliked"}}
+          <img src="/assets/img/thumb-down-icon.svg" />
+          {{ .ActionUsername}} has disliked your comment ! :'( {{ else if eq
+          .ActionType "commentLiked"}}
+          <img src="/assets/img/thumb-up-icon.svg" />
+          You liked a comment {{ else if eq .ActionType "commentDisliked"}}
+          <img src="/assets/img/thumb-down-icon.svg" />
+          You disliked a comment {{else if eq .ActionType "getComment"}}
+          <img src="/assets/img/pen-icon.svg" />{{.ActionUsername}} has
+          commented your post !{{end}}
+        </div>
+        <div class="activity-card-date">{{ .FormattedCreationDate }}</div>
+      </div>
+      <div class="activity-card-body">
+        <div class="activity-card-description">{{ .Details }}</div>
+        <div class="activity-card-footer">
+          <a href="/post/{{ .PostId}}">See post details</a>
+          {{if eq .IsRead false}}
+          <div class="red-point"></div>
+          {{end}}
+        </div>
+      </div>
+    </div>
+    {{ end }} {{ else }}
+    <div class="activity-card global-box">
+      <h1>No activity yet</h1>
+      <p>When you will have some activity, you will see it here</p>
+    </div>
+    {{ end }}
+  </div>
+  <!-- Footer Section -->
+  <footer class="footer-section">
+    <span class="footer-text">© 2024 Aniverse. All rights reserved -
+      <a href="/about">Our team</a></span>
+  </footer>
+</body>
+
 </html>
