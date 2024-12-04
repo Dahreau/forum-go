@@ -31,6 +31,20 @@
     <div class="user-info">
       {{ if .User }}
       <h1 class="welcome">Welcome {{ .User.Username}}</h1>
+      <a href="/activity" class="notif button">{{ .User.UnreadActivities}}
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3V5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M12 5C8.69 5 6 7.69 6 11V17C5 17 4 18 4 19H12M12 5C15.31 5 18 7.69 18 11V17C19 17 20 18 20 19H12"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M10 20C10 21.1 10.9 22 12 22C13.1 22 14 21.1 14 20" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </a>
+      {{if or (eq .User.Role "user") (eq .User.Role "moderator")}}
+      <div>
+        <a href="/modRequest" class="button register"> Mod Request</a>
+      </div>
+      {{end}}
       <form method="post" action="/logout">
         <button class="logout-button button" type="submit">
           <span>Log out</span><svg id="logout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24">
@@ -96,7 +110,9 @@
           {{ end }}
         </select>
         <div id="selected-categories"></div>
-        <button id="btn-reset-filters" class="button btn-reset">Reset filters</button>
+        <button id="btn-reset-filters" class="button btn-reset">
+          Reset filters
+        </button>
       </aside>
 
       <!-- Post List Section -->
@@ -194,19 +210,17 @@
               </div>
             </div>
             <div class="categories">
-              {{ if .Categories }}
-              {{ range .Categories }}
+              {{ if .Categories }} {{ range .Categories }}
               <span class="category-box">{{ .Name }}</span>
-              {{ end }}
-              {{ end }}
+              {{ end }} {{ end }}
             </div>
             <!-- Report and Delete -->
             <div class="post-actions">
               {{ if or (eq $.User.Role "moderator") (eq $.User.Role "admin")
               }}
-              <a class="button report" href="/report">Report</a>
+              <a class="button report" href="/report/{{.PostId}}">Report</a>
               {{ end }} {{ if or (eq .UserID $.User.UserId) (eq $.User.Role
-              "admin") }}
+              "admin") (eq $.User.Role "moderator")}}
               <form action="/posts/delete/{{ .PostId }}" method="post">
                 <input type="hidden" name="postId" value="{{ .PostId }}" />
                 <button class="delete-button">
@@ -247,7 +261,8 @@
 
   <!-- Footer Section -->
   <footer class="footer-section">
-    <span class="footer-text">© 2024 Aniverse. All rights reserved - <a href="/about">Our team</a></span>
+    <span class="footer-text">© 2024 Aniverse. All rights reserved -
+      <a href="/about">Our team</a></span>
   </footer>
 </body>
 <script src="/assets/js/index.js"></script>

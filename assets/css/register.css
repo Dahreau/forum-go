@@ -83,3 +83,48 @@ p {
     font-size: 0.9em;
     margin: 0;
 }
+
+.social-login {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.social-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px; /* Space between buttons */
+    margin-top: 10px;
+}
+
+.button.google-login, .button.github-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px; /* Reduced button size */
+    height: 36px;
+    border-radius: 12px; /* Squircle shape */
+    text-decoration: none;
+    background-color: #10091b; /* Match form background */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.button.google-login:hover, .button.github-login:hover {
+    transform: scale(1.1); /* Slight zoom on hover */
+    box-shadow:
+            0 0 12px rgba(255, 255, 255, 0.4),
+            inset 0 0 6px rgba(255, 255, 255, 0.2),
+            0 0 16px #7789FF; /* Intensified glow */
+}
+
+.button img {
+    width: 20px; /* Larger icon size */
+    height: 20px;
+}
+
+/*.button.google-login {
+    border: 2px solid #FE9AF8; /* Use matching neon pink */
+/*}
+
+.button.github-login {
+    border: 2px solid #FE9AF8; /* Use matching lighter pink */
+/*}

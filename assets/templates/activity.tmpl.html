@@ -8,16 +8,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="icon" href="/assets/img/logo.png" type="image/png" />
   <link href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Shojumaru&display=swap" rel="stylesheet" />
-
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Mina:wght@400;700&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="/assets/css/global.css" />
   <link rel="stylesheet" href="/assets/css/header.css" />
-  <title>Error {{ .Error.StatusCode }}</title>
+  <link rel="stylesheet" href="/assets/css/activity.css" />
+  <title>{{ .User.Username}}'s activity</title>
 </head>
 
 <body>
+  <!-- Header Section -->
   <header class="header-section">
     <div class="logo-container">
       <a href="/">
@@ -48,8 +48,8 @@
         </button>
       </form>
       <!-- <div class="logout-button">
-                <a href="#" class="logout-link">Log out</a>
-            </div> -->
+              <a href="#" class="logout-link">Log out</a>
+          </div> -->
       {{ if eq .User.Role "admin" }}
       <a class="button" href="/adminPanel">Admin Panel</a>
       {{ end }} {{ else }}
@@ -59,10 +59,56 @@
       {{ end }}
     </div>
   </header>
+
+  <!-- Main Section -->
   <div class="content-wrapper">
-    <h1 class="main-title">Error {{ .Error.StatusCode }}</h1>
-    <p class="error-message">{{ .Error.Message }}</p>
-    <button class="button" onclick="window.history.back()">Go back</button>
+    {{ if .User.Activities}} {{ range .User.Activities }}
+    <div class="activity-card global-box">
+      <div class="activity-card-header">
+        <div class="activity-card-title">
+          {{ if eq .ActionType "postCreated"}}
+          <img src="/assets/img/pen-icon.svg" />You have created a new post {{
+          else if eq .ActionType "commentCreated"}}<img src="/assets/img/pen-icon.svg" />
+          You comment a post {{ else if eq .ActionType "getPostLiked"}}
+          <img src="/assets/img/thumb-up-icon.svg" /> {{ .ActionUsername}} has
+          liked your post ! {{ else if eq .ActionType "getPostDisliked"}}
+          <img src="/assets/img/thumb-down-icon.svg" /> {{ .ActionUsername}}
+          has disliked your post ! :'( {{ else if eq .ActionType
+          "postLiked"}}<img src="/assets/img/thumb-up-icon.svg" /> You liked a
+          post {{ else if eq .ActionType "postDisliked"}}
+          <img src="/assets/img/thumb-down-icon.svg" /> You disliked a post {{
+          else if eq .ActionType "getCommentLiked"}}
+          <img src="/assets/img/thumb-up-icon.svg" />
+          {{ .ActionUsername}} has liked your comment ! {{ else if eq
+          .ActionType "getCommentDisliked"}}
+          <img src="/assets/img/thumb-down-icon.svg" />
+          {{ .ActionUsername}} has disliked your comment ! :'( {{ else if eq
+          .ActionType "commentLiked"}}
+          <img src="/assets/img/thumb-up-icon.svg" />
+          You liked a comment {{ else if eq .ActionType "commentDisliked"}}
+          <img src="/assets/img/thumb-down-icon.svg" />
+          You disliked a comment {{else if eq .ActionType "getComment"}}
+          <img src="/assets/img/pen-icon.svg" />{{.ActionUsername}} has
+          commented your post !{{end}}
+        </div>
+        <div class="activity-card-date">{{ .FormattedCreationDate }}</div>
+      </div>
+      <div class="activity-card-body">
+        <div class="activity-card-description">{{ .Details }}</div>
+        <div class="activity-card-footer">
+          <a href="/post/{{ .PostId}}">See post details</a>
+          {{if eq .IsRead false}}
+          <div class="red-point"></div>
+          {{end}}
+        </div>
+      </div>
+    </div>
+    {{ end }} {{ else }}
+    <div class="activity-card global-box">
+      <h1>No activity yet</h1>
+      <p>When you will have some activity, you will see it here</p>
+    </div>
+    {{ end }}
   </div>
   <!-- Footer Section -->
   <footer class="footer-section">

@@ -42,6 +42,10 @@ func (s *service) GetUser(email, password string) (models.User, error) {
 	if err != nil {
 		return models.User{}, err
 	}
+	user.Activities, err = s.GetActivities(user)
+	if err != nil {
+		return models.User{}, err
+	}
 	return user, nil
 }
 
@@ -65,6 +69,17 @@ func (s *service) FindEmailUser(email string) (bool, error) {
 		return true, nil
 	}
 	return false, nil
+}
+
+func (s *service) FindUserByEmail(email string) (models.User, error) {
+	query := "SELECT * FROM User WHERE email=?"
+	row := s.db.QueryRow(query, email)
+	var user models.User
+	err := row.Scan(&user.UserId, &user.Email, &user.Username, &user.Password, &user.Role, &user.CreationDate, &user.SessionId, &user.SessionExpire)
+	if err != nil {
+		return models.User{}, err
+	}
+	return user, nil
 }
 
 func (s *service) FindUserCookie(cookie string) (models.User, error) {

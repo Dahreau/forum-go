@@ -95,6 +95,26 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
+	newActivity := models.Activity{
+		ActivityId:   shared.ParseUUID(shared.GenerateUUID()),
+		UserId:       newPost.UserID,
+		ActionUserId: newPost.UserID,
+		PostId:       newPost.PostId,
+		ActionType:   string(models.POST_CREATED),
+		CreationDate: time.Now(),
+		Details:      newPost.Title,
+		IsRead:       false,
+	}
+	for i, user := range s.users {
+		if user.UserId == newPost.UserID {
+			s.users[i].Activities = append(s.users[i].Activities, newActivity)
+		}
+	}
+	err = s.db.CreateActivity(newActivity)
+	if err != nil {
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+		return
+	}
 	http.Redirect(w, r, "/post/"+newPost.PostId, http.StatusSeeOther)
 }
 
@@ -112,6 +132,18 @@ func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func (s *Server) EditPostHandler(w http.ResponseWriter, r *http.Request) {
+	PostId := r.FormValue("PostId")
+	UpdatedContent := r.FormValue("UpdatedContent")
+
+	err := s.db.EditPost(PostId, UpdatedContent)
+	if err != nil {
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+		return
+	}
+	http.Redirect(w, r, "/post/"+PostId, http.StatusSeeOther)
 }
 
 func (s *Server) GetNewPostHandler(w http.ResponseWriter, r *http.Request) {

@@ -1,10 +1,7 @@
 package server
 
 import (
-	"encoding/base64"
 	"forum-go/internal/models"
-	"log"
-	"math/rand"
 	"net/http"
 	"unicode"
 )
@@ -27,15 +24,14 @@ func IsAdmin(r *http.Request) bool {
 	}
 	return user.(models.User).Role == "admin"
 }
-
-func generateToken(lenght int) string {
-	bytes := make([]byte, lenght)
-	if _, err := rand.Read(bytes); err != nil {
-		log.Fatalf("Failed to generate token: %v", err)
+func IsModerator(r *http.Request) bool {
+	user := r.Context().Value(contextKeyUser)
+	if user == nil {
+		return false
 	}
-	return base64.URLEncoding.EncodeToString(bytes)
-
+	return user.(models.User).Role == "moderator"
 }
+
 func IsAlphanumeric(s string) bool {
 	for _, char := range s {
 		if !unicode.IsLetter(char) && !unicode.IsDigit(char) {

@@ -182,8 +182,8 @@ func (s *service) DeletePost(id string) error {
 	return err
 }
 
-func (s *service) EditPost(id, title string) error {
-	query := "UPDATE Post SET title=? WHERE post_id=?"
-	_, err := s.db.Exec(query, title, id)
+func (s *service) EditPost(id, content string) error {
+	query := "UPDATE Post SET content=? WHERE post_id=?"
+	_, err := s.db.Exec(query, content, id)
 	return err
 }

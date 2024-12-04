@@ -17,8 +17,9 @@ COPY . .
 # Build the application
 RUN go build -v -o forum-go ./cmd/api
 
-# Create an empty SQLite database file
-RUN sqlite3 /app/db.sqlite ""
+# Create an empty SQLite database file and populate it
+RUN sqlite3 /app/db.sqlite ".databases" && \
+    sqlite3 /app/db.sqlite < /app/query.sql
 
 # Final stage: minimal image for running the application
 FROM alpine:latest
@@ -27,19 +28,18 @@ WORKDIR /app
 
 RUN apk add --no-cache sqlite
 
-# Copy the binary from the build stage
+# Copy the binary and assets from the build stage
 COPY --from=build /app/forum-go .
 COPY --from=build /app/assets /app/assets
-
-# Copy the SQLite database file
-COPY --from=build /app/db.sqlite .
-
-# Copy the SQL query file
 COPY --from=build /app/query.sql .
+
+# Copy the prebuilt SQLite database
+COPY --from=build /app/db.sqlite /app/db-init.sqlite
 
 # Ensure the binary is executable
 RUN chmod +x /app/forum-go
 
 EXPOSE 8080
 
-CMD ["./forum-go"]
+# Ensure the database is copied to the volume at runtime
+CMD ["/bin/sh", "-c", "if [ ! -f /app/db.sqlite ]; then cp /app/db-init.sqlite /app/db.sqlite; fi && ./forum-go"]

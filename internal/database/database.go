@@ -29,6 +29,7 @@ type Service interface {
 	Close() error
 
 	FindEmailUser(email string) (bool, error)
+	FindUserByEmail(email string) (models.User, error)
 	FindUsername(username string) (bool, error)
 	UpdateUser(user models.User) error
 	DeleteUser(id string) error
@@ -54,6 +55,20 @@ type Service interface {
 	Vote(postId, commentId, userId string, isLike bool) error
 	DeleteLikes(postId string) error
 	DeleteCommentLikes(commentId string) error
+
+	GetActivities(user models.User) ([]models.Activity, error)
+	CreateActivity(activity models.Activity) error
+	UpdateActivity(activity models.Activity) error
+	ReadActivites(userId string) error
+	//admin section
+	GetRequests() ([]models.Request, error)
+	CreateRequest(request models.Request) error
+	DeleteRequest(requestId string) error
+	UpdateRequestStatus(requestId, status string) error
+	//report section
+	CreateReport(report models.Report) error
+	GetReports() ([]models.Report, error)
+	UpdateReportStatus(reportId, status string) error
 }
 
 type service struct {

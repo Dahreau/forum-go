@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/css/global.css" />
+    <link rel="stylesheet" href="./assets/css/header.css" />
+    <title>Aniverse Categories</title>
+  </head>
+
+  <body>
+    <!-- Header Section -->
+    <header class="header-section">
+      <div class="logo-container">
+        <a href="/">
+          <div class="logo">
+            <img src="/assets/img/logo.png" alt="Logo Aniverse" width="50" />
+          </div>
+          <div class="logo-text">Aniverse</div>
+        </a>
+      </div>
+      <div class="user-info">
+        {{ if .User }}
+        <h1 class="welcome">Welcome {{ .User.Username}}</h1>
+        <a href="/activity" class="notif button"
+          >{{ .User.UnreadActivities}}
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 3V5"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12 5C8.69 5 6 7.69 6 11V17C5 17 4 18 4 19H12M12 5C15.31 5 18 7.69 18 11V17C19 17 20 18 20 19H12"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M10 20C10 21.1 10.9 22 12 22C13.1 22 14 21.1 14 20"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </a>
+        <form method="post" action="/logout">
+          <button class="logout-button button" type="submit">
+            <span>Log out</span
+            ><svg
+              id="logout-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="-2 -2 24 24"
+            >
+              <path
+                d="M15 4L13.59 5.41L16.17 8H6V10H16.17L13.59 12.58L15 14L20 9M2 2H10V0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H10V16H2V2Z"
+              />
+            </svg>
+          </button>
+        </form>
+        <!-- <div class="logout-button">
+              <a href="#" class="logout-link">Log out</a>
+          </div> -->
+        {{ if eq .User.Role "admin" }}
+        <a class="button" href="/adminPanel">Admin Panel</a>
+        {{ end }} {{ else }}
+        <h1 class="welcome">Guest</h1>
+        <a class="button" href="/login">Login</a>
+        <a class="button register" href="/register">Register</a>
+        {{ end }}
+      </div>
+    </header>
+    <div class="categories-wrapper">
+      <form action="/categories/add" method="post">
+        <input type="text" name="categoryName" placeholder="Category Name" />
+        <button class="button">Add Category</button>
+      </form>
+      <div class="categories">
+        {{ range .Categories }}
+        <div class="category global-box">
+          <div class="category-name">{{ .Name }}</div>
+          <div class="category-buttons">
+            <form
+              action="/categories/delete/{{ .CategoryId }}"
+              method="post"
+              class="delete-form"
+            >
+              <input
+                type="hidden"
+                name="categoryId"
+                value="{{ .CategoryId }}"
+              />
+              <button class="category-button">Delete</button>
+            </form>
+            <form
+              action="/categories/edit/{{ .CategoryId }}"
+              method="post"
+              class="edit-form"
+            >
+              <input type="hidden" name="categoryId" value="{{ .CategoryId}}" />
+              <input
+                type="text"
+                name="newCategoryName"
+                placeholder="New Category Name"
+              />
+              <button class="category-button edit-button">Edit</button>
+            </form>
+          </div>
+        </div>
+        {{ end }}
+      </div>
+      {{ if .Error }}
+      <div style="color: red; margin-bottom: 20px">{{ .Error }}</div>
+      {{ end }}
+    </div>
+  </body>
+</html>
+<style>
+  .categories-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    gap: 24px;
+  }
+
+  .categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .category {
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .category-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .category-buttons {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .category-button {
+    background-color: #ff0000;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    flex: 1;
+  }
+
+  .category-button:hover {
+    background-color: #cc0000;
+  }
+
+  .delete-form {
+    width: 100%;
+    flex: 1;
+  }
+
+  .edit-form {
+    width: 100%;
+    flex: 3;
+  }
+
+  .edit-button {
+    background-color: #007bff;
+  }
+
+  .edit-button:hover {
+    background-color: #0056b3;
+  }
+
+  form {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+  }
+</style>

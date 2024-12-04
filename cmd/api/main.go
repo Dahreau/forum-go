@@ -36,6 +36,11 @@ func gracefulShutdown(apiServer *http.Server) {
 
 func main() {
 	go security.CleanupInactiveClients()
+	//dotenv.Define(".env.prod")
+	//shared.GoogleRedirectURL = dotenv.GetEnv("googleRedirectURL")
+	//shared.GoogleClientSecret = dotenv.GetEnv("googleClientSecret")
+	//shared.GoogleClientID = dotenv.GetEnv("googleClientID")
+	//
 	server := server.NewServer()
 
 	go gracefulShutdown(server)

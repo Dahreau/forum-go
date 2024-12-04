@@ -11,23 +11,18 @@
       rel="stylesheet"
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
       href="https://fonts.googleapis.com/css2?family=Shojumaru&display=swap"
       rel="stylesheet"
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Mina:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/assets/css/global.css" />
     <link rel="stylesheet" href="/assets/css/header.css" />
     <link rel="stylesheet" href="/assets/css/home.css" />
-    <link rel="stylesheet" href="/assets/css/about.css" />
-
-    <title>About</title>
+    <link rel="stylesheet" href="/assets/css/adminPanel.css" />
+    <title>Admin Panel</title>
   </head>
 
   <body>
@@ -90,83 +85,68 @@
         <!-- <div class="logout-button">
               <a href="#" class="logout-link">Log out</a>
           </div> -->
-        {{ if eq .User.Role "admin" }}
-        <a class="button" href="/adminPanel">Admin Panel</a>
-        {{ end }} {{ else }}
+        {{ if eq .User.Role "admin" }} {{ end }} {{ else }}
         <h1 class="welcome">Guest</h1>
         <a class="button" href="/login">Login</a>
         <a class="button register" href="/register">Register</a>
         {{ end }}
       </div>
     </header>
-    <div class="content-wrapper">
-      <div class="global-box">
-        <div>
-          <h1 class="title">Our team</h1>
-          <ul>
-            <li>
-              <a href="https://github.com/AlexandreJoly76"
-                ><img src="/assets/img/github-icon.svg" /> Alexandre
-              </a>
-            </li>
-            <li>
-              <a href="https://github.com/BrendieD24"
-                ><img src="/assets/img/github-icon.svg" /> Brendie</a
-              >
-            </li>
-            <li>
-              <a href="https://github.com/CapitaineTagada"
-                ><img src="/assets/img/github-icon.svg" /> Sam
-              </a>
-            </li>
-            <li>
-              <a href="https://github.com/Dahreau"
-                ><img src="/assets/img/github-icon.svg" /> Daro
-              </a>
-            </li>
-            <li>
-              <a href="https://github.com/dylanBourcier"
-                ><img src="/assets/img/github-icon.svg" /> Dylan
-              </a>
-            </li>
-            <li>
-              <a href="https://github.com/EC21HG"
-                ><img src="/assets/img/github-icon.svg" /> Evan
-              </a>
-            </li>
-            <li>
-              <a href="https://github.com/RazmoLeRat"
-                ><img src="/assets/img/github-icon.svg" /> Leo
-              </a>
-            </li>
-            <li>
-              <a href="https://github.com/Salinkcha"
-                ><img src="/assets/img/github-icon.svg" /> Mohammed
-              </a>
-            </li>
-            <li>
-              <a href="https://github.com/SpauriRosso"
-                ><img src="/assets/img/github-icon.svg" /> Nassuif
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h1 class="title">GitHub Project</h1>
-          <p>
-            <a href="https://github.com/Dahreau/forum-go"
-              ><img src="/assets/img/github-icon.svg" /> Forum</a
-            >
-          </p>
+    <div class="main-content">
+      <div class="Admin-buttons"><a href="/categories" class="button register">Add Category</a>
+        <a href="/adminPanel/modrequests" class="button register">Requests</a>
+        <a href="/adminPanel/reports" class="button register">Reports</a>
+      </div>
+        <div class="user-section global-box">
+        <h1>Users List</h1>
+        <div class="userlist scroll">
+          <table>
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Actions</th>
+            </tr>
+            {{ range .users }}
+            <tr>
+              <td>{{ .Username }}</td>
+              <td>{{ .Email }}</td>
+              <td>{{ .Role }}</td>
+              <td class="actions-td">
+                {{ if not (eq .UserId $.User.UserId) }}
+                <a href="/delete/users/{{.UserId}}">
+                  <button class="logout-button button btn-action">
+                    Delete
+                  </button>
+                </a>
+                {{ end }} {{ if eq .Role "ban"}}
+                <a href="/ban/users/{{.UserId}}">
+                  <button class="button btn-action">Unban</button>
+                </a>
+                {{ else if not (eq .UserId $.User.UserId) }}
+                <a href="/ban/users/{{.UserId}}">
+                  <button class="logout-button button btn-action">
+                    BAN !!!
+                  </button>
+                </a>
+                {{ end }} {{ if or (eq .Role "user") (eq .Role "moderator")}}
+                <a href="/promote/users/{{.UserId}}">
+                  <button class="button btn-action">Promote</button>
+                </a>
+                {{ end }} {{ if and (not (eq .UserId $.User.UserId)) (eq .Role
+                "moderator") }}
+                <a href="/demote/users/{{.UserId}}">
+                  <button class="logout-button button btn-action">
+                    Demote
+                  </button>
+                </a>
+                {{ end }}
+              </td>
+            </tr>
+            {{ end }}
+          </table>
         </div>
       </div>
     </div>
-    <!-- Footer Section -->
-    <footer class="footer-section">
-      <span class="footer-text"
-        >© 2024 Aniverse. All rights reserved -
-        <a href="/about">Our team</a></span
-      >
-    </footer>
   </body>
 </html>

@@ -16,7 +16,7 @@ func (s *Server) GetCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
-	render(w, r, "categories", map[string]interface{}{"Categories": categories})
+	render(w, r, "admin/categories", map[string]interface{}{"Categories": categories})
 }
 
 func (s *Server) PostCategoriesHandler(w http.ResponseWriter, r *http.Request) {
@@ -26,7 +26,7 @@ func (s *Server) PostCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	category := r.FormValue("categoryName")
 	if !IsUniqueCategory(s.categories, category) {
-		render(w, r, "categories", map[string]interface{}{"Categories": s.categories, "Error": "Category already exists"})
+		render(w, r, "admin/categories", map[string]interface{}{"Categories": s.categories, "Error": "Category already exists"})
 		return
 	}
 	err := s.db.AddCategory(category)
@@ -65,7 +65,7 @@ func (s *Server) EditCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 	categoryID := r.FormValue("categoryId")
 	categoryName := r.FormValue("newCategoryName")
 	if !IsUniqueCategory(s.categories, categoryName) {
-		render(w, r, "categories", map[string]interface{}{"Categories": s.categories, "Error": "Category already exists"})
+		render(w, r, "admin/categories", map[string]interface{}{"Categories": s.categories, "Error": "Category already exists"})
 		return
 	}
 	err := s.db.EditCategory(categoryID, categoryName)
