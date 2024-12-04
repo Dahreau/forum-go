@@ -106,11 +106,6 @@ p {
     text-decoration: none;
     background-color: #10091b; /* Match form background */
     transition: box-shadow 0.3s ease, transform 0.3s ease;
-    box-shadow:
-            0 0 8px rgba(255, 255, 255, 0.2),
-            inset 0 0 4px rgba(255, 255, 255, 0.1),
-            0 0 8px #7789FF; /* Match neon glow */
-    border: 2px solid #7789FF; /* Match sign-up button's border color */
 }
 
 .button.google-login:hover, .button.github-login:hover {
@@ -126,10 +121,10 @@ p {
     height: 20px;
 }
 
-.button.google-login {
+/*.button.google-login {
     border: 2px solid #FE9AF8; /* Use matching neon pink */
-}
+/*}
 
 .button.github-login {
-    border: 2px solid #FFC4FB; /* Use matching lighter pink */
-}
+    border: 2px solid #FE9AF8; /* Use matching lighter pink */
+/*}

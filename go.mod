@@ -9,4 +9,4 @@ require (
 	golang.org/x/crypto v0.28.0
 )
 
-require github.com/SpauriRosso/dotenv v0.0.0-20240721170528-a191997eba12 // indirect
+require github.com/SpauriRosso/dotenv v0.0.0-20240721170528-a191997eba12
