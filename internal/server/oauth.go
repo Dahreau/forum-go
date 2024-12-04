@@ -65,7 +65,7 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	if tokenResp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(tokenResp.Body)
 		log.Printf("Error exchanging token: %s", body)
-		http.Error(w, "Eror exchanging token", http.StatusInternalServerError)
+		http.Error(w, "Error exchanging token", http.StatusInternalServerError)
 		return
 	}
 
@@ -210,8 +210,27 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	s.users = append(s.users, user)
 
+	userID := shared.ParseUUID(shared.GenerateUUID())
+
+	// Create a session for the user
+	expiration := time.Now().Add(time.Hour)
+	cookie := http.Cookie{
+		Name:    s.SESSION_ID,
+		Value:   userID,
+		Expires: expiration,
+		Path:    "/",
+	}
+	user.SessionId = sql.NullString{String: userID, Valid: true}
+	user.SessionExpire = sql.NullTime{Time: expiration, Valid: true}
+	err = s.db.UpdateUser(user)
+	if err != nil {
+		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+		return
+	}
+	http.SetCookie(w, &cookie)
+
 	// Redirect the user to the home page
-	http.Redirect(w, r, "/login", http.StatusSeeOther)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 //////////////////////////////////////////////////////////////////
