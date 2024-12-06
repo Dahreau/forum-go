@@ -19,11 +19,11 @@ import (
 var (
 	googleClientID     = "SECRET" // TODO Put googleClientID
 	googleClientSecret = "SECRET" // TODO Put googleClientSecret
-	googleRedirectURL  = "http://localhost:8080/auth/google/callback"
+	googleRedirectURL  = "https://localhost:8080/auth/google/callback"
 
 	GitHubclientID     = "SECRET" // TODO Put GitHubclientID
 	GitHubclientSecret = "SECRET" // TODO Put GitHubclientSecret
-	GitHubredirectURI  = "http://localhost:8080/auth/github/callback"
+	GitHubredirectURI  = "https://localhost:8080/auth/github/callback"
 )
 
 //////////////////////////////////////////////////////////////////
@@ -126,7 +126,6 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("JSON error when parsing the user information :", err)
 		return
 	}
-	log.Printf("User information: %+v\n", userInfo)
 
 	// Fetch the user's email and name
 	email := userInfo["email"].(string)
@@ -141,9 +140,6 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !IsUnique {
-		// The email already exists in the database
-		log.Println("The email already exists in the database")
-
 		// Fetch the user from the database
 		user, err := s.db.FindUserByEmail(email)
 		if err != nil {
@@ -154,6 +150,10 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 		if user.Role == "ban" {
 			render(w, r, "login", map[string]interface{}{"Error": "You are banned", "email": email})
+			return
+		}
+		if user.Provider != "google" {
+			render(w, r, "login", map[string]interface{}{"Error": "Email already used by another provider", "email": email})
 			return
 		}
 
@@ -202,6 +202,7 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		Role:         "user",
 		CreationDate: time.Now(),
 		UserId:       shared.ParseUUID(shared.GenerateUUID()),
+		Provider:     "google",
 	}
 	err = s.db.CreateUser(user)
 	if err != nil {
@@ -309,7 +310,6 @@ func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Extract user details
-	email, emailOk := userInfo["email"].(string)
 	username, usernameOk := userInfo["login"].(string)
 
 	if !usernameOk || username == "" {
@@ -317,8 +317,8 @@ func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	email, errMail := getMail(accessToken)
-	log.Println(email, emailOk, errMail)
-	if !emailOk || email == "" {
+	log.Println(email, errMail)
+	if email == "" {
 		// If no email exists, use the GitHub username as a fallback for account uniqueness
 		email = fmt.Sprintf("%s@github.local", username) // Fake email to ensure unique account creation
 	}
@@ -339,6 +339,10 @@ func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 		if user.Role == "ban" {
 			render(w, r, "login", map[string]interface{}{"Error": "You are banned", "email": email})
+			return
+		}
+		if user.Provider != "github" {
+			render(w, r, "login", map[string]interface{}{"Error": "Email already used by another provider", "email": email})
 			return
 		}
 
@@ -378,6 +382,7 @@ func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		Role:         "user",
 		CreationDate: time.Now(),
 		UserId:       shared.ParseUUID(shared.GenerateUUID()),
+		Provider:     "github",
 	}
 	err = s.db.CreateUser(user)
 	if err != nil {

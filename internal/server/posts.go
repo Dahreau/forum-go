@@ -180,6 +180,10 @@ func (s *Server) GetPostHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Post not found", http.StatusNotFound)
 		return
 	}
+	post.HasVoted = GetUserVote(post, s.getUser(r).UserId)
+	for i, comment := range post.Comments {
+		post.Comments[i].HasVoted = GetUserVote(comment, s.getUser(r).UserId)
+	}
 	if post.ImageURL != "" {
 		render(w, r, "detailsPost", map[string]interface{}{"Post": post, "ImageURL": post.ImageURL})
 		return

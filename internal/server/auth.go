@@ -23,8 +23,9 @@ func (s *Server) PostLoginHandler(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 	user, err := s.db.GetUser(email, password)
-	if user.UserId == "" || err != nil {
-		render(w, r, "login", map[string]interface{}{"Error": "Invalid username or password. Please try again.", "email": email})
+
+	if user.UserId == "" || err != nil || user.Provider != "local" {
+		render(w, r, "login", map[string]interface{}{"Error": "Invalid email or password. Please try again.", "email": email})
 		return
 	}
 	if user.Role == "ban" {
@@ -125,7 +126,7 @@ func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
 		render(w, r, "register", map[string]interface{}{"FormData": formData})
 		return
 	}
-	user := models.User{Username: r.FormValue("username"), Email: r.FormValue("email"), Password: string(PasswordHash), Role: "user", CreationDate: time.Now(), UserId: shared.ParseUUID(shared.GenerateUUID())}
+	user := models.User{Username: r.FormValue("username"), Email: r.FormValue("email"), Password: string(PasswordHash), Role: "user", CreationDate: time.Now(), UserId: shared.ParseUUID(shared.GenerateUUID()), Provider: "local"}
 	err = s.db.CreateUser(user)
 	if err != nil {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())

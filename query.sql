@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS User (
   role VARCHAR(50) NOT NULL,
   creation_date DATETIME NOT NULL,
   session_id CHAR(32),
-  session_expire DATETIME
+  session_expire DATETIME,
+  provider VARCHAR(50)
 );
 CREATE TABLE IF NOT EXISTS Post (
   post_id CHAR(32) PRIMARY KEY,

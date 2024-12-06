@@ -15,6 +15,7 @@ type User struct {
 	CreationDate     time.Time      `db:"creation_date"`
 	SessionId        sql.NullString `db:"session_id"`
 	SessionExpire    sql.NullTime   `db:"session_expire"`
+	Provider         string         `db:"provider"`
 	Posts            []Post         `db:"-"`
 	Activities       []Activity     `db:"-"`
 	UnreadActivities int            `db:"-"`

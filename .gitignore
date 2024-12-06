@@ -34,3 +34,6 @@ main
 
 # Database
 *.sqlite
+
+# Images
+assets/img/uploads/*
