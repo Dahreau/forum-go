@@ -103,9 +103,10 @@ func (s *service) GetPosts() ([]models.Post, error) {
 
 func (s *service) GetPost(id string) (models.Post, error) {
 	post := models.Post{}
+	imageUrl := sql.NullString{}
 	user := models.User{}
 	query := `
-		SELECT p.post_id, p.title, p.content, p.user_id, p.creation_date, p.update_date, 
+		SELECT p.post_id, p.title, p.content, p.user_id, p.creation_date, p.update_date,p.image_url, 
 			   u.user_id, u.username, u.email,
 			   c.category_id, c.name
 		FROM Post p 
@@ -125,7 +126,7 @@ func (s *service) GetPost(id string) (models.Post, error) {
 		var categoryID sql.NullString
 		var categoryName sql.NullString
 		err := rows.Scan(
-			&post.PostId, &post.Title, &post.Content, &post.UserID, &post.CreationDate, &post.UpdateDate,
+			&post.PostId, &post.Title, &post.Content, &post.UserID, &post.CreationDate, &post.UpdateDate, &imageUrl,
 			&user.UserId, &user.Username, &user.Email,
 			&categoryID, &categoryName,
 		)
@@ -137,6 +138,9 @@ func (s *service) GetPost(id string) (models.Post, error) {
 		}
 		if categoryName.Valid {
 			category.Name = categoryName.String
+		}
+		if imageUrl.Valid {
+			post.ImageURL = imageUrl.String
 		}
 		categories = append(categories, category)
 	}
@@ -161,8 +165,8 @@ func (s *service) GetPost(id string) (models.Post, error) {
 }
 
 func (s *service) AddPost(post models.Post, categories []models.Category) error {
-	query := "INSERT INTO Post (post_id,title,content,user_id,creation_date) VALUES (?,?,?,?,?)"
-	_, err := s.db.Exec(query, post.PostId, post.Title, post.Content, post.UserID, post.CreationDate)
+	query := "INSERT INTO Post (post_id,title,content,user_id,creation_date,image_url) VALUES (?,?,?,?,?,?)"
+	_, err := s.db.Exec(query, post.PostId, post.Title, post.Content, post.UserID, post.CreationDate, post.ImageURL)
 	if err != nil {
 		return err
 	}
