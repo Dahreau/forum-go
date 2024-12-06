@@ -33,6 +33,7 @@ type Post struct {
 	Content               string       `db:"content"`
 	UserID                string       `db:"user_id"`
 	CreationDate          time.Time    `db:"creation_date"`
+	ImageURL              string       `db:"image_url"`
 	FormattedCreationDate string       `db:"-"`
 	UpdateDate            sql.NullTime `db:"update_date"`
 	User                  User         `db:"-"`
