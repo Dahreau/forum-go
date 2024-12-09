@@ -5,23 +5,7 @@ services:
     build: .
     ports:
       - "8080:8080"
+    environment:
+      - PORT=8080
     volumes:
       - ~/data/forum-go/db.sqlite:/app/db.sqlite
-
-  sqlite-web:
-    image: coleifer/sqlite-web
-    expose:
-      - "8080" # Only exposed on docker internal network
-    volumes:
-      - ~/data/forum-go/db.sqlite:/db/db.sqlite
-    environment:
-      - SQLITE_DATABASE=/db/db.sqlite
-
-  nginx:
-    image: nginx:latest
-    ports:
-      - "8083:8083" # Exposed port for accessing sqlite
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - sqlite-web

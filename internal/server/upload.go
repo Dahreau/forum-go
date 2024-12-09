@@ -30,7 +30,7 @@ func UploadImageHandler(w http.ResponseWriter, r *http.Request) (string, error) 
 	ext := filepath.Ext(handler.Filename)
 	allowedExtensions := []string{".jpg", ".jpeg", ".png", ".gif"}
 	if !contains(allowedExtensions, ext) {
-		err := errors.New("Invalid file type")
+		err := errors.New("invalid file type")
 		return "", err
 	}
 

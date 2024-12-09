@@ -69,7 +69,6 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 	var imageURL string
 	if r.MultipartForm != nil && r.MultipartForm.File["file"] != nil {
 		imageURL, erri = UploadImageHandler(w, r)
-		fmt.Println(formData.Errors)
 		if erri != nil {
 			formData.Errors["Image"] = erri.Error()
 		}

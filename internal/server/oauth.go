@@ -21,8 +21,8 @@ var (
 	googleClientSecret = "SECRET" // TODO Put googleClientSecret
 	googleRedirectURL  = "https://localhost:8080/auth/google/callback"
 
-	GitHubclientID     = "Ov23liskj2fqLbgNMufM"                     // TODO Put GitHubclientID
-	GitHubclientSecret = "f2206cdd5dece7e17bc22d5d335d30bff9ab6ea7" // TODO Put GitHubclientSecret
+	GitHubclientID     = "SECRET" // TODO Put GitHubclientID
+	GitHubclientSecret = "SECRET" // TODO Put GitHubclientSecret
 	GitHubredirectURI  = "https://localhost:8080/auth/github/callback"
 )
 
@@ -154,6 +154,10 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 			render(w, r, "login", map[string]interface{}{"Error": "You are banned", "email": email})
 			return
 		}
+		if user.Provider != "google" {
+			render(w, r, "login", map[string]interface{}{"Error": "Email already used by another provider", "email": email})
+			return
+		}
 
 		userID := shared.ParseUUID(shared.GenerateUUID())
 
@@ -194,6 +198,7 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		Role:         "user",
 		CreationDate: time.Now(),
 		UserId:       shared.ParseUUID(shared.GenerateUUID()),
+		Provider:     "google",
 	}
 	err = s.db.CreateUser(user)
 	if err != nil {
@@ -298,7 +303,7 @@ func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Extract user details
-	email, emailOk := userInfo["email"].(string)
+	_, emailOk := userInfo["email"].(string)
 	username, usernameOk := userInfo["login"].(string)
 
 	if !usernameOk || username == "" {
@@ -328,6 +333,10 @@ func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 		if user.Role == "ban" {
 			render(w, r, "login", map[string]interface{}{"Error": "You are banned", "email": email})
+			return
+		}
+		if user.Provider != "github" {
+			render(w, r, "login", map[string]interface{}{"Error": "Email already used by another provider", "email": email})
 			return
 		}
 
@@ -367,6 +376,7 @@ func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		Role:         "user",
 		CreationDate: time.Now(),
 		UserId:       shared.ParseUUID(shared.GenerateUUID()),
+		Provider:     "github",
 	}
 	err = s.db.CreateUser(user)
 	if err != nil {
