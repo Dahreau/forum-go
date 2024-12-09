@@ -298,19 +298,18 @@ func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Extract user details
-	email, emailOk := userInfo["email"].(string)
+	email, _ := userInfo["email"].(string)
 	username, usernameOk := userInfo["login"].(string)
 
 	if !usernameOk || username == "" {
 		http.Error(w, "Failed to retrieve username", http.StatusInternalServerError)
 		return
 	}
-	email, errMail := getMail(accessToken)
-	log.Println(email, emailOk, errMail)
-	if !emailOk || email == "" {
-		// If no email exists, use the GitHub username as a fallback for account uniqueness
-		email = fmt.Sprintf("%s@github.local", username) // Fake email to ensure unique account creation
-	}
+	//email, errMail := getMail(accessToken)
+	//if !emailOk || email == "" {
+	//	// If no email exists, use the GitHub username as a fallback for account uniqueness
+	//	email = fmt.Sprintf("%s@github.local", username) // Fake email to ensure unique account creation
+	//}
 
 	// Check if the email already exists in the database
 	IsUnique, err := s.db.FindEmailUser(email)
