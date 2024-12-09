@@ -30,6 +30,9 @@ var (
 ///////////////////////////// GOOGLE /////////////////////////////
 //////////////////////////////////////////////////////////////////
 
+// handles the Google login process by constructing a URL for Google OAuth2 authentication. It includes
+// the client ID, redirect URL, response type, scope, and state parameters in the URL. Finally, it
+// redirects the user to this URL using an HTTP temporary redirect response.
 func (s *Server) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
 	url := "https://accounts.google.com/o/oauth2/auth?client_id=" + googleClientID +
 		"&redirect_uri=" + googleRedirectURL +
@@ -42,11 +45,13 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	code := r.URL.Query().Get("code")
 	if code == "" {
 		http.Error(w, "Authorization code missing", http.StatusBadRequest)
-		log.Println("Authorization code missing")
 		return
 	}
 
 	// Exchange the authorization code for an access token
+	// Making an HTTP POST request to the Google OAuth2 token endpoint to exchange an
+	// authorization code for an access token. It is sending the client ID, client secret, redirect URI,
+	// grant type, and authorization code as form data in the request.
 	tokenResp, err := http.PostForm("https://oauth2.googleapis.com/token", url.Values{
 		"client_id":     {googleClientID},
 		"client_secret": {googleClientSecret},
@@ -56,7 +61,6 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	})
 	if err != nil {
 		http.Error(w, "Exchanging the token failed : "+err.Error(), http.StatusInternalServerError)
-		log.Println("HTTP POST error when exchanging the token :", err)
 		return
 	}
 	defer tokenResp.Body.Close()
@@ -64,7 +68,6 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	// Check the HTTP status
 	if tokenResp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(tokenResp.Body)
-		log.Printf("Error exchanging token: %s", body)
 		http.Error(w, "Error exchanging token", http.StatusInternalServerError)
 		return
 	}
@@ -73,40 +76,40 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	var tokenData map[string]interface{}
 	if err := json.NewDecoder(tokenResp.Body).Decode(&tokenData); err != nil {
 		http.Error(w, "Error parsing the token : "+err.Error(), http.StatusInternalServerError)
-		log.Println("JSON error when parsing the token :", err)
 		return
 	}
-	log.Printf("JSON token response: %+v\n", tokenData)
 
 	// Verify that the access token is present
 	accessToken, ok := tokenData["access_token"]
 	if !ok || accessToken == nil {
 		http.Error(w, "Access token missing or invalid", http.StatusInternalServerError)
-		log.Println("Access token missing or invalid in the JSON response")
 		return
 	}
 
 	accessTokenStr, ok := accessToken.(string)
 	if !ok {
 		http.Error(w, "Access token is not a valid string", http.StatusInternalServerError)
-		log.Println("Access token is not a valid string")
 		return
 	}
 
-	// Use the access token to fetch user information
+	// Use the access token to fetch user information creating a new HTTP GET request
+	// to the Google OAuth2 userinfo endpoint with a nil request body. It then sets the
+	// Authorization header with the access token retrieved as a string.
+
 	req, err := http.NewRequest("GET", "https://www.googleapis.com/oauth2/v2/userinfo", nil)
 	if err != nil {
 		http.Error(w, "Error creating user request : "+err.Error(), http.StatusInternalServerError)
-		log.Println("HTTP GET error when creating the user request :", err)
 		return
 	}
 	req.Header.Set("Authorization", "Bearer "+accessTokenStr)
 
+	// Create an HTTP client to send requests. An HTTP client is used to send requests to a server and receive responses.
+	// It manages the connection and handles the communication over the HTTP protocol.
 	client := &http.Client{}
+	// The Do method executes the request and returns the response or an error.
 	resp, err := client.Do(req)
 	if err != nil {
-		http.Error(w, "Error fetching user information : "+err.Error(), http.StatusInternalServerError)
-		log.Println("HTTP GET error when fetching user information :", err)
+		http.Error(w, "Error fetching user information: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 	defer resp.Body.Close()
@@ -126,6 +129,7 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("JSON error when parsing the user information :", err)
 		return
 	}
+	log.Printf("User information: %+v\n", userInfo)
 
 	// Fetch the user's email and name
 	email := userInfo["email"].(string)
@@ -135,7 +139,6 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	IsUnique, err := s.db.FindEmailUser(email)
 	if err != nil {
 		http.Error(w, "Error checking the user : "+err.Error(), http.StatusInternalServerError)
-		log.Println("Error checking the user :", err)
 		return
 	}
 
@@ -144,16 +147,11 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		user, err := s.db.FindUserByEmail(email)
 		if err != nil {
 			http.Error(w, "Error fetching the user : "+err.Error(), http.StatusInternalServerError)
-			log.Println("Error fetching the user :", err)
 			return
 		}
 
 		if user.Role == "ban" {
 			render(w, r, "login", map[string]interface{}{"Error": "You are banned", "email": email})
-			return
-		}
-		if user.Provider != "google" {
-			render(w, r, "login", map[string]interface{}{"Error": "Email already used by another provider", "email": email})
 			return
 		}
 
@@ -175,18 +173,12 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		http.SetCookie(w, &cookie)
-
 		// Redirect the user to the home page
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
-	// If the email is unique, create a new user
-	log.Println("The email doesn't exist in the database")
-
-	// Generate a random password
 	password := shared.GenerateUUID().String()
-
 	// Hash the password
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -202,7 +194,6 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		Role:         "user",
 		CreationDate: time.Now(),
 		UserId:       shared.ParseUUID(shared.GenerateUUID()),
-		Provider:     "google",
 	}
 	err = s.db.CreateUser(user)
 	if err != nil {
@@ -210,7 +201,6 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.users = append(s.users, user)
-
 	userID := shared.ParseUUID(shared.GenerateUUID())
 
 	// Create a session for the user
@@ -229,7 +219,6 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.SetCookie(w, &cookie)
-
 	// Redirect the user to the home page
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
@@ -243,7 +232,6 @@ func (s *Server) GithubLoginHandler(w http.ResponseWriter, r *http.Request) {
 	authURL := "https://github.com/login/oauth/authorize?client_id=" + GitHubclientID +
 		"&redirect_uri=" + url.QueryEscape(GitHubredirectURI) +
 		"&scope=user:email"
-
 	http.Redirect(w, r, authURL, http.StatusTemporaryRedirect)
 }
 
@@ -310,6 +298,7 @@ func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Extract user details
+	email, emailOk := userInfo["email"].(string)
 	username, usernameOk := userInfo["login"].(string)
 
 	if !usernameOk || username == "" {
@@ -317,8 +306,8 @@ func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	email, errMail := getMail(accessToken)
-	log.Println(email, errMail)
-	if email == "" {
+	log.Println(email, emailOk, errMail)
+	if !emailOk || email == "" {
 		// If no email exists, use the GitHub username as a fallback for account uniqueness
 		email = fmt.Sprintf("%s@github.local", username) // Fake email to ensure unique account creation
 	}
@@ -339,10 +328,6 @@ func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 		if user.Role == "ban" {
 			render(w, r, "login", map[string]interface{}{"Error": "You are banned", "email": email})
-			return
-		}
-		if user.Provider != "github" {
-			render(w, r, "login", map[string]interface{}{"Error": "Email already used by another provider", "email": email})
 			return
 		}
 
@@ -382,7 +367,6 @@ func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		Role:         "user",
 		CreationDate: time.Now(),
 		UserId:       shared.ParseUUID(shared.GenerateUUID()),
-		Provider:     "github",
 	}
 	err = s.db.CreateUser(user)
 	if err != nil {
@@ -441,6 +425,5 @@ func getMail(accessToken string) (string, error) {
 			}
 		}
 	}
-
 	return "", fmt.Errorf("no primary email found")
 }
