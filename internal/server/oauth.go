@@ -17,13 +17,8 @@ import (
 )
 
 var (
-	googleClientID     = "SECRET" // TODO Put googleClientID
-	googleClientSecret = "SECRET" // TODO Put googleClientSecret
-	googleRedirectURL  = "https://localhost:8080/auth/google/callback"
-
-	GitHubclientID     = "SECRET" // TODO Put GitHubclientID
-	GitHubclientSecret = "SECRET" // TODO Put GitHubclientSecret
-	GitHubredirectURI  = "https://localhost:8080/auth/github/callback"
+	googleRedirectURL = "https://localhost:8080/auth/google/callback"
+	GitHubredirectURI = "https://localhost:8080/auth/github/callback"
 )
 
 //////////////////////////////////////////////////////////////////
@@ -34,6 +29,8 @@ var (
 // the client ID, redirect URL, response type, scope, and state parameters in the URL. Finally, it
 // redirects the user to this URL using an HTTP temporary redirect response.
 func (s *Server) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
+	googleClientID := shared.GetEnv("googleClientID")
+
 	url := "https://accounts.google.com/o/oauth2/auth?client_id=" + googleClientID +
 		"&redirect_uri=" + googleRedirectURL +
 		"&response_type=code&scope=email%20profile&state=state"
@@ -41,6 +38,8 @@ func (s *Server) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
+	googleClientID := shared.GetEnv("googleClientID")
+	googleClientSecret := shared.GetEnv("googleClientSecret")
 	// Gets the authorization code from the query string
 	code := r.URL.Query().Get("code")
 	if code == "" {
@@ -234,6 +233,7 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 // GithubLoginHandler initiates the GitHub OAuth flow.
 func (s *Server) GithubLoginHandler(w http.ResponseWriter, r *http.Request) {
+	GitHubclientID := shared.GetEnv("GitHubClientID")
 	authURL := "https://github.com/login/oauth/authorize?client_id=" + GitHubclientID +
 		"&redirect_uri=" + url.QueryEscape(GitHubredirectURI) +
 		"&scope=user:email"
@@ -242,6 +242,8 @@ func (s *Server) GithubLoginHandler(w http.ResponseWriter, r *http.Request) {
 
 // GithubCallbackHandler handles the callback from GitHub.
 func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
+	GitHubclientID := shared.GetEnv("GitHubClientID")
+	GitHubclientSecret := shared.GetEnv("GitHubClientSecret")
 	code := r.URL.Query().Get("code")
 	if code == "" {
 		http.Error(w, "Authorization code is missing", http.StatusBadRequest)

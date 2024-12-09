@@ -3,14 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
+	"forum-go/internal/server"
+	"forum-go/internal/shared"
+	"forum-go/security"
 	"log"
 	"net/http"
 	"os/signal"
 	"syscall"
 	"time"
-
-	"forum-go/internal/server"
-	"forum-go/security"
 )
 
 func gracefulShutdown(apiServer *http.Server) {
@@ -45,10 +45,15 @@ func main() {
 
 	go gracefulShutdown(server)
 
+	err := shared.LoadEnv(".env")
+	if err != nil {
+		log.Fatalf("error loading .env file: %v", err)
+	}
+
 	fmt.Println("Server started on port", server.Addr)
 	fmt.Println("https://localhost:8080")
 	// err := server.ListenAndServe()
-	err := server.ListenAndServeTLS("./cert.pem", "./key.pem")
+	err = server.ListenAndServeTLS("./cert.pem", "./key.pem")
 	if err != nil && err != http.ErrServerClosed {
 		panic(fmt.Sprintf("http server error: %s", err))
 	}
