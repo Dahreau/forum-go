@@ -21,8 +21,8 @@ var (
 	googleClientSecret = "SECRET" // TODO Put googleClientSecret
 	googleRedirectURL  = "https://localhost:8080/auth/google/callback"
 
-	GitHubclientID     = "SECRET" // TODO Put GitHubclientID
-	GitHubclientSecret = "SECRET" // TODO Put GitHubclientSecret
+	GitHubclientID     = "Ov23liskj2fqLbgNMufM"                     // TODO Put GitHubclientID
+	GitHubclientSecret = "f2206cdd5dece7e17bc22d5d335d30bff9ab6ea7" // TODO Put GitHubclientSecret
 	GitHubredirectURI  = "https://localhost:8080/auth/github/callback"
 )
 
@@ -298,18 +298,19 @@ func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Extract user details
-	email, _ := userInfo["email"].(string)
+	email, emailOk := userInfo["email"].(string)
 	username, usernameOk := userInfo["login"].(string)
 
 	if !usernameOk || username == "" {
 		http.Error(w, "Failed to retrieve username", http.StatusInternalServerError)
 		return
 	}
-	//email, errMail := getMail(accessToken)
-	//if !emailOk || email == "" {
-	//	// If no email exists, use the GitHub username as a fallback for account uniqueness
-	//	email = fmt.Sprintf("%s@github.local", username) // Fake email to ensure unique account creation
-	//}
+	email, errMail := getMail(accessToken)
+	if (errMail != nil) && !emailOk || email == "" {
+		errMsg := fmt.Sprintf("Error occured :%s %s", email, errMail)
+		render(w, r, "login", map[string]interface{}{"Error": errMsg})
+		return
+	}
 
 	// Check if the email already exists in the database
 	IsUnique, err := s.db.FindEmailUser(email)
