@@ -66,7 +66,7 @@ if (btnResetFilters) {
   btnResetFilters.onclick = function () {
     Array.from(selectedCategories.children).forEach((category) => {
       removeCategory(
-        category.id.split("-")[1],
+        category.id.replace("selected-", ""),
         category.textContent.replace("×", "").trim()
       );
     });
