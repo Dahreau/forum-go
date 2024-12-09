@@ -34,6 +34,7 @@ func (s *Server) PostCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
+	s.categories = append(s.categories, models.Category{Name: category})
 	http.Redirect(w, r, "/categories", http.StatusSeeOther)
 }
 

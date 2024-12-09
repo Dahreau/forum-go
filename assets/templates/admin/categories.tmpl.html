@@ -9,8 +9,8 @@
       href="https://fonts.googleapis.com/css2?family=Mina:wght@400;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./assets/css/global.css" />
-    <link rel="stylesheet" href="./assets/css/header.css" />
+    <link rel="stylesheet" href="/assets/css/global.css" />
+    <link rel="stylesheet" href="/assets/css/header.css" />
     <title>Aniverse Categories</title>
   </head>
 
@@ -72,8 +72,8 @@
           </button>
         </form>
         <!-- <div class="logout-button">
-              <a href="#" class="logout-link">Log out</a>
-          </div> -->
+          <a href="#" class="logout-link">Log out</a>
+        </div> -->
         {{ if eq .User.Role "admin" }}
         <a class="button" href="/adminPanel">Admin Panel</a>
         {{ end }} {{ else }}
@@ -84,6 +84,9 @@
       </div>
     </header>
     <div class="categories-wrapper">
+      {{ if .Error }}
+      <div style="color: red; margin-bottom: 20px">{{ .Error }}</div>
+      {{ end }}
       <form action="/categories/add" method="post">
         <input type="text" name="categoryName" placeholder="Category Name" />
         <button class="button">Add Category</button>
@@ -122,9 +125,6 @@
         </div>
         {{ end }}
       </div>
-      {{ if .Error }}
-      <div style="color: red; margin-bottom: 20px">{{ .Error }}</div>
-      {{ end }}
     </div>
   </body>
 </html>
