@@ -16,11 +16,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var (
-	googleRedirectURL = "https://localhost:8080/auth/google/callback"
-	GitHubredirectURI = "https://localhost:8080/auth/github/callback"
-)
-
 //////////////////////////////////////////////////////////////////
 ///////////////////////////// GOOGLE /////////////////////////////
 //////////////////////////////////////////////////////////////////
@@ -30,6 +25,7 @@ var (
 // redirects the user to this URL using an HTTP temporary redirect response.
 func (s *Server) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
 	googleClientID := shared.GetEnv("googleClientID")
+	googleRedirectURL := shared.GetEnv("googleRedirectURL")
 
 	url := "https://accounts.google.com/o/oauth2/auth?client_id=" + googleClientID +
 		"&redirect_uri=" + googleRedirectURL +
@@ -40,6 +36,7 @@ func (s *Server) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
 func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	googleClientID := shared.GetEnv("googleClientID")
 	googleClientSecret := shared.GetEnv("googleClientSecret")
+	googleRedirectURL := shared.GetEnv("googleRedirectURL")
 	// Gets the authorization code from the query string
 	code := r.URL.Query().Get("code")
 	if code == "" {
@@ -234,6 +231,7 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 // GithubLoginHandler initiates the GitHub OAuth flow.
 func (s *Server) GithubLoginHandler(w http.ResponseWriter, r *http.Request) {
 	GitHubclientID := shared.GetEnv("GitHubClientID")
+	GitHubredirectURI := shared.GetEnv("GitHubredirectURI")
 	authURL := "https://github.com/login/oauth/authorize?client_id=" + GitHubclientID +
 		"&redirect_uri=" + url.QueryEscape(GitHubredirectURI) +
 		"&scope=user:email"
@@ -244,6 +242,7 @@ func (s *Server) GithubLoginHandler(w http.ResponseWriter, r *http.Request) {
 func (s *Server) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	GitHubclientID := shared.GetEnv("GitHubClientID")
 	GitHubclientSecret := shared.GetEnv("GitHubClientSecret")
+	GitHubredirectURI := shared.GetEnv("GitHubredirectURI")
 	code := r.URL.Query().Get("code")
 	if code == "" {
 		http.Error(w, "Authorization code is missing", http.StatusBadRequest)
