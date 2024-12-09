@@ -57,7 +57,7 @@
             />
           </svg>
         </a>
-        <form method="post" action="/logout">
+        <form method="post" class="logout-form" action="/logout">
           <button class="logout-button button" type="submit">
             <span>Log out</span
             ><svg
@@ -140,6 +140,7 @@
 
   .categories {
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
     gap: 20px;
     margin-bottom: 20px;
@@ -203,7 +204,7 @@
     background-color: #0056b3;
   }
 
-  form {
+  form:not(.logout-form) {
     display: flex;
     gap: 8px;
     width: 100%;

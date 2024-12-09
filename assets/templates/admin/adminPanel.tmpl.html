@@ -93,24 +93,25 @@
       </div>
     </header>
     <div class="main-content">
-      <div class="Admin-buttons"><a href="/categories" class="button register">Add Category</a>
+      <div class="Admin-buttons">
+        <a href="/categories" class="button register">Add Category</a>
         <a href="/adminPanel/modrequests" class="button register">Requests</a>
         <a href="/adminPanel/reports" class="button register">Reports</a>
       </div>
-        <div class="user-section global-box">
+      <div class="user-section global-box">
         <h1>Users List</h1>
         <div class="userlist scroll">
           <table>
             <tr>
               <th>Username</th>
-              <th>Email</th>
+              <th class="th-email">Email</th>
               <th>Role</th>
               <th>Actions</th>
             </tr>
             {{ range .users }}
             <tr>
               <td>{{ .Username }}</td>
-              <td>{{ .Email }}</td>
+              <td class="td-email">{{ .Email }}</td>
               <td>{{ .Role }}</td>
               <td class="actions-td">
                 {{ if not (eq .UserId $.User.UserId) }}

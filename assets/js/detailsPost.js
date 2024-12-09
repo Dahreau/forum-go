@@ -13,7 +13,7 @@ window.addEventListener("load", () => {
 
 // Ajuste la hauteur du textarea à l'affichage pour afficher tout le contenu sans scroll
 document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".comment-text").forEach((textarea) => {
+  document.querySelectorAll("textarea").forEach((textarea) => {
     textarea.style.height = "auto"; // Reset the height to auto
     textarea.style.height = textarea.scrollHeight + "px"; // Set it to the scrollHeight
   });

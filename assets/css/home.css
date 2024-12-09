@@ -25,8 +25,9 @@
 
 .tabs {
     display: flex;
-    justify-content: center;
-    gap: 32px;
+    justify-content: space-between;
+    width: 450px;
+    text-wrap: nowrap;
     margin-bottom: 20px;
     padding: 1px 32px;
     background-color: rgb(16, 9, 27);
@@ -244,8 +245,9 @@
 }
 
 .report {
-    padding: 0.375rem 0.75rem;
     border: none;
+    display: flex;
+    align-items: center;
     border-radius: 12px;
     background: rgba(51, 10, 94, 80%);
     color: #FF948A;
@@ -264,6 +266,9 @@
 
 .delete-button {
     padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    height: 100%;
     border: none;
     border-radius: 12px;
     stroke: #FF948A;
@@ -281,22 +286,31 @@
 }
 
 
-
-@media (max-width: 768px) {
+@media (max-width:900px){
     .main-content {
         flex-direction: column;
         gap: 16px;
         align-items: center;
     }
+    .filters-section {
+        width: 75%;
+    }
+}
+@media (max-width: 768px) {
 
     .filters-section {
         width: 95%;
     }
-
     .post-list {
         width: 100%;
     }
+    .tabs{
+        width: 70%;
+    }
 
+    .post-actions{
+        gap: 8px;
+    }
     .Newpost-button {
         bottom: 2rem;
         right: 4rem;
@@ -305,6 +319,10 @@
         span {
             display: none;
         }
+    }
+    .tab{
+        font-size: 1rem;
+        padding: 4px 8px;
     }
 
 }

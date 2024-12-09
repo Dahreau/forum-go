@@ -1,5 +1,6 @@
 .user-section {
-    width: 95vw;
+    width: 100%;
+    box-sizing: border-box;
     padding: 16px;
     height: 80%;
     display: flex;
@@ -11,13 +12,16 @@
 }
 
 .userlist {
+    box-sizing: border-box;
     display: flex;
+    justify-content: center;
     flex-direction: column;
-    overflow: scroll;
+    overflow: overlay;
     height: auto;
 }
 .main-content{
     display: flex;
+    box-sizing: border-box;
     flex-direction: column;
     gap: 16px;
 }
@@ -65,6 +69,7 @@ tr:not(:last-child)>td, tr:not(:last-child)>th {
 }
 
 table {
+    box-sizing: border-box;
     border-radius: 16px;
     border: 1px solid #7789FF;
     border-collapse: separate;
@@ -83,19 +88,25 @@ table {
 }
 
 @media (max-width: 768px) {
+    .main-content{
+        width: 100%;
+    }
+    .th-email,.td-email{
+        display: none;
+    }
+    .actions-td{
+        flex-wrap: wrap;
+        gap:4px;
+    }
     .user-section {
-        width: 95vw;
-        padding: 16px;
+        width: 100%;
         height: 80%;
         display: flex;
         flex-direction: column;
+        padding: 1px;
     }
-
-    .userlist {
-        display: flex;
-        flex-direction: column;
-        overflow: scroll;
-        height: auto;
+    td,th{
+        padding: 4px;
     }
 
 

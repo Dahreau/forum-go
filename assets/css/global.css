@@ -7,15 +7,13 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
+    box-sizing: border-box;
     width: 100%;
     display: flex;
     flex-direction: column;
     font-family: 'Manrope', sans-serif;
     /* background-color: #10091B; */
     color: #FFFFFF;
-}
-
-body {
     gap: 16px;
     align-items: center;
     background-image: url(/assets/img/13.png);
@@ -23,8 +21,8 @@ body {
     background-position: center;
     background-attachment: fixed;
     background-repeat: no-repeat;
-    overflow-x: hidden;
     overflow-y: overlay;
+    overflow-x: hidden;
 }
 ::selection {
     background: #FFC4FB;
@@ -64,6 +62,7 @@ body {
 }
 .content-wrapper {
     display: flex;
+    box-sizing: border-box;
     flex: 1;
     flex-direction: column;
     align-items: center;
@@ -337,6 +336,17 @@ a {
 
     p {
         font-size: 1rem;
+    }
+
+    .button {
+        padding: 8px;
+        font-size: 16px;
+    }
+    .content-wrapper{
+        padding: 0;
+    }
+    .footer-text{
+        font-size: 16px;
     }
 }
 
