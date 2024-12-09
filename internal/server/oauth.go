@@ -67,7 +67,7 @@ func (s *Server) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Check the HTTP status
 	if tokenResp.StatusCode != http.StatusOK {
-		body, _ := io.ReadAll(tokenResp.Body)
+		_, _ = io.ReadAll(tokenResp.Body)
 		http.Error(w, "Error exchanging token", http.StatusInternalServerError)
 		return
 	}
