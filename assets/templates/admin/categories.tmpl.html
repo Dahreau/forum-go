@@ -85,7 +85,7 @@
     </header>
     <div class="categories-wrapper">
       {{ if .Error }}
-      <div style="color: red; margin-bottom: 20px">{{ .Error }}</div>
+      <div class="error-message">{{ .Error }}</div>
       {{ end }}
       <form action="/categories/add" method="post">
         <input type="text" name="categoryName" placeholder="Category Name" />
