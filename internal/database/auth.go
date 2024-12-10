@@ -7,13 +7,14 @@ import (
 )
 
 func (s *service) CreateUser(User models.User) error {
-
+	// Create user in database with hashed password
 	query := "INSERT INTO User (user_id, email, username, password, role, creation_date, session_id, session_expire,provider) VALUES (?, ?, ?, ?, ?, ?,?,?,?)"
 	_, err := s.db.Exec(query, User.UserId, User.Email, User.Username, User.Password, User.Role, User.CreationDate, User.SessionId, User.SessionExpire, User.Provider)
 	return err
 }
 
 func (s *service) GetUsers() ([]models.User, error) {
+	// Get all users
 	query := "SELECT * FROM User"
 	rows, err := s.db.Query(query)
 	if err != nil {
@@ -32,6 +33,7 @@ func (s *service) GetUsers() ([]models.User, error) {
 }
 
 func (s *service) GetUser(email, password string) (models.User, error) {
+	// Get user by email and password
 	query := "SELECT * FROM User WHERE email=?"
 	row := s.db.QueryRow(query, email)
 	var user models.User
@@ -50,6 +52,7 @@ func (s *service) GetUser(email, password string) (models.User, error) {
 }
 
 func (s *service) FindUsername(username string) (bool, error) {
+	// Check if username exists
 	query := "SELECT * FROM User WHERE username=?"
 	row := s.db.QueryRow(query, username)
 	var user models.User
@@ -61,6 +64,7 @@ func (s *service) FindUsername(username string) (bool, error) {
 }
 
 func (s *service) FindEmailUser(email string) (bool, error) {
+	// Check if email exists
 	query := "SELECT * FROM User WHERE email=?"
 	row := s.db.QueryRow(query, email)
 	var user models.User
@@ -72,6 +76,7 @@ func (s *service) FindEmailUser(email string) (bool, error) {
 }
 
 func (s *service) FindUserByEmail(email string) (models.User, error) {
+	// Find user by email
 	query := "SELECT * FROM User WHERE email=?"
 	row := s.db.QueryRow(query, email)
 	var user models.User
@@ -83,6 +88,7 @@ func (s *service) FindUserByEmail(email string) (models.User, error) {
 }
 
 func (s *service) FindUserCookie(cookie string) (models.User, error) {
+	// Find user by cookie
 	query := "SELECT * FROM User WHERE session_id=?"
 	row := s.db.QueryRow(query, cookie)
 	var user models.User
@@ -99,12 +105,14 @@ func (s *service) DeleteUser(id string) error {
 }
 
 func (s *service) UpdateUser(user models.User) error {
+	// Update user
 	query := "UPDATE User SET email=?, username=?, password=?, role=?, session_id=?, session_expire=? WHERE user_id=?"
 	_, err := s.db.Exec(query, user.Email, user.Username, user.Password, user.Role, user.SessionId, user.SessionExpire, user.UserId)
 	return err
 }
 
 func (s *service) GetBanUsers() ([]models.User, error) {
+	// Get all banned users
 	query := "select * from user where role=ban"
 	rows, err := s.db.Query(query)
 	if err != nil {

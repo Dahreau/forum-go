@@ -5,6 +5,7 @@ import (
 )
 
 func (s *service) GetComments(post models.Post) ([]models.Comment, error) {
+	// Query to get all comments for a post
 	rows, err := s.db.Query(`
         SELECT c.comment_id, c.content, c.creation_date, c.user_id, c.post_id, u.username
         FROM Comment c
@@ -23,11 +24,11 @@ func (s *service) GetComments(post models.Post) ([]models.Comment, error) {
 		if err != nil {
 			return nil, err
 		}
-		// Formater la date après récupération
+		// Format creation date
 		comment.FormattedCreationDate = comment.CreationDate.Format("02/01/06 - 15:04")
 		comments = append(comments, comment)
 	}
-	// Récupère les likes des posts
+	// Get user likes for each comment
 	for i := range comments {
 		userlikes, err := s.GetCommentLikes(comments[i].CommentId)
 		if err != nil {
@@ -71,6 +72,7 @@ func (s *service) DeleteComment(id string) error {
 }
 
 func (s *service) EditComment(id, content string) error {
+	// Query to update comment content
 	query := "UPDATE Comment SET content=? WHERE comment_id=?"
 	_, err := s.db.Exec(query, content, id)
 	return err

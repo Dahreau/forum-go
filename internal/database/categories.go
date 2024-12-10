@@ -6,6 +6,7 @@ import (
 )
 
 func (s *service) GetCategories() ([]models.Category, error) {
+	// Get all categories
 	rows, err := s.db.Query("SELECT * FROM Category")
 	if err != nil {
 		return nil, err
@@ -25,6 +26,7 @@ func (s *service) GetCategories() ([]models.Category, error) {
 }
 
 func (s *service) AddCategory(name string) error {
+	// Create a new category
 	category := models.Category{
 		CategoryId: shared.ParseUUID(shared.GenerateUUID()),
 		Name:       name,
@@ -67,6 +69,7 @@ func (s *service) DeleteCategory(id string) error {
 }
 
 func (s *service) EditCategory(id, name string) error {
+	// Update an existing category
 	query := "UPDATE Category SET name=? WHERE category_id=?"
 	_, err := s.db.Exec(query, name, id)
 	return err

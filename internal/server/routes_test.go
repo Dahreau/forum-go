@@ -8,6 +8,7 @@ import (
 )
 
 func TestHandler(t *testing.T) {
+	// Create a new server
 	s := &Server{}
 	server := httptest.NewServer(http.HandlerFunc(s.HomePageHandler))
 	defer server.Close()

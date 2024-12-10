@@ -8,7 +8,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
-	"sort" // Import pour trier les posts
+	"sort" 
 	"strconv"
 	"strings"
 	"time"
@@ -21,12 +21,12 @@ func (s *Server) GetPostsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Tri des posts par date de création dans l'ordre décroissant
+	// Sorting posts by creation date in descending order
 	sort.Slice(posts, func(i, j int) bool {
 		return posts[i].CreationDate.After(posts[j].CreationDate)
 	})
 
-	// Rendu des posts triés
+	// Render sorted posts
 	render(w, r, "../posts", map[string]interface{}{"Posts": posts})
 }
 
@@ -139,6 +139,7 @@ func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) EditPostHandler(w http.ResponseWriter, r *http.Request) {
+	// Edit a post
 	PostId := r.FormValue("PostId")
 	UpdatedContent := r.FormValue("UpdatedContent")
 
@@ -151,6 +152,7 @@ func (s *Server) EditPostHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GetNewPostHandler(w http.ResponseWriter, r *http.Request) {
+	// GetNewPostHandler handles the new post page
 	categories, err := s.db.GetCategories()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -164,6 +166,7 @@ func (s *Server) GetNewPostHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GetPostHandler(w http.ResponseWriter, r *http.Request) {
+	// GetPostHandler handles the post page
 	vars := strings.Split(r.URL.Path, "/")
 	if len(vars) < 3 {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
@@ -191,6 +194,7 @@ func (s *Server) GetPostHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func IsUniquePost(posts []models.Post, post string) bool {
+	// Check if the post is unique
 	for _, existingPost := range posts {
 		if strings.EqualFold(existingPost.PostId, post) {
 			return false
@@ -202,6 +206,7 @@ func IsUniquePost(posts []models.Post, post string) bool {
 const MaxChar = 1000
 
 func ValidatePostChar(content string) bool {
+	// Validate post character length
 	if len(content) > MaxChar || len(content) == 0 {
 		return true
 	}
@@ -209,9 +214,11 @@ func ValidatePostChar(content string) bool {
 }
 
 func ValidateTitle(title string) bool {
+	// Validate title character length
 	return len(title) == 0
 }
 
 func ValidateCategory(categories []string) bool {
+	// Validate categories
 	return len(categories) < 1
 }

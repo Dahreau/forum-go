@@ -7,6 +7,7 @@ import (
 )
 
 func (s *Server) GetCategoriesHandler(w http.ResponseWriter, r *http.Request) {
+	// Get all categories
 	if !s.isLoggedIn(r) || !IsAdmin(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -20,6 +21,7 @@ func (s *Server) GetCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) PostCategoriesHandler(w http.ResponseWriter, r *http.Request) {
+	// Create a new category
 	if !s.isLoggedIn(r) || !IsAdmin(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -39,6 +41,7 @@ func (s *Server) PostCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) DeleteCategoriesHandler(w http.ResponseWriter, r *http.Request) {
+	// Delete a category
 	if !s.isLoggedIn(r) || !IsAdmin(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -59,6 +62,7 @@ func (s *Server) DeleteCategoriesHandler(w http.ResponseWriter, r *http.Request)
 }
 
 func (s *Server) EditCategoriesHandler(w http.ResponseWriter, r *http.Request) {
+	// Edit a category
 	if !s.isLoggedIn(r) || !IsAdmin(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -84,6 +88,7 @@ func (s *Server) EditCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func IsUniqueCategory(categories []models.Category, category string) bool {
+	// Check if the category is unique
 	for _, existingCategory := range categories {
 		if strings.EqualFold(existingCategory.Name, category) {
 			return false

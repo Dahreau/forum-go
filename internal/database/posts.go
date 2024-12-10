@@ -102,6 +102,7 @@ func (s *service) GetPosts() ([]models.Post, error) {
 }
 
 func (s *service) GetPost(id string) (models.Post, error) {
+	// Query to retrieve a post by ID
 	post := models.Post{}
 	imageUrl := sql.NullString{}
 	user := models.User{}
@@ -165,12 +166,14 @@ func (s *service) GetPost(id string) (models.Post, error) {
 }
 
 func (s *service) AddPost(post models.Post, categories []models.Category) error {
+	// Insert a new post
 	query := "INSERT INTO Post (post_id,title,content,user_id,creation_date,image_url) VALUES (?,?,?,?,?,?)"
 	_, err := s.db.Exec(query, post.PostId, post.Title, post.Content, post.UserID, post.CreationDate, post.ImageURL)
 	if err != nil {
 		return err
 	}
 	for _, category := range categories {
+		// Insert post categories
 		query = "INSERT INTO Post_Category (post_id,category_id) VALUES (?,?)"
 		_, err = s.db.Exec(query, post.PostId, category.CategoryId)
 		if err != nil {
@@ -181,12 +184,14 @@ func (s *service) AddPost(post models.Post, categories []models.Category) error 
 }
 
 func (s *service) DeletePost(id string) error {
+	// Start a transaction
 	query := "DELETE FROM Post WHERE post_id=?"
 	_, err := s.db.Exec(query, id)
 	return err
 }
 
 func (s *service) EditPost(id, content string) error {
+	// Update an existing post
 	query := "UPDATE Post SET content=? WHERE post_id=?"
 	_, err := s.db.Exec(query, content, id)
 	return err

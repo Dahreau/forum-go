@@ -8,15 +8,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const path = window.location.pathname;
 
     if (tabs.length > 0) {
-      // Définir l'onglet actif en fonction de l'URL
-      tabs.forEach((tab) => tab.classList.remove("active")); // Réinitialiser l'onglet actif
+      // Set the active tab based on the URL
+      tabs.forEach((tab) => tab.classList.remove("active")); // Reset the active tab
 
       if (path === "/created") {
         tabs[1].classList.add("active");
       } else if (path === "/liked") {
         tabs[2].classList.add("active");
       } else {
-        tabs[0].classList.add("active"); // Par défaut, "All posts"
+        tabs[0].classList.add("active"); // Default to "All posts"
       }
     }
   }
@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function addCategory() {
+  // Add the selected category to the selected categories
   const selectedOption = select.options[select.selectedIndex];
   if (selectedOption) {
     const categoryElement = document.createElement("div");
@@ -41,6 +42,7 @@ function addCategory() {
 }
 
 function removeCategory(value, text) {
+  // Remove the category from the selected categories and add it back to the select element.
   const categoryElement = document.getElementById(`selected-${value}`);
   if (categoryElement) {
     categoryElement.remove();
@@ -54,6 +56,7 @@ function removeCategory(value, text) {
 select.onchange = addCategory;
 
 function sortOptions() {
+  // Sort the options in the select element
   const options = Array.from(select.options).slice(1); // Ignore first option
   options.sort((a, b) => a.text.localeCompare(b.text));
   select.innerHTML = '<option value="">Select one or more categories</option>';
@@ -62,6 +65,7 @@ function sortOptions() {
 }
 
 const btnResetFilters = document.getElementById("btn-reset-filters");
+// Reset all selected categories
 if (btnResetFilters) {
   btnResetFilters.onclick = function () {
     Array.from(selectedCategories.children).forEach((category) => {
@@ -74,6 +78,7 @@ if (btnResetFilters) {
 }
 
 function displayPosts() {
+  // Get all posts and categories to filter by  (post-item and category-box)
   const posts = document.querySelectorAll(".post-item");
   const arrayCategories = Array.from(selectedCategories.children).map(
     (category) => category.textContent.replace("×", "").trim()

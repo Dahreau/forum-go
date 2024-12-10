@@ -7,11 +7,11 @@ window.addEventListener("load", () => {
   const scrollPosition = sessionStorage.getItem("scrollPositionComment");
   if (scrollPosition) {
     commentSection.scrollTop = scrollPosition;
-    sessionStorage.removeItem("scrollPositionComment"); // Supprime après usage
+    sessionStorage.removeItem("scrollPositionComment"); // Remove after use
   }
 });
 
-// Ajuste la hauteur du textarea à l'affichage pour afficher tout le contenu sans scroll
+// Adjust the height of the textarea on display to show all content without scrolling
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll("textarea").forEach((textarea) => {
     textarea.style.height = "auto"; // Reset the height to auto

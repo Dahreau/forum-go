@@ -12,6 +12,7 @@ import (
 )
 
 func (s *Server) GetLoginHandler(w http.ResponseWriter, r *http.Request) {
+	// Check if user is already logged in
 	if s.isLoggedIn(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -23,7 +24,7 @@ func (s *Server) PostLoginHandler(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 	user, err := s.db.GetUser(email, password)
-
+	
 	if user.UserId == "" || err != nil || user.Provider != "local" {
 		render(w, r, "login", map[string]interface{}{"Error": "Invalid email or password. Please try again.", "email": email})
 		return
@@ -74,6 +75,7 @@ func (s *Server) LogoutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GetRegisterHandler(w http.ResponseWriter, r *http.Request) {
+	// Check if user is already logged in
 	if s.isLoggedIn(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -135,6 +137,7 @@ func (s *Server) PostRegisterHandler(w http.ResponseWriter, r *http.Request) {
 	s.users = append(s.users, user)
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
+
 
 func (s *Server) DeleteUsersHandler(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path

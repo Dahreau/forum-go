@@ -6,36 +6,36 @@ import (
 	"time"
 )
 
-// Structure pour gérer les requêtes d'un client
+// Structure to manage a client's requests
 type client struct {
-	requests []time.Time // Historique des requêtes
+	requests []time.Time // Request history
 }
 
-// Map pour stocker les clients et un mutex pour la sécurité des threads
+// Map to store clients and a mutex for thread safety
 var clients = make(map[string]*client)
 var mu sync.Mutex
 
-// Paramètres de la limitation de débit
-const maxRequests = 12              // Nombre maximum de requêtes autorisées
-const timeWindow = 10 * time.Second // Intervalle de temps pour limiter les requêtes
+// Rate limiting parameters
+const maxRequests = 12              // Maximum number of allowed requests
+const timeWindow = 10 * time.Second // Time interval to limit requests
 
-// Fonction principale pour gérer les requêtes avec limitation
+// Main function to handle requests with rate limiting
 func RateLimitedHandler(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ip := r.RemoteAddr // Identifier le client par son IP
+		ip := r.RemoteAddr // Identify the client by its IP
 
-		// Verrouiller l'accès à la map des clients
+		// Lock access to the clients map
 		mu.Lock()
 		defer mu.Unlock()
 
-		// Récupérer les informations du client ou créer un nouvel enregistrement
+		// Retrieve client information or create a new record
 		c, exists := clients[ip]
 		if !exists {
 			c = &client{requests: []time.Time{}}
 			clients[ip] = c
 		}
 
-		// Nettoyer les requêtes hors de la fenêtre de temps
+		// Clean up requests outside the time window
 		now := time.Now()
 		validRequests := []time.Time{}
 		for _, t := range c.requests {
@@ -45,27 +45,27 @@ func RateLimitedHandler(next http.HandlerFunc) http.HandlerFunc {
 		}
 		c.requests = validRequests
 
-		// Vérifier si la limite de requêtes est atteinte
+		// Check if the request limit is reached
 		if len(c.requests) >= maxRequests {
 			http.Error(w, "Too Many Requests", http.StatusTooManyRequests)
 			return
 		}
 
-		// Ajouter la nouvelle requête à l'historique
+		// Add the new request to the history
 		c.requests = append(c.requests, now)
 
 		next(w, r)
 	}
 }
 
-// Nettoyage périodique des clients inactifs
+// Periodic cleanup of inactive clients
 func CleanupInactiveClients() {
 	for {
-		time.Sleep(1 * time.Minute) // Nettoyer toutes les minutes
+		time.Sleep(1 * time.Minute) // Clean up every minute
 
 		mu.Lock()
 		for ip, c := range clients {
-			// Si un client n'a pas envoyé de requêtes depuis un certain temps, on le supprime
+			// If a client has not sent requests for a certain time, delete it
 			if len(c.requests) == 0 || time.Since(c.requests[len(c.requests)-1]) > 2*timeWindow {
 				delete(clients, ip)
 			}

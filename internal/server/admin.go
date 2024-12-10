@@ -6,6 +6,7 @@ import (
 )
 
 func (s *Server) ModRequestsHandler(w http.ResponseWriter, r *http.Request) {
+	// ModRequestsHandler handles the moderator requests page
 	if !IsAdmin(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -19,6 +20,7 @@ func (s *Server) ModRequestsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GetModRequestHandler(w http.ResponseWriter, r *http.Request) {
+	// GetModRequestHandler handles the moderator request page
 	if !s.isLoggedIn(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -46,6 +48,7 @@ func (s *Server) GetModRequestHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) PostModRequestHandler(w http.ResponseWriter, r *http.Request) {
+	// PostModRequestHandler handles the moderator request form submission
 	if !s.isLoggedIn(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -64,6 +67,7 @@ func (s *Server) PostModRequestHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) AcceptRequestHandler(w http.ResponseWriter, r *http.Request) {
+	// AcceptRequestHandler handles the moderator request acceptance
 	if !IsAdmin(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -91,6 +95,7 @@ func (s *Server) AcceptRequestHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) RejectRequestHandler(w http.ResponseWriter, r *http.Request) {
+	//	RejectRequestHandler handles the moderator request rejection
 	if !IsAdmin(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -106,6 +111,7 @@ func (s *Server) RejectRequestHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GetReportsHandler(w http.ResponseWriter, r *http.Request) {
+	// GetReportsHandler handles the reports page
 	if !IsAdmin(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -127,6 +133,7 @@ func (s *Server) GetReportsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) AcceptReportHandler(w http.ResponseWriter, r *http.Request) {
+	// AcceptReportHandler handles the report acceptance
 	if !IsAdmin(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -142,6 +149,7 @@ func (s *Server) AcceptReportHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) RejectReportHandler(w http.ResponseWriter, r *http.Request) {
+	// RejectReportHandler handles the report rejection
 	if !IsAdmin(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return

@@ -76,6 +76,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 }
 
 func (s *Server) VoteHandler(w http.ResponseWriter, r *http.Request) {
+	// VoteHandler handles the voting of posts and comments
 	if !s.isLoggedIn(r) {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
@@ -171,6 +172,7 @@ func (s *Server) VoteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GetReportHandler(w http.ResponseWriter, r *http.Request) {
+	// GetReportHandler handles the report page
 	if !s.isLoggedIn(r) || (!IsAdmin(r) && !IsModerator(r)) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -193,6 +195,7 @@ func (s *Server) GetReportHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) PostReportHandler(w http.ResponseWriter, r *http.Request) {
+	// PostReportHandler handles the report creation
 	if !s.isLoggedIn(r) || (!IsAdmin(r) && !IsModerator(r)) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -212,6 +215,7 @@ func (s *Server) PostReportHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) AdminPanelHandler(w http.ResponseWriter, r *http.Request) {
+	// AdminPanelHandler handles the admin panel
 	if !s.isLoggedIn(r) || !IsAdmin(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -225,6 +229,7 @@ func (s *Server) AdminPanelHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) HomePageHandler(w http.ResponseWriter, r *http.Request) {
+	// HomePageHandler handles the home page
 	if r.URL.Path != "/" && r.URL.Path != "/created" && r.URL.Path != "/liked" {
 		s.errorHandler(w, r, http.StatusNotFound, "Page not found")
 		return
@@ -270,6 +275,7 @@ func (s *Server) AboutPageHandler(w http.ResponseWriter, r *http.Request) {
 	render(w, r, "about", nil)
 }
 func (s *Server) HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
+	// HelloWorldHandler handles the hello world page
 	resp := make(map[string]string)
 	resp["message"] = "Hello World"
 	for k, v := range r.Header {

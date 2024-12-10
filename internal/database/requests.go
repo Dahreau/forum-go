@@ -3,6 +3,7 @@ package database
 import "forum-go/internal/models"
 
 func (s *service) GetRequests() ([]models.Request, error) {
+	// Get all requests
 	rows, err := s.db.Query(`
 		SELECT r.*, u.username 
 		FROM request r 
@@ -27,6 +28,7 @@ func (s *service) GetRequests() ([]models.Request, error) {
 }
 
 func (s *service) CreateRequest(request models.Request) error {
+	// Insert a new request
 	_, err := s.db.Exec(`
 		INSERT INTO request (request_id, user_id, content, creation_date, status) 
 		VALUES (?, ?, ?, ?, ?)
@@ -35,6 +37,7 @@ func (s *service) CreateRequest(request models.Request) error {
 }
 
 func (s *service) DeleteRequest(requestId string) error {
+	// Delete a request by ID
 	_, err := s.db.Exec(`
 		DELETE FROM request WHERE request_id = ?
 	`, requestId)
@@ -42,6 +45,7 @@ func (s *service) DeleteRequest(requestId string) error {
 }
 
 func (s *service) UpdateRequestStatus(requestId, status string) error {
+	// Update the status of a request
 	_, err := s.db.Exec(`
 		UPDATE request SET status = ? WHERE request_id = ?
 	`, status, requestId)

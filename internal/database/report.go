@@ -3,6 +3,7 @@ package database
 import "forum-go/internal/models"
 
 func (s *service) CreateReport(report models.Report) error {
+	// Insert a new report
 	_, err := s.db.Exec(`
 		INSERT INTO Report (report_id, user_id, post_id, creation_date, content, reason, status) 
 		VALUES (?, ?, ?, ?, ?, ?, ?);`, report.ReportId, report.UserId, report.PostId, report.CreationDate, report.Content, report.Reason, report.Status)
@@ -10,6 +11,7 @@ func (s *service) CreateReport(report models.Report) error {
 }
 
 func (s *service) GetReports() ([]models.Report, error) {
+	// Get all reports
 	rows, err := s.db.Query(`
 		SELECT r.report_id, r.user_id, r.post_id, r.creation_date, r.content, r.reason, r.status, u.username
 		FROM Report r
@@ -36,6 +38,7 @@ func (s *service) GetReports() ([]models.Report, error) {
 }
 
 func (s *service) UpdateReportStatus(reportId, status string) error {
+	// Update the status of a report
 	_, err := s.db.Exec(`
 		UPDATE Report SET status = ? WHERE report_id = ?;`, status, reportId)
 	return err

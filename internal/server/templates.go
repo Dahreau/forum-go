@@ -7,6 +7,7 @@ import (
 )
 
 func render(w http.ResponseWriter, r *http.Request, page string, data map[string]interface{}) {
+	// render renders the template with the given data
 	t, err := template.ParseFiles("./assets/templates/" + page + ".tmpl.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

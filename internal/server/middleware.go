@@ -10,6 +10,7 @@ type contextKey string
 const contextKeyUser = contextKey("user")
 
 func (s *Server) authenticate(next http.Handler) http.Handler {
+	// Implement function : retrieve cookie value and call FindUserCookie function in database/user.go
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie(s.SESSION_ID)
 		if err != nil {

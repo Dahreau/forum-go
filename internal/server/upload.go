@@ -56,6 +56,7 @@ func UploadImageHandler(w http.ResponseWriter, r *http.Request) (string, error) 
 }
 
 func contains(slice []string, item string) bool {
+	// Check if a string is in a slice
 	for _, s := range slice {
 		if s == item {
 			return true

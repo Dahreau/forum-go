@@ -26,16 +26,16 @@ func NewServer() *http.Server {
 		fmt.Println("error cerst", err)
 	}
 
-	// Configurer les options TLS
+	// Configure TLS options
 	tlsConfig := &tls.Config{
 		Certificates: []tls.Certificate{cert},
-		MinVersion:   tls.VersionTLS12, // Force TLS v1.2 ou supérieur
-		// Configurer les suites de chiffrement (optionnel)
+		MinVersion:   tls.VersionTLS12, // Force TLS v1.2 or higher
+		// Configure cipher suites (optional)
 		CipherSuites: []uint16{
 			tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
 			tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
 		},
-		PreferServerCipherSuites: true, // Prioriser les suites de chiffrement du serveur
+		PreferServerCipherSuites: true, // Prefer server cipher suites
 	}
 
 	NewServer := &Server{

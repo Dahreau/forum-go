@@ -5,6 +5,7 @@ import (
 )
 
 func (s *service) GetActivities(user models.User) ([]models.Activity, error) {
+	// Get all activities for a user
 	activities := make([]models.Activity, 0)
 	query := `
 		SELECT 
@@ -48,18 +49,21 @@ func (s *service) GetActivities(user models.User) ([]models.Activity, error) {
 }
 
 func (s *service) CreateActivity(activity models.Activity) error {
+	// Create a new activity
 	query := "INSERT INTO Activity (activity_id, user_id, action_user_id, action_type, post_id, comment_id, creation_date, details, is_read) VALUES (?,?,?,?,?,?,?,?,?)"
 	_, err := s.db.Exec(query, activity.ActivityId, activity.UserId, activity.ActionUserId, activity.ActionType, activity.PostId, activity.CommentId, activity.CreationDate, activity.Details, &activity.IsRead)
 	return err
 }
 
 func (s *service) UpdateActivity(activity models.Activity) error {
+	// Update an existing activity
 	query := "UPDATE Activity SET user_id=?, action_user_id=?, action_type=?, post_id=?, comment_id=?, creation_date=?, details=?, is_read=? WHERE activity_id=?"
 	_, err := s.db.Exec(query, activity.UserId, activity.ActionUserId, activity.ActionType, activity.PostId, activity.CommentId, activity.CreationDate, activity.Details, activity.IsRead, activity.ActivityId)
 	return err
 }
 
 func (s *service) ReadActivites(userId string) error {
+	// Mark all activities as read
 	query := "UPDATE Activity SET is_read=1 WHERE user_id=?"
 	_, err := s.db.Exec(query, userId)
 	return err

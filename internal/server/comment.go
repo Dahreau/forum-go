@@ -60,6 +60,7 @@ func (s *Server) PostCommentHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GetCommentsHandler(w http.ResponseWriter, r *http.Request) {
+	// Get all comments
 	posts, err := s.db.GetPosts()
 	if err != nil {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
@@ -69,6 +70,7 @@ func (s *Server) GetCommentsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) DeleteCommentHandler(w http.ResponseWriter, r *http.Request) {
+	// Delete a comment
 	PostID := r.FormValue("PostId")
 	CommentID := r.FormValue("CommentId")
 	UserID := r.FormValue("UserId")
@@ -97,6 +99,7 @@ func (s *Server) DeleteCommentHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GetNewCommentHandler(w http.ResponseWriter, r *http.Request) {
+	// GetNewCommentHandler handles the new comment page
 	categories, err := s.db.GetCategories()
 	if err != nil {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
@@ -112,6 +115,7 @@ func (s *Server) GetNewCommentHandler(w http.ResponseWriter, r *http.Request) {
 const MaxCharComment = 400
 
 func ValidateCommentChar(content string) bool {
+	// Validate comment character length
 	if len(content) > MaxCharComment || len(content) == 0 {
 		return true
 	}
@@ -119,6 +123,7 @@ func ValidateCommentChar(content string) bool {
 }
 
 func (s *Server) EditCommentHandler(w http.ResponseWriter, r *http.Request) {
+	// Edit a comment
 	CommentID := r.FormValue("CommentId")
 	PostId := r.FormValue("PostId")
 	UpdatedContent := r.FormValue("UpdatedContent")

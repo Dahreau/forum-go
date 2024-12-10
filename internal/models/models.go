@@ -116,6 +116,7 @@ type Report struct {
 }
 
 func NewRequest(userId, username, content string) Request {
+	// Create a new request
 	request := Request{
 		RequestId:             shared.ParseUUID(shared.GenerateUUID()),
 		UserId:                userId,
@@ -129,6 +130,7 @@ func NewRequest(userId, username, content string) Request {
 }
 
 func NewActivity(userId, actionUserId, actionType, postId, commentId, details string) Activity {
+	// Create a new activity
 	activity := Activity{
 		ActivityId:   shared.ParseUUID(shared.GenerateUUID()),
 		UserId:       userId,
@@ -144,6 +146,7 @@ func NewActivity(userId, actionUserId, actionType, postId, commentId, details st
 }
 
 func NewReport(userId, username, postId, content, reason string) Report {
+	// Create a new report
 	report := Report{
 		ReportId:              shared.ParseUUID(shared.GenerateUUID()),
 		UserId:                userId,
@@ -159,10 +162,12 @@ func NewReport(userId, username, postId, content, reason string) Report {
 }
 
 func (post Post) GetUserLikes() []UserLike {
+	// Get the user likes of a post
 	return post.UserLikes
 }
 
 func (comment Comment) GetUserLikes() []UserLike {
+	// Get the user likes of a comment
 	return comment.UserLikes
 }
 

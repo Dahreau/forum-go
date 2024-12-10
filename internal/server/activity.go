@@ -6,6 +6,7 @@ import (
 )
 
 func (s *Server) ActivityPageHandler(w http.ResponseWriter, r *http.Request) {
+	// ActivityPageHandler handles the activity page
 	if !s.isLoggedIn(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
