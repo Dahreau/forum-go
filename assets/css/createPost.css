@@ -135,10 +135,11 @@ input:checked+label {
   .custom-upload-button {
     display: flex;
     align-items: center;
+    background-color: #10091b;
     border: 2px solid #ffc4fb;
-    margin: 0;
     width: fit-content;
     padding: 6px 12px;
+    margin: 4px 0;
     font-size: 1rem;
     text-align: center;
     border-radius: 52px;
