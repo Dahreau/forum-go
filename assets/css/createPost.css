@@ -112,3 +112,44 @@ input:checked+label {
 .content {
     resize: none;
 }
+/* Masquer le bouton natif de l'input */
+.upload-button {
+    display: none; /* Cache l'élément natif */
+  }
+  
+  /* Style du bouton personnalisé */
+  .custom-upload-button {
+    display: flex;
+    align-items: center;
+    background-color: #10091b;
+    border: 2px solid #ffc4fb;
+    width: fit-content;
+    padding: 6px 12px;
+    margin: 4px 0;
+    font-size: 1rem;
+    text-align: center;
+    border-radius: 52px;
+    color: #ffc4fb;
+    caret-color: #ffc4fb;
+    transition: border-color 0.3s ease;
+    box-shadow:
+        0 0 7px #FE9AF8,
+        inset 0 0 4px #FE9AF8;
+
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Effet hover */
+  .custom-upload-button:hover {
+    box-shadow: 0 0 16px #FE9AF8;
+    outline: none;
+    background-color: #FE9AF8;
+    color: #10091b;
+    .check-icon{
+        fill:#10091b;
+    }
+    cursor: pointer; /* Couleur légèrement plus foncée au survol */
+  }
+  .check-icon {
+    fill:#FE9AF8;
+  }
