@@ -96,7 +96,7 @@ p {
     margin-top: 10px;
 }
 
-.button.google-login, .button.github-login {
+.button.google-login, .button.github-login{
     display: flex;
     align-items: center;
     justify-content: center;
