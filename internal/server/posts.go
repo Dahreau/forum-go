@@ -8,7 +8,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
-	"sort" 
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -102,6 +102,8 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 	newPost.Categories = categories
 	err := s.db.AddPost(newPost, categories)
 	s.posts = append(s.posts, newPost)
+	newActivity := models.NewActivity(newPost.UserID, newPost.UserID, string(models.POST_CREATED), newPost.PostId, "", newPost.Title)
+	s.db.CreateActivity(newActivity)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
