@@ -72,6 +72,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc("/auth/github", s.GithubLoginHandler)
 	mux.HandleFunc("/auth/github/callback", s.GithubCallbackHandler)
 
+	mux.HandleFunc("/auth/discord", s.DiscordLoginHandler)
+	mux.HandleFunc("/auth/discord/callback", s.DiscordCallbackHandler)
+
 	return s.authenticate(mux)
 }
 
