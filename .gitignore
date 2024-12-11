@@ -38,3 +38,4 @@ main
 
 # Images
 assets/img/uploads/*
+!\assets/img/uploads/.gitkeep
