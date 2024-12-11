@@ -40,4 +40,3 @@ main
 *.png
 assets/img/uploads/*
 !\assets/img/uploads/.gitkeep
-!\assets/img/uploads/.gitkeep
