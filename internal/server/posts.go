@@ -3,13 +3,11 @@ package server
 import (
 	"fmt"
 	"forum-go/internal/models"
+	"forum-go/internal/shared"
 	"log"
-	"math"
-	"math/rand"
 	"net/http"
 	"os"
-	"sort" 
-	"strconv"
+	"sort"
 	"strings"
 	"time"
 )
@@ -82,7 +80,7 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Create new post
 	newPost := models.Post{
-		PostId:                strconv.Itoa(rand.Intn(math.MaxInt32)),
+		PostId:                shared.ParseUUID(shared.GenerateUUID()),
 		Title:                 formData.Title,
 		Content:               formData.Content,
 		UserID:                r.FormValue("UserId"),
@@ -102,6 +100,8 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 	newPost.Categories = categories
 	err := s.db.AddPost(newPost, categories)
 	s.posts = append(s.posts, newPost)
+	newActivity := models.NewActivity(newPost.UserID, newPost.UserID, string(models.POST_CREATED), newPost.PostId, "", newPost.Title)
+	s.db.CreateActivity(newActivity)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
