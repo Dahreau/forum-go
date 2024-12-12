@@ -13,7 +13,7 @@
     align-items: center;
     width: 90%;
     height: fit-content;
-    gap: 32px;
+    gap: 16px;
     padding: 15px 32px;
     text-align: center;
 }
@@ -33,7 +33,21 @@
     width: 100%;
     text-align: left;
 }
-
+.file-section{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.file-name{
+    font-size: 14px;
+    color: #ffc4fb;
+    font-family: 'Mina', sans-serif;
+}
+#deleteFile{
+    display: none;
+    padding: 6px;
+}
 .error {
     width: 100%;
     text-align: center;
@@ -77,8 +91,8 @@
 }
 
 .category-box:hover {
-    background-color: #767676;
-    color: black
+    color: #ffc4fb;
+    border : 1px solid #ffc4fb;
 }
 
 /* Post Actions */
@@ -121,11 +135,10 @@ input:checked+label {
   .custom-upload-button {
     display: flex;
     align-items: center;
-    background-color: #10091b;
     border: 2px solid #ffc4fb;
+    margin: 0;
     width: fit-content;
     padding: 6px 12px;
-    margin: 4px 0;
     font-size: 1rem;
     text-align: center;
     border-radius: 52px;
