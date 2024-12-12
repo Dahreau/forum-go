@@ -180,6 +180,7 @@ func (s *service) AddPost(post models.Post, categories []models.Category) error 
 			return err
 		}
 	}
+	
 	return err
 }
 

@@ -84,11 +84,13 @@
           {{ if .FormData.Errors.Image }}
           <span class="error">{{ .FormData.Errors.Image }}</span>
           {{ end }}
+          <div class="file-section">
           <label for="upload" class="custom-upload-button"><svg class="check-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
             xmlns="http://www.w3.org/2000/svg">
             <path d="M19 12.998H13V18.998H11V12.998H5V10.998H11V4.998H13V10.998H19V12.998Z" />
-          </svg>Upload Image</label>
+          </svg>Upload Image</label><span class="file-name">No file chosen</span><span class="button logout-button" id="deleteFile"><img src="/assets/img/delete-icon (1).svg"/></span>
           <input type="file" id="upload" class="upload-button" name="file" />
+        </div>
         </div>
 
         <!-- Categories Section-->
@@ -114,5 +116,6 @@
   <footer class="footer-section">
     <span class="footer-text">© 2024 Aniverse. All rights reserved - <a href="/about">Our team</a></span>
   </footer>
+  <script src="/assets/js/createPost.js"></script>
 </body>
 </html>

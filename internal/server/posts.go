@@ -111,8 +111,6 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
 	PostID := r.FormValue("postId")
-	fmt.Println(PostID)
-
 	// Fetch the post to get the image path
 	post, err := s.db.GetPost(PostID)
 	if err != nil {
