@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"forum-go/internal/models"
 	"forum-go/internal/shared"
 	"log"
@@ -46,7 +45,6 @@ func (s *Server) PostNewPostsHandler(w http.ResponseWriter, r *http.Request) {
 	if erri != nil {
 		log.Println(erri)
 	}
-	fmt.Println(formData)
 
 	// Validate title
 	if ValidateTitle(formData.Title) {
@@ -121,7 +119,6 @@ func (s *Server) DeletePostsHandler(w http.ResponseWriter, r *http.Request) {
 	// Delete the image file if it exists
 	if post.ImageURL != "" {
 		err = os.Remove("assets/img/uploads/" + post.ImageURL)
-		fmt.Println(post.ImageURL)
 		if err != nil && !os.IsNotExist(err) { // Ignore errors if the file doesn't exist
 			log.Printf("Failed to delete image file: %v\n", err)
 		}

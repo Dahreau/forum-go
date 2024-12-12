@@ -91,3 +91,5 @@ CREATE TABLE IF NOT EXISTS Report(
     FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
     FOREIGN KEY (post_id) REFERENCES Post(post_id) ON DELETE CASCADE 
 );
+
+PRAGMA foreign_keys = ON;

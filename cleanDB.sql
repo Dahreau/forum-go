@@ -42,7 +42,3 @@ CREATE TABLE IF NOT EXISTS Activity(
     -- FK vers la table User
     FOREIGN KEY (post_id) REFERENCES Post(post_id) ON DELETE CASCADE -- FK vers la table Post
 );
-update user
-set provider = 'local';
-
-DELETE from user WHERE email = 'BrendieD24@github.local';

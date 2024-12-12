@@ -53,6 +53,13 @@ func (s *Server) PostCommentHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
 	}
+	post.Comments = append(post.Comments, newComment)
+	for i, p := range s.posts {
+		if p.PostId == post.PostId {
+			s.posts[i] = post
+			break
+		}
+	}
 	if post.UserID != newComment.UserID {
 		newActivity := models.NewActivity(post.UserID, newComment.UserID, string(models.GET_COMMENT), newComment.PostID, newComment.CommentId, newComment.Content)
 		s.db.CreateActivity(newActivity)
@@ -76,21 +83,37 @@ func (s *Server) DeleteCommentHandler(w http.ResponseWriter, r *http.Request) {
 	// Delete a comment
 	PostID := r.FormValue("PostId")
 	CommentID := r.FormValue("CommentId")
-	UserID := r.FormValue("UserId")
 	if !s.isLoggedIn(r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
-	if UserID != s.getUser(r).UserId && !IsAdmin(r) {
-		http.Error(w, "You are not allowed to delete this comment", http.StatusForbidden)
+	SelectedPost := models.Post{}
+	for _, post := range s.posts {
+		if post.PostId == PostID {
+			SelectedPost = post
+			break
+		}
+	}
+	if SelectedPost.PostId == "" {
+		s.errorHandler(w, r, http.StatusInternalServerError, "Post not found")
 		return
 	}
-	if CommentID == "" {
-		http.Error(w, "Invalid comment ID", http.StatusBadRequest)
+	isPresent := false
+	SelectedComment := models.Comment{}
+	for _, comment := range SelectedPost.Comments {
+		if comment.CommentId == CommentID {
+			isPresent = true
+			SelectedComment = comment
+			break
+		}
+	}
+
+	if !isPresent {
+		s.errorHandler(w, r, http.StatusBadRequest, "Comment not found")
 		return
 	}
-	if PostID == "" {
-		http.Error(w, "Invalid post ID", http.StatusBadRequest)
+	if SelectedComment.UserID != s.getUser(r).UserId && !IsAdmin(r) {
+		s.errorHandler(w, r, http.StatusForbidden, "You are not allowed to delete this comment")
 		return
 	}
 	err := s.db.DeleteComment(CommentID)

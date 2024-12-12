@@ -250,6 +250,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-family: 'Mina', sans-serif;
 
     .comment-author {
         font-size: 1.25rem;
