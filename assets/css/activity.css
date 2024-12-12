@@ -30,6 +30,9 @@
     gap: 4px;
     font-weight: 600;
 }
+.activity-card-description{
+    line-break: anywhere;
+}
 .red-point{
     width: 16px;
     height: 16px;

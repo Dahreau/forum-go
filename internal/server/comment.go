@@ -19,8 +19,7 @@ func (s *Server) PostCommentHandler(w http.ResponseWriter, r *http.Request) {
 
 	commentData := CommentData{
 		Content: r.FormValue("comment"),
-		UserID:  "UserId",
-		PostID:  "PostId",
+		PostID:  r.FormValue("PostId"),
 		Errors:  make(map[string]string),
 	}
 
@@ -28,7 +27,11 @@ func (s *Server) PostCommentHandler(w http.ResponseWriter, r *http.Request) {
 		commentData.Errors["Comment"] = "Comments must have a maximum of 400 characters"
 	}
 	if len(commentData.Errors) > 0 {
-		render(w, r, "detailsPost", map[string]interface{}{"FormData": commentData, "Categories": s.categories})
+		post, err := s.db.GetPost(commentData.PostID)
+		if err != nil {
+			s.errorHandler(w, r, http.StatusInternalServerError, err.Error())
+		}
+		http.Redirect(w, r, "/post/"+post.PostId, http.StatusSeeOther)
 		return
 	}
 

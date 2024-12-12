@@ -149,6 +149,10 @@
     gap: 8px;
     align-items: flex-end;
 }
+.red-message::placeholder{
+    color: #FF948A!important;
+    opacity: 0.9;
+}
 
 #comment-form {
     width: 100%;
