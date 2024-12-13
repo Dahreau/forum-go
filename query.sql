@@ -1,3 +1,4 @@
+PRAGMA foreign_keys = ON;
 CREATE TABLE IF NOT EXISTS User (
   user_id CHAR(32) PRIMARY KEY,
   email VARCHAR(100) NOT NULL,
@@ -91,5 +92,3 @@ CREATE TABLE IF NOT EXISTS Report(
     FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
     FOREIGN KEY (post_id) REFERENCES Post(post_id) ON DELETE CASCADE 
 );
-
-PRAGMA foreign_keys = ON;

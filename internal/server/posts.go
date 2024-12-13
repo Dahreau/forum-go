@@ -174,7 +174,7 @@ func (s *Server) GetPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if post.PostId == "" {
-		http.Error(w, "Post not found", http.StatusNotFound)
+		s.errorHandler(w, r, http.StatusNotFound, "Post not found")
 		return
 	}
 	post.HasVoted = GetUserVote(post, s.getUser(r).UserId)

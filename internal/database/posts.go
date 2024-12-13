@@ -180,7 +180,7 @@ func (s *service) AddPost(post models.Post, categories []models.Category) error 
 			return err
 		}
 	}
-	
+
 	return err
 }
 
@@ -189,6 +189,53 @@ func (s *service) DeletePost(id string) error {
 	query := "DELETE FROM Post WHERE post_id=?"
 	_, err := s.db.Exec(query, id)
 	return err
+}
+func (s *service) DeletePostsFromUser(userID string) error {
+	// Retrieve all post IDs for the user
+	rows, err := s.db.Query("SELECT post_id FROM Post WHERE user_id=?", userID)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	var postIDs []string
+	for rows.Next() {
+		var postID string
+		if err := rows.Scan(&postID); err != nil {
+			return err
+		}
+		postIDs = append(postIDs, postID)
+	}
+
+	// Start a transaction
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	// Delete comments for each post
+	for _, postID := range postIDs {
+		_, err := tx.Exec("DELETE FROM Comment WHERE post_id=?", postID)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	// Delete posts
+	_, err = tx.Exec("DELETE FROM Post WHERE user_id=?", userID)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// Commit transaction
+	err = tx.Commit()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *service) EditPost(id, content string) error {

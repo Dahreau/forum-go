@@ -42,3 +42,13 @@ CREATE TABLE IF NOT EXISTS Activity(
     -- FK vers la table User
     FOREIGN KEY (post_id) REFERENCES Post(post_id) ON DELETE CASCADE -- FK vers la table Post
 );
+
+
+DELETE FROM Activity
+WHERE user_id NOT IN (
+    SELECT user_id FROM user
+);
+delete from post where user_id not in (select user_id from user);
+delete from comment where user_id not in (select user_id from user);
+delete from user_like where user_id not in (select user_id from user);
+delete from Post_Category where post_id not in (select post_id from post);

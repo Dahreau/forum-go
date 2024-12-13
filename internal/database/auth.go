@@ -99,8 +99,12 @@ func (s *service) FindUserCookie(cookie string) (models.User, error) {
 }
 func (s *service) DeleteUser(id string) error {
 	// Delete user
+	err := s.DeletePostsFromUser(id)
+	if err != nil {
+		return err
+	}
 	userQuery := "DELETE FROM User WHERE user_id=?"
-	_, err := s.db.Exec(userQuery, id)
+	_, err = s.db.Exec(userQuery, id)
 	return err
 }
 

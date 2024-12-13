@@ -40,6 +40,7 @@ type Service interface {
 	GetPost(id string) (models.Post, error)
 	AddPost(post models.Post, categories []models.Category) error
 	DeletePost(id string) error
+	DeletePostsFromUser(userID string) error
 	EditPost(id, title string) error
 
 	// Comment section
