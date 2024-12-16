@@ -19,16 +19,19 @@ func UploadImageHandler(w http.ResponseWriter, r *http.Request) (string, error) 
 		http.Error(w, "File size exceeds limit", http.StatusBadRequest)
 		return "", err
 	}
-	file, handler, err := r.FormFile("file")
+	file, header, err := r.FormFile("file")
 	if err != nil {
 		http.Error(w, "Invalid file upload", http.StatusBadRequest)
 		return "", err
 	}
 	defer file.Close()
-
+	if header.Size > 20*1024*1024 {
+		err := errors.New("file size exceeds limit")
+		return "", err
+	}
 	// Check file extension
-	ext := filepath.Ext(handler.Filename)
-	allowedExtensions := []string{".jpg", ".jpeg", ".png", ".gif"}
+	ext := filepath.Ext(header.Filename)
+	allowedExtensions := []string{".jpg", ".jpeg", ".png", ".gif", ".JPG", ".JPEG", ".PNG", ".GIF"}
 	if !contains(allowedExtensions, ext) {
 		err := errors.New("invalid file type")
 		return "", err
