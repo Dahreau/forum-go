@@ -213,9 +213,14 @@ func (s *service) DeletePostsFromUser(userID string) error {
 		return err
 	}
 
-	// Delete comments for each post
+	// Delete comments and post categories for each post
 	for _, postID := range postIDs {
 		_, err := tx.Exec("DELETE FROM Comment WHERE post_id=?", postID)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+		_, err = tx.Exec("DELETE FROM Post_Category WHERE post_id=?", postID)
 		if err != nil {
 			tx.Rollback()
 			return err
