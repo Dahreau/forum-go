@@ -19,61 +19,61 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	mux.HandleFunc("/about", security.RateLimitedHandler(s.AboutPageHandler))
 
-	mux.HandleFunc("/activity", s.ActivityPageHandler)
+	mux.HandleFunc("/activity", security.RateLimitedHandler(s.ActivityPageHandler))
 
-	mux.HandleFunc("GET /login", s.GetLoginHandler)
+	mux.HandleFunc("GET /login", security.RateLimitedHandler(s.GetLoginHandler))
 	mux.HandleFunc("POST /login", s.PostLoginHandler)
 
 	mux.HandleFunc("POST /logout", s.LogoutHandler)
 
-	mux.HandleFunc("GET /register", s.GetRegisterHandler)
+	mux.HandleFunc("GET /register", security.RateLimitedHandler(s.GetRegisterHandler))
 	mux.HandleFunc("POST /register", s.PostRegisterHandler)
 
-	mux.HandleFunc("GET /delete/users/{id}", s.DeleteUsersHandler)
-	mux.HandleFunc("GET /ban/users/{id}", s.BanUserHandler)
-	mux.HandleFunc("GET /promote/users/{id}", s.PromoteUserHandler)
-	mux.HandleFunc("GET /demote/users/{id}", s.DemoteUserHandler)
+	mux.HandleFunc("GET /delete/users/{id}", security.RateLimitedHandler(s.DeleteUsersHandler))
+	mux.HandleFunc("GET /ban/users/{id}", security.RateLimitedHandler(s.BanUserHandler))
+	mux.HandleFunc("GET /promote/users/{id}", security.RateLimitedHandler(s.PromoteUserHandler))
+	mux.HandleFunc("GET /demote/users/{id}", security.RateLimitedHandler(s.DemoteUserHandler))
 
-	mux.HandleFunc("GET /posts/create", s.GetNewPostHandler)
+	mux.HandleFunc("GET /posts/create", security.RateLimitedHandler(s.GetNewPostHandler))
 	mux.HandleFunc("POST /posts/create", s.PostNewPostsHandler)
 	mux.HandleFunc("POST /posts/delete/{id}", s.DeletePostsHandler)
 	mux.HandleFunc("POST /posts/edit/{id}", s.EditPostHandler)
 
-	mux.HandleFunc("GET /categories", s.GetCategoriesHandler)
+	mux.HandleFunc("GET /categories", security.RateLimitedHandler(s.GetCategoriesHandler))
 	mux.HandleFunc("POST /categories/add", s.PostCategoriesHandler)
 	mux.HandleFunc("POST /categories/delete/{id}", s.DeleteCategoriesHandler)
 	mux.HandleFunc("POST /categories/edit/{id}", s.EditCategoriesHandler)
 
-	mux.HandleFunc("GET /post/{id}", s.GetPostHandler)
+	mux.HandleFunc("GET /post/{id}", security.RateLimitedHandler(s.GetPostHandler))
 	mux.HandleFunc("POST /comment/delete/{id}", s.DeleteCommentHandler)
 	mux.HandleFunc("POST /comment/edit/{id}", s.EditCommentHandler)
 	mux.HandleFunc("POST /post/comment", s.PostCommentHandler)
 
 	mux.HandleFunc("/health", s.healthHandler)
-	mux.HandleFunc("GET /adminPanel", s.AdminPanelHandler)
-	mux.HandleFunc("GET /report/{id}", s.GetReportHandler)
+	mux.HandleFunc("GET /adminPanel", security.RateLimitedHandler(s.AdminPanelHandler))
+	mux.HandleFunc("GET /report/{id}", security.RateLimitedHandler(s.GetReportHandler))
 	mux.HandleFunc("POST /report", s.PostReportHandler)
-	mux.HandleFunc("GET /adminPanel/modrequests", s.ModRequestsHandler)
+	mux.HandleFunc("GET /adminPanel/modrequests", security.RateLimitedHandler(s.ModRequestsHandler))
 	mux.HandleFunc("POST /vote", s.VoteHandler)
 
 	mux.HandleFunc("POST /modRequest", s.PostModRequestHandler)
-	mux.HandleFunc("GET /modRequest", s.GetModRequestHandler)
+	mux.HandleFunc("GET /modRequest", security.RateLimitedHandler(s.GetModRequestHandler))
 	mux.HandleFunc("POST /modRequest/accepted", s.AcceptRequestHandler)
 	mux.HandleFunc("POST /modRequest/rejected", s.RejectRequestHandler)
 
-	mux.HandleFunc("GET /adminPanel/reports", s.GetReportsHandler)
+	mux.HandleFunc("GET /adminPanel/reports", security.RateLimitedHandler(s.GetReportsHandler))
 	mux.HandleFunc("POST /reports/accepted", s.AcceptReportHandler)
 	mux.HandleFunc("POST /reports/rejected", s.RejectReportHandler)
 
 	// AUTH ROUTES
-	mux.HandleFunc("/auth/google", s.GoogleLoginHandler)
-	mux.HandleFunc("/auth/google/callback", s.GoogleCallbackHandler)
+	mux.HandleFunc("/auth/google", security.RateLimitedHandler(s.GoogleLoginHandler))
+	mux.HandleFunc("/auth/google/callback", security.RateLimitedHandler(s.GoogleCallbackHandler))
 
-	mux.HandleFunc("/auth/github", s.GithubLoginHandler)
-	mux.HandleFunc("/auth/github/callback", s.GithubCallbackHandler)
+	mux.HandleFunc("/auth/github", security.RateLimitedHandler(s.GithubLoginHandler))
+	mux.HandleFunc("/auth/github/callback", security.RateLimitedHandler(s.GithubCallbackHandler))
 
-	mux.HandleFunc("/auth/discord", s.DiscordLoginHandler)
-	mux.HandleFunc("/auth/discord/callback", s.DiscordCallbackHandler)
+	mux.HandleFunc("/auth/discord", security.RateLimitedHandler(s.DiscordLoginHandler))
+	mux.HandleFunc("/auth/discord/callback", security.RateLimitedHandler(s.DiscordCallbackHandler))
 
 	return s.authenticate(mux)
 }
